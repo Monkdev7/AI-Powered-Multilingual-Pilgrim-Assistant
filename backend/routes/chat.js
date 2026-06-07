@@ -99,6 +99,11 @@ function getMockResponse(message, language) {
     return prefix + response;
 }
 
+// Check if a real valid-looking key is configured (Gemini keys start with "AIza")
+function isValidKey(key) {
+    return key && key.startsWith('AIza') && key.length > 20;
+}
+
 // POST /api/chat
 router.post('/', async (req, res) => {
     try {
@@ -109,17 +114,19 @@ router.post('/', async (req, res) => {
         }
 
         let reply;
+        let isMock = false;
 
-        if (!process.env.GEMINI_API_KEY) {
-            // Mock mode
+        if (!isValidKey(process.env.GEMINI_API_KEY)) {
+            // No valid key — pure mock mode, no API call attempted
+            isMock = true;
             reply = getMockResponse(message, language);
         } else {
             try {
                 reply = await getGeminiResponse(message.trim(), language, history);
             } catch (aiError) {
                 console.error('Gemini API error:', aiError.message);
-                // Fall back to mock on API error
-                reply = `⚠️ AI service temporarily unavailable. \n\n${getMockResponse(message, language)}`;
+                isMock = true;
+                reply = `⚠️ AI service temporarily unavailable.\n\n${getMockResponse(message, language)}`;
             }
         }
 
@@ -127,7 +134,7 @@ router.post('/', async (req, res) => {
             reply,
             language,
             timestamp: new Date().toISOString(),
-            mock: !process.env.GEMINI_API_KEY,
+            mock: isMock,
         });
     } catch (err) {
         console.error('Chat route error:', err);
