@@ -46,11 +46,13 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   const key = process.env.GEMINI_API_KEY;
-  const keyValid = key && key.startsWith('AIza') && key.length > 20;
+  const keyValid = key &&
+    key !== 'your_gemini_api_key_here' &&
+    ((key.startsWith('AIza') && key.length > 20) || (key.startsWith('AQ.') && key.length > 20));
   console.log(`🔱  Simhastha Pilgrim Assistant API running on port ${PORT}`);
   console.log(`   Gemini API: ${keyValid ? '✅ Configured' : '⚠️  Not configured (running in mock mode)'}`);
   if (!keyValid) {
     console.log(`   → Get a free key at: https://aistudio.google.com`);
-    console.log(`   → Add it to backend/.env as GEMINI_API_KEY=AIza...`);
+    console.log(`   → Add it to backend/.env as GEMINI_API_KEY=...`);
   }
 });

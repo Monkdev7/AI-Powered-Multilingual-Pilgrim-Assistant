@@ -55,7 +55,7 @@ async function getGeminiResponse(message, language, history) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
     const model = genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash-lite',
         systemInstruction: SYSTEM_PROMPT,
     });
 
@@ -99,9 +99,13 @@ function getMockResponse(message, language) {
     return prefix + response;
 }
 
-// Check if a real valid-looking key is configured (Gemini keys start with "AIza")
+// Check if a real valid-looking key is configured
+// Gemini keys start with "AIza" (legacy) or "AQ." (new format)
 function isValidKey(key) {
-    return key && key.startsWith('AIza') && key.length > 20;
+    if (!key) return false;
+    if (key === 'your_gemini_api_key_here') return false;
+    return (key.startsWith('AIza') && key.length > 20) ||
+        (key.startsWith('AQ.') && key.length > 20);
 }
 
 // POST /api/chat
