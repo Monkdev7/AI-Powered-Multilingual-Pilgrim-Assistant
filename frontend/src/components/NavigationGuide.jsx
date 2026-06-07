@@ -161,6 +161,7 @@ export default function NavigationGuide() {
         { id: 'ghats', label: 'Ghats', icon: '🌊' },
         { id: 'dates', label: 'Snan Dates', icon: '📅' },
         { id: 'transport', label: 'Transport', icon: '🚂' },
+        { id: 'map', label: 'Map', icon: '📍' },
         { id: 'tips', label: 'Nav Tips', icon: '💡' },
     ];
 
@@ -248,6 +249,70 @@ export default function NavigationGuide() {
                     {transportOptions.map((option) => (
                         <TransportCard key={option.id} option={option} />
                     ))}
+                </div>
+            )}
+
+            {/* Map section */}
+            {activeSection === 'map' && (
+                <div className="space-y-3 animate-fade-in">
+                    <div className="flex items-center gap-2">
+                        <MapPin size={16} className="text-orange-500" />
+                        <h3 className="section-title">Ujjain Mela Area Map</h3>
+                    </div>
+
+                    {/* Google Maps embed — Ram Ghat, Ujjain */}
+                    <div className="rounded-2xl overflow-hidden border border-orange-200 shadow-md">
+                        <iframe
+                            title="Ujjain Ram Ghat - Simhastha 2028 Location"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.5!2d75.7692!3d23.1765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39637469de000001%3A0x9f67d93e3e0e9a5b!2sRam%20Ghat%2C%20Ujjain!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                            width="100%"
+                            height="300"
+                            style={{ border: 0, display: 'block' }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                        />
+                    </div>
+
+                    {/* Key locations */}
+                    <div className="space-y-2">
+                        <p className="text-xs font-semibold text-gray-600 flex items-center gap-1.5">
+                            <MapPin size={12} className="text-orange-500" />
+                            Key Locations in Ujjain
+                        </p>
+                        {[
+                            { icon: '🌊', name: 'Ram Ghat (Principal Bathing Ghat)', dist: '2 km from station', color: 'bg-orange-50 border-orange-200' },
+                            { icon: '🔱', name: 'Mahakaleshwar Jyotirlinga Temple', dist: '1.5 km from station', color: 'bg-purple-50 border-purple-200' },
+                            { icon: '🚂', name: 'Ujjain Junction Railway Station', dist: 'City center', color: 'bg-blue-50 border-blue-200' },
+                            { icon: '🌳', name: 'Siddhavat Ghat (Pind Daan)', dist: '5 km from station', color: 'bg-green-50 border-green-200' },
+                            { icon: '✈️', name: 'Indore Airport (Nearest)', dist: '55 km from Ujjain', color: 'bg-sky-50 border-sky-200' },
+                        ].map((loc) => (
+                            <div key={loc.name} className={`${loc.color} border rounded-xl px-3 py-2.5 flex items-center gap-3`}>
+                                <span className="text-lg flex-shrink-0">{loc.icon}</span>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-semibold text-gray-800 truncate">{loc.name}</p>
+                                    <p className="text-xs text-gray-500">{loc.dist}</p>
+                                </div>
+                                <a
+                                    href={`https://www.google.com/maps/search/${encodeURIComponent(loc.name + ' Ujjain')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-xs text-orange-600 font-semibold hover:text-orange-700 flex-shrink-0 bg-white border border-orange-200 rounded-lg px-2 py-1"
+                                    aria-label={`Open ${loc.name} in Google Maps`}
+                                >
+                                    Maps ↗
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Offline map tip */}
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2.5">
+                        <span className="text-lg flex-shrink-0">📵</span>
+                        <p className="text-sm text-amber-800">
+                            <strong>Download offline map</strong> before visiting — open Google Maps, search "Ujjain" and tap Download. Mobile data is unreliable in crowded mela grounds.
+                        </p>
+                    </div>
                 </div>
             )}
 

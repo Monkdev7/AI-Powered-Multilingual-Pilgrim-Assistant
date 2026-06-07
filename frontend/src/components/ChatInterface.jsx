@@ -40,6 +40,68 @@ function formatTime(isoString) {
     }
 }
 
+// Lightweight markdown renderer — handles bold, italic, bullets, headers
+function MarkdownText({ content, className = '' }) {
+    const lines = content.split('\n');
+
+    const parseInline = (text) => {
+        // Bold: **text** or __text__
+        // Italic: *text* or _text_
+        const parts = [];
+        let remaining = text;
+        let key = 0;
+
+        while (remaining.length > 0) {
+            const boldMatch = remaining.match(/^(.*?)\*\*(.*?)\*\*/s);
+            const italicMatch = remaining.match(/^(.*?)\*(.*?)\*/s);
+
+            if (boldMatch && (!italicMatch || boldMatch[0].length <= italicMatch[0].length)) {
+                if (boldMatch[1]) parts.push(<span key={key++}>{boldMatch[1]}</span>);
+                parts.push(<strong key={key++} className="font-semibold">{boldMatch[2]}</strong>);
+                remaining = remaining.slice(boldMatch[0].length);
+            } else if (italicMatch) {
+                if (italicMatch[1]) parts.push(<span key={key++}>{italicMatch[1]}</span>);
+                parts.push(<em key={key++} className="italic">{italicMatch[2]}</em>);
+                remaining = remaining.slice(italicMatch[0].length);
+            } else {
+                parts.push(<span key={key++}>{remaining}</span>);
+                break;
+            }
+        }
+        return parts;
+    };
+
+    return (
+        <div className={`text-sm leading-relaxed space-y-1 ${className}`}>
+            {lines.map((line, i) => {
+                // Bullet: * text or - text
+                if (/^[\*\-]\s+/.test(line)) {
+                    return (
+                        <div key={i} className="flex items-start gap-2">
+                            <span className="text-orange-400 flex-shrink-0 mt-0.5 font-bold">•</span>
+                            <span>{parseInline(line.replace(/^[\*\-]\s+/, ''))}</span>
+                        </div>
+                    );
+                }
+                // Header: ### or ## or #
+                if (/^#{1,3}\s+/.test(line)) {
+                    const text = line.replace(/^#{1,3}\s+/, '');
+                    return <p key={i} className="font-bold text-gray-900 mt-2">{parseInline(text)}</p>;
+                }
+                // Horizontal rule: ---
+                if (/^---+$/.test(line.trim())) {
+                    return <hr key={i} className="border-orange-100 my-2" />;
+                }
+                // Empty line → spacing
+                if (line.trim() === '') {
+                    return <div key={i} className="h-1" />;
+                }
+                return <p key={i}>{parseInline(line)}</p>;
+            })}
+        </div>
+    );
+}
+
 function MessageBubble({ message }) {
     const isUser = message.role === 'user';
 
@@ -65,7 +127,11 @@ function MessageBubble({ message }) {
                             : 'bg-white text-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-orange-100'
                     }
                 >
-                    <p className="text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
+                    {isUser ? (
+                        <p className="text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
+                    ) : (
+                        <MarkdownText content={message.content} />
+                    )}
                 </div>
                 <div className={`flex items-center gap-2 mt-1 px-1 ${isUser ? 'justify-end' : 'justify-start'}`}>
                     <p className="text-xs text-gray-400">{formatTime(message.timestamp)}</p>
