@@ -120,7 +120,7 @@ export default function CountdownTimer({ compact = false }) {
                     <p className="text-orange-100 text-xs mt-0.5">Book your pass now — fills up months in advance!</p>
                 </div>
                 <a
-                    href="https://mahakaleshwar.nic.in"
+                    href="https://www.bhasmarti.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white text-orange-600 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-orange-50 transition-colors flex-shrink-0 active:scale-95"

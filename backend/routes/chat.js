@@ -21,7 +21,7 @@ Your areas of expertise:
 - Why "Simhastha": occurs when Jupiter enters Leo (Simha Rashi) and Sun enters Aries (Mesh Rashi) — held every 12 years in Ujjain. Last was 2016.
 - Ghats in Ujjain: Ram Ghat (principal bathing ghat on Kshipra river), Triveni Ghat, Mangalnath Ghat, Siddhavat Ghat, Narsinh Ghat
 - Holy river: Kshipra (also called Shipra) — the sacred river of Ujjain
-- Mahakaleshwar Temple: one of 12 Jyotirlingas of Lord Shiva; Bhasma Aarti at 4 AM daily — must visit
+- Mahakaleshwar Temple: one of 12 Jyotirlingas of Lord Shiva; Bhasma Aarti at 4 AM daily — must visit; book passes at https://www.bhasmarti.com
 - Other temples: Kal Bhairav, Harsiddhi Mata (Shakti Peeth), Mangalnath, Sandipani Ashram, Chintaman Ganesh, Bade Ganeshji Ka Mandir
 - Accommodation: Tent cities near Ram Ghat, dharamshalas, IRCTC packages, akhara camps, Indore hotels (55 km)
 - Transportation: Trains to Ujjain Junction, MP Roadways buses, Indore airport (55 km) + taxi transfer
