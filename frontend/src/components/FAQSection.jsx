@@ -1,6 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Search, X, BookOpen, Share2 } from 'lucide-react';
-import { faqs, faqCategories } from '../data/faqs';
+import { useApiGet } from '../hooks/useApiGet';
+import { LoadingState, ErrorState } from './ApiStates';
+
+const SEARCH_DEBOUNCE_MS = 300;
+const validateFaqResponse = (d) => Array.isArray(d?.faqs) && Array.isArray(d?.categories);
 
 function FAQItem({ faq, isOpen, onToggle }) {
     const handleShare = () => {
@@ -54,25 +58,32 @@ export default function FAQSection({ labels = {} }) {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredFaqs = useMemo(() => {
-        let result = faqs;
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [categories, setCategories] = useState([]);
 
-        if (selectedCategory !== 'All') {
-            result = result.filter((f) => f.category === selectedCategory);
-        }
+    // Debounce typing so each keystroke does not trigger a backend request
+    useEffect(() => {
+        const q = searchQuery.trim();
+        const timer = setTimeout(() => setDebouncedSearch(q), SEARCH_DEBOUNCE_MS);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
-        if (searchQuery.trim()) {
-            const q = searchQuery.toLowerCase();
-            result = result.filter(
-                (f) =>
-                    f.question.toLowerCase().includes(q) ||
-                    f.answer.toLowerCase().includes(q)
-            );
-        }
+    const { data, error, loading, retry } = useApiGet('/api/faq', {
+        params: {
+            category: selectedCategory !== 'All' ? selectedCategory : undefined,
+            search: debouncedSearch || undefined,
+        },
+        validate: validateFaqResponse,
+    });
 
-        return result;
-    }, [selectedCategory, searchQuery]);
+    // Categories come from the API response (the list is not narrowed by filters)
+    useEffect(() => {
+        if (data?.categories) setCategories(data.categories);
+    }, [data]);
 
+    const faqs = data?.faqs || [];
+    const faqCategories = ['All', ...categories];
+    const isInitialLoad = loading && !data;
     const handleToggle = (id) => {
         setOpenId((prev) => (prev === id ? null : id));
     };
@@ -89,6 +100,7 @@ export default function FAQSection({ labels = {} }) {
 
     const clearSearch = () => {
         setSearchQuery('');
+        setDebouncedSearch('');
         setOpenId(null);
     };
 
@@ -149,9 +161,15 @@ export default function FAQSection({ labels = {} }) {
                 <p className="text-xs text-gray-500 flex items-center gap-1.5">
                     <BookOpen size={12} />
                     <span>
-                        {filteredFaqs.length} question{filteredFaqs.length !== 1 ? 's' : ''}
-                        {selectedCategory !== 'All' && ` in ${selectedCategory}`}
-                        {searchQuery && ` matching "${searchQuery}"`}
+                        {data && !error ? (
+                            <>
+                                {faqs.length} question{faqs.length !== 1 ? 's' : ''}
+                                {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+                                {debouncedSearch && ` matching "${debouncedSearch}"`}
+                            </>
+                        ) : (
+                            'Questions'
+                        )}
                     </span>
                 </p>
                 {(searchQuery || selectedCategory !== 'All') && (
@@ -165,15 +183,19 @@ export default function FAQSection({ labels = {} }) {
             </div>
 
             {/* FAQ list */}
-            {filteredFaqs.length === 0 ? (
+            {error ? (
+                <ErrorState error={error} onRetry={retry} />
+            ) : isInitialLoad ? (
+                <LoadingState label="Loading FAQs..." />
+            ) : faqs.length === 0 ? (
                 <div className="text-center py-12 text-gray-400">
                     <Search size={40} className="mx-auto mb-3 opacity-30" />
                     <p className="font-medium">{L.noResults || 'No FAQs found'}</p>
                     <p className="text-sm mt-1">{L.noResultsHint || 'Try a different search term or category'}</p>
                 </div>
             ) : (
-                <div className="space-y-2">
-                    {filteredFaqs.map((faq) => (
+                <div className={`space-y-2 transition-opacity ${loading ? 'opacity-60' : ''}`} aria-busy={loading}>
+                    {faqs.map((faq) => (
                         <FAQItem
                             key={faq.id}
                             faq={faq}
@@ -183,7 +205,6 @@ export default function FAQSection({ labels = {} }) {
                     ))}
                 </div>
             )}
-
             {/* Bottom tip */}
             <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex items-start gap-2.5">
                 <span className="text-lg flex-shrink-0">💬</span>

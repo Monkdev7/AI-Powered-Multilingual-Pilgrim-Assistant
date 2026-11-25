@@ -1,187 +1,22 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, MapPin, Clock, Info } from 'lucide-react';
+import { useApiGet } from '../hooks/useApiGet';
+import { LoadingState, ErrorState } from './ApiStates';
 
-const services = [
-    {
-        id: 'food',
-        category: 'Food & Langars',
-        icon: '🍚',
-        color: 'bg-green-50 border-green-200',
-        headerColor: 'from-green-500 to-teal-500',
-        items: [
-            {
-                name: 'Government Food Camps',
-                detail: 'Free meals available at all sectors. Simple, nutritious food — dal, rice, roti.',
-                location: 'Near each sector entry gate',
-                timing: '7 AM – 10 PM',
-                cost: 'Free',
-            },
-            {
-                name: 'Akhara Langars',
-                detail: 'Religious organizations serve free food to all pilgrims without discrimination.',
-                location: 'Near major akharas in tent city',
-                timing: '6 AM – 9 PM',
-                cost: 'Free (donation optional)',
-            },
-            {
-                name: 'Mela Food Courts',
-                detail: 'Certified stalls selling snacks, thalis, and tea. Look for the green "Certified" sign.',
-                location: 'Distributed across all sectors',
-                timing: '5 AM – 11 PM',
-                cost: '₹20 – ₹150 per item',
-            },
-            {
-                name: 'Mobile Canteens',
-                detail: 'IRCTC and MP Tourism mobile canteens with standard pricing and hygienic food.',
-                location: 'Near major ghats in Ujjain',
-                timing: '6 AM – 9 PM',
-                cost: '₹30 – ₹200',
-            },
-        ],
-    },
-    {
-        id: 'water',
-        category: 'Drinking Water',
-        icon: '💧',
-        color: 'bg-blue-50 border-blue-200',
-        headerColor: 'from-blue-500 to-cyan-500',
-        items: [
-            {
-                name: 'Drinking Water Kiosks',
-                detail: 'RO-purified drinking water available at kiosks across all sectors. Carry your own bottle.',
-                location: 'Every 200-300 meters across mela grounds',
-                timing: '24 hours',
-                cost: 'Free',
-            },
-            {
-                name: 'Packaged Water',
-                detail: 'ISI-marked bottled water (1L, 500ml) available from certified vendors.',
-                location: 'All major markets and entry points',
-                timing: 'All day',
-                cost: '₹15 – ₹25 per bottle',
-            },
-        ],
-        warning: '⚠️ Do NOT drink directly from the river. Always use designated drinking water points. April-May Ujjain heat makes hydration critical — drink 3-4 litres daily.',
-    },
-    {
-        id: 'sanitation',
-        category: 'Toilets & Sanitation',
-        icon: '🚻',
-        color: 'bg-purple-50 border-purple-200',
-        headerColor: 'from-purple-500 to-indigo-500',
-        items: [
-            {
-                name: 'Community Toilet Blocks',
-                detail: 'Permanent and mobile toilet blocks are set up throughout the mela grounds.',
-                location: 'Near all major ghats and entry points',
-                timing: '24 hours',
-                cost: '₹2 – ₹5 (nominal fee)',
-            },
-            {
-                name: 'Mobile Toilet Vans',
-                detail: 'Mobile toilet units deployed during peak days and near congested areas.',
-                location: 'Amrit Snan routes and crowded ghats',
-                timing: '24 hours during Amrit Snan days',
-                cost: 'Free',
-            },
-            {
-                name: 'Pink Toilets (Women)',
-                detail: 'Dedicated sanitation facilities for women at all major sectors.',
-                location: 'All sectors — look for pink signs',
-                timing: '24 hours',
-                cost: '₹2',
-            },
-        ],
-        tip: '💡 Tip: Locate the nearest toilet block when you arrive at any sector. Queues are long during peak hours.',
-    },
-    {
-        id: 'banking',
-        category: 'ATMs & Banking',
-        icon: '🏧',
-        color: 'bg-amber-50 border-amber-200',
-        headerColor: 'from-amber-500 to-orange-500',
-        items: [
-            {
-                name: 'ATMs',
-                detail: 'Multiple ATMs from SBI, HDFC, ICICI, PNB deployed across the mela grounds. May run out of cash on Amrit Snan days.',
-                location: 'Near main entry points and food markets',
-                timing: '24 hours',
-                cost: 'Standard bank charges',
-            },
-            {
-                name: 'UPI / Digital Payments',
-                detail: 'Most vendors accept Google Pay, PhonePe, and Paytm. QR codes available at certified stalls.',
-                location: 'Across all markets and vendors',
-                timing: 'All day',
-                cost: 'No extra charge',
-            },
-            {
-                name: 'Currency Exchange',
-                detail: 'RBI-authorized foreign exchange counters for international pilgrims.',
-                location: 'Near Sector 1 main entrance, Ujjain mela grounds',
-                timing: '9 AM – 6 PM',
-                cost: 'Standard exchange rates',
-            },
-        ],
-        tip: '💡 Carry ₹2,000-3,000 in cash before entering on Amrit Snan days. ATMs may be out of cash.',
-    },
-    {
-        id: 'charging',
-        category: 'Phone Charging',
-        icon: '🔋',
-        color: 'bg-yellow-50 border-yellow-200',
-        headerColor: 'from-yellow-500 to-amber-500',
-        items: [
-            {
-                name: 'Phone Charging Stations',
-                detail: 'Solar-powered and grid-connected charging stations set up across the mela.',
-                location: 'Near food courts and waiting areas at all major sectors',
-                timing: '6 AM – 10 PM',
-                cost: '₹10 – ₹20 per hour',
-            },
-            {
-                name: 'Power Banks',
-                detail: 'Carry your own power bank (10,000 mAh minimum recommended). Available to purchase at Ujjain and Indore markets.',
-                location: 'Purchase at Freeganj or Tower Chowk market, Ujjain before entering the mela',
-                timing: 'As needed',
-                cost: '₹500-₹1500 to purchase',
-            },
-        ],
-        warning: '⚠️ A dead phone = serious risk. Always keep at least 30% battery. Carry a power bank!',
-    },
-    {
-        id: 'accommodation-nearby',
-        category: 'Local Accommodation',
-        icon: '🏕️',
-        color: 'bg-orange-50 border-orange-200',
-        headerColor: 'from-orange-500 to-red-500',
-        items: [
-            {
-                name: 'Kumbh Tent Cities',
-                detail: 'Organized tent cities with cots, blankets, and basic amenities in Simhastha Kumbh sectors near Ram Ghat, Ujjain.',
-                location: 'Sectors 1-20, near Ram Ghat & Kshipra riverbank',
-                timing: 'Check-in 24 hrs',
-                cost: '₹300 – ₹5,000/night',
-            },
-            {
-                name: 'Dharamshalas',
-                detail: 'Traditional pilgrim rest houses run by temples and religious organizations in Ujjain. Book in advance.',
-                location: 'Freeganj, Kothi Road, near Mahakal Temple',
-                timing: '24 hours',
-                cost: '₹100 – ₹500/night',
-            },
-            {
-                name: 'Indore Hotels (Overflow)',
-                detail: 'When Ujjain is full, Indore (55 km) hotels are a great base. Daily commute by train (1 hr) or road (1.5 hrs).',
-                location: 'Indore city — well connected to Ujjain',
-                timing: '24 hours',
-                cost: '₹600 – ₹5,000/night',
-            },
-        ],
-        tip: '💡 Book accommodation 2-3 months before Amrit Snan dates. Prices triple close to the event.',
-    },
-];
+// The API sends no styling; card colors are keyed by service id (literal Tailwind classes)
+const CATEGORY_COLORS = {
+    food: 'bg-green-50 border-green-200',
+    water: 'bg-blue-50 border-blue-200',
+    sanitation: 'bg-purple-50 border-purple-200',
+    banking: 'bg-amber-50 border-amber-200',
+    charging: 'bg-yellow-50 border-yellow-200',
+    'accommodation-nearby': 'bg-orange-50 border-orange-200',
+};
+const DEFAULT_CATEGORY_COLOR = 'bg-gray-50 border-gray-200';
 
+const validateServicesResponse = (d) =>
+    Array.isArray(d?.services) &&
+    d.services.every((s) => s && typeof s.category === 'string' && Array.isArray(s.items));
 function ServiceItem({ item }) {
     return (
         <div className="bg-white rounded-xl border border-gray-100 p-3.5 hover:border-orange-200 hover:shadow-sm transition-all">
@@ -210,7 +45,7 @@ function ServiceCategory({ service }) {
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className={`rounded-2xl border ${service.color} overflow-hidden transition-all duration-200`}>
+        <div className={`rounded-2xl border ${CATEGORY_COLORS[service.id] || DEFAULT_CATEGORY_COLOR} overflow-hidden transition-all duration-200`}>
             <button
                 className="w-full text-left p-4 flex items-center gap-3"
                 onClick={() => setExpanded(!expanded)}
@@ -253,6 +88,8 @@ function ServiceCategory({ service }) {
 }
 
 export default function LocalServices() {
+    const { data, error, loading, retry } = useApiGet('/api/services', { validate: validateServicesResponse });
+    const services = data?.services || [];
     return (
         <div className="p-4 space-y-4">
             {/* Header */}
@@ -287,9 +124,21 @@ export default function LocalServices() {
                     <Info size={12} className="text-orange-400" />
                     Tap any category to expand service details
                 </p>
-                {services.map((service) => (
-                    <ServiceCategory key={service.id} service={service} />
-                ))}
+                {error ? (
+                    <ErrorState error={error} onRetry={retry} />
+                ) : loading ? (
+                    <LoadingState label="Loading services..." />
+                ) : services.length === 0 ? (
+                    <div className="text-center py-12 text-gray-400">
+                        <Info size={40} className="mx-auto mb-3 opacity-30" />
+                        <p className="font-medium">No services available</p>
+                        <p className="text-sm mt-1">Please check back later</p>
+                    </div>
+                ) : (
+                    services.map((service) => (
+                        <ServiceCategory key={service.id} service={service} />
+                    ))
+                )}
             </div>
 
             {/* Bottom tip */}
