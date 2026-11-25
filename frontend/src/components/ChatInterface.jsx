@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User, Sparkles, RefreshCw, Share2 } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
+import { API_BASE } from '../utils/api';
 
 const LANGUAGE_LABELS = {
     en: 'English',
@@ -13,8 +14,6 @@ const LANGUAGE_LABELS = {
     pa: 'Punjabi',
 };
 
-// Empty/unset VITE_API_URL keeps relative paths (Vite dev proxy or same-origin hosting)
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 const STORAGE_KEY = 'simhastha_chat_history';
 
 const WELCOME_MESSAGE = {
