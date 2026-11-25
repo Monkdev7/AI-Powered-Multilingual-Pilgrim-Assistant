@@ -103,6 +103,21 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ---
 
+## ⚙️ Configuration
+
+Backend (`backend/.env`, see `backend/.env.example` for every variable):
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `GEMINI_API_KEY` | Gemini key. Without it `/api/chat` returns 503 `CHAT_NOT_CONFIGURED` | none |
+| `NODE_ENV` | `production` disables default CORS origins and ignores `DEMO_MODE` | unset |
+| `CORS_ORIGINS` | Comma-separated allowed browser origins | localhost:5173 and 127.0.0.1:5173 (none in production) |
+| `TRUST_PROXY` | Proxy hops to trust (e.g. `1` on Render/Railway); keep unset locally | off |
+| `RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MS` | Chat requests per IP per window | 20 per 60000 ms |
+| `BODY_LIMIT`, `CHAT_MAX_MESSAGE_LENGTH`, `CHAT_MAX_HISTORY`, `CHAT_MAX_HISTORY_CONTENT_LENGTH`, `GEMINI_TIMEOUT_MS` | Request and timeout limits | 128kb, 1000, 20, 4000, 25000 |
+| `DEMO_MODE` | `true` serves canned demo answers when no key is set (never in production) | false |
+
+Frontend (`frontend/.env`): `VITE_API_URL` is the backend base URL, for example `https://api.example.com`. Leave it empty in development so the Vite proxy is used. Chat errors return `{ error, code }` with codes `INVALID_REQUEST`, `INVALID_JSON`, `PAYLOAD_TOO_LARGE`, `RATE_LIMITED`, `AI_QUOTA_EXCEEDED`, `AI_UNAVAILABLE`, `AI_INVALID_REQUEST`, `AI_ERROR`, `CHAT_NOT_CONFIGURED`. Run backend tests with `cd backend && npm test`.
 ## 🔑 Getting a Free Gemini API Key
 
 1. Go to **[aistudio.google.com/apikey](https://aistudio.google.com/apikey)**
