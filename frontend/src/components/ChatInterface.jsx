@@ -13,6 +13,8 @@ const LANGUAGE_LABELS = {
     pa: 'Punjabi',
 };
 
+// Empty/unset VITE_API_URL keeps relative paths (Vite dev proxy or same-origin hosting)
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 const STORAGE_KEY = 'simhastha_chat_history';
 
 const WELCOME_MESSAGE = {
@@ -239,7 +241,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
             setIsLoading(true);
 
             const history = messages
-                .filter((m) => m.id !== 'welcome')
+                .filter((m) => m.id !== 'welcome' && !m.isError)
                 .slice(-10)
                 .map((m) => ({ role: m.role, content: m.content }));
 
@@ -247,7 +249,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
-                const response = await fetch('/api/chat', {
+                const response = await fetch(`${API_BASE}/api/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -260,12 +262,12 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
 
                 clearTimeout(timeoutId);
 
-                if (response.status === 429) {
-                    throw new Error('RATE_LIMIT');
-                }
                 if (!response.ok) {
                     const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || `Server error: ${response.status}`);
+                    const apiError = new Error(errData.error || `Server error: ${response.status}`);
+                    apiError.code = errData.code || (response.status === 429 ? 'RATE_LIMITED' : undefined);
+                    apiError.status = response.status;
+                    throw apiError;
                 }
 
                 const data = await response.json();
@@ -286,7 +288,11 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                 let errorContent;
                 if (err.name === 'AbortError') {
                     errorContent = '⏱️ Request timed out. The server is taking too long to respond.\n\nPlease try again or check your connection.';
-                } else if (err.message === 'RATE_LIMIT') {
+                } else if (err.code === 'AI_QUOTA_EXCEEDED') {
+                    errorContent = '⚠ The AI assistant has reached its usage limit. Please try again later.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
+                } else if (err.code === 'AI_UNAVAILABLE' || err.code === 'CHAT_NOT_CONFIGURED' || err.status === 503) {
+                    errorContent = '⚠ The AI assistant is temporarily unavailable. Please try again in a few minutes.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
+                } else if (err.code === 'RATE_LIMITED') {
                     errorContent = '⚠️ Too many requests. Please wait a moment and try again.\n\nFor immediate help:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
                 } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
                     errorContent = '📡 No connection to server. Please check that the backend is running.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
@@ -416,6 +422,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                         onKeyDown={handleKeyDown}
                         placeholder={L.placeholder || 'Ask about Simhastha, rituals, travel, safety...'}
                         rows={1}
+                        maxLength={1000}
                         className="flex-1 bg-transparent resize-none outline-none text-sm text-gray-800 placeholder-gray-400 max-h-32 py-1"
                         style={{ minHeight: '24px' }}
                         disabled={isLoading}
