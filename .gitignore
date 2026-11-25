@@ -26,3 +26,6 @@ Thumbs.db
 .idea/
 *.suo
 *.swp
+
+# Local agent/workflow files and reports
+.agents/
