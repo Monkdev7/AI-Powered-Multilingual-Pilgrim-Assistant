@@ -1,58 +1,25 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-
-const chatRoutes = require('./routes/chat');
-const emergencyRoutes = require('./routes/emergency');
-const faqRoutes = require('./routes/faq');
-const servicesRoutes = require('./routes/services');
-
-const app = express();
+const { createApp } = require('./app');
+const { isValidKey, isDemoMode } = require('./routes/chat');
+const app = createApp();
 const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-}));
-app.use(express.json());
-
-// Routes
-app.use('/api/chat', chatRoutes);
-app.use('/api/emergency', emergencyRoutes);
-app.use('/api/faq', faqRoutes);
-app.use('/api/services', servicesRoutes);
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'Simhastha Pilgrim Assistant API is running',
-    geminiConfigured: !!process.env.GEMINI_API_KEY,
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({ error: 'Internal server error', details: err.message });
-});
-
 app.listen(PORT, () => {
-  const key = process.env.GEMINI_API_KEY;
-  const keyValid = key &&
-    key !== 'your_gemini_api_key_here' &&
-    ((key.startsWith('AIza') && key.length > 20) || (key.startsWith('AQ.') && key.length > 20));
-  console.log(`🔱  Simhastha Pilgrim Assistant API running on port ${PORT}`);
-  console.log(`   Gemini API: ${keyValid ? '✅ Configured' : '⚠️  Not configured (running in mock mode)'}`);
-  if (!keyValid) {
-    console.log(`   → Get a free key at: https://aistudio.google.com`);
-    console.log(`   → Add it to backend/.env as GEMINI_API_KEY=...`);
+  const keyValid = isValidKey(process.env.GEMINI_API_KEY);
+  const isProd = process.env.NODE_ENV === 'production';
+  console.log(`Simhastha Pilgrim Assistant API running on port ${PORT}`);
+  if (keyValid) {
+    console.log('   Gemini API: configured');
+  } else if (isDemoMode()) {
+    console.warn('   WARNING: Gemini API key not configured. DEMO_MODE=true: chat returns canned demo answers.');
+  } else {
+    console.warn('   WARNING: Gemini API key not configured. /api/chat will return 503 CHAT_NOT_CONFIGURED.');
+    console.warn('   Get a free key at https://aistudio.google.com and set GEMINI_API_KEY in backend/.env');
+    console.warn('   (for local demos without a key, set DEMO_MODE=true)');
+  }
+  if (isProd && process.env.DEMO_MODE === 'true') {
+    console.warn('   WARNING: DEMO_MODE is ignored when NODE_ENV=production.');
+  }
+  if (isProd && !(process.env.CORS_ORIGINS || '').trim()) {
+    console.warn('   WARNING: CORS_ORIGINS is not set; cross-origin browser requests will be blocked.');
   }
 });

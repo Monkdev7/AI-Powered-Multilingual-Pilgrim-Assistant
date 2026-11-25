@@ -50,21 +50,20 @@ const MOCK_RESPONSES = [
 
 let mockIndex = 0;
 
+const GEMINI_TIMEOUT_MS = () => parseInt(process.env.GEMINI_TIMEOUT_MS, 10) || 25000;
+
 async function getGeminiResponse(message, language, history) {
     const { GoogleGenerativeAI } = require('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
     const model = genAI.getGenerativeModel({
         model: 'gemini-2.5-flash-lite',
         systemInstruction: SYSTEM_PROMPT,
     });
-
-    // Build chat history for context
-    const formattedHistory = (history || []).map((msg) => ({
+    // Build chat history for context (already validated and normalized)
+    const formattedHistory = history.map((msg) => ({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.content }],
     }));
-
     const chat = model.startChat({
         history: formattedHistory,
         generationConfig: {
@@ -72,13 +71,28 @@ async function getGeminiResponse(message, language, history) {
             temperature: 0.7,
         },
     });
-
-    const langName = LANGUAGE_NAMES[language] || 'English';
+    const langName = LANGUAGE_NAMES[language];
     const prompt = `[Please respond in ${langName}]\n\n${message}`;
-
-    const result = await chat.sendMessage(prompt);
-    const response = await result.response;
-    return response.text();
+    let timer;
+    const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+            const e = new Error('Gemini request timed out');
+            e.code = 'ETIMEDOUT';
+            reject(e);
+        }, GEMINI_TIMEOUT_MS());
+    });
+    try {
+        return await Promise.race([
+            (async () => {
+                const result = await chat.sendMessage(prompt);
+                const response = await result.response;
+                return response.text();
+            })(),
+            timeout,
+        ]);
+    } finally {
+        clearTimeout(timer);
+    }
 }
 
 function getMockResponse(message, language) {
@@ -108,42 +122,131 @@ function isValidKey(key) {
         (key.startsWith('AQ.') && key.length > 20);
 }
 
+// Demo (mock) mode is opt-in via DEMO_MODE=true and is never active in production.
+function isDemoMode() {
+    return process.env.DEMO_MODE === 'true' && process.env.NODE_ENV !== 'production';
+}
+
+const intEnv = (name, def) => {
+    const n = parseInt(process.env[name], 10);
+    return Number.isFinite(n) && n > 0 ? n : def;
+};
+
+function sendError(res, status, code, error) {
+    return res.status(status).json({ error, code });
+}
+
+// Validates the request body. Returns { value } or { error }.
+function validateChatBody(body) {
+    const maxMessage = intEnv('CHAT_MAX_MESSAGE_LENGTH', 1000);
+    const maxHistory = intEnv('CHAT_MAX_HISTORY', 20);
+    const maxHistoryContent = intEnv('CHAT_MAX_HISTORY_CONTENT_LENGTH', 4000);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+        return { error: 'Request body must be a JSON object' };
+    }
+    const { message, language = 'en', history = [] } = body;
+    if (typeof message !== 'string' || message.trim() === '') {
+        return { error: 'Message is required' };
+    }
+    if (message.trim().length > maxMessage) {
+        return { error: `Message must be at most ${maxMessage} characters` };
+    }
+    // Unknown language codes are rejected (400) rather than silently using English.
+    if (typeof language !== 'string' || !Object.prototype.hasOwnProperty.call(LANGUAGE_NAMES, language)) {
+        return { error: `Unsupported language. Supported: ${Object.keys(LANGUAGE_NAMES).join(', ')}` };
+    }
+    if (!Array.isArray(history)) {
+        return { error: 'History must be an array' };
+    }
+    if (history.length > maxHistory) {
+        return { error: `History must contain at most ${maxHistory} messages` };
+    }
+    const cleaned = [];
+    for (const item of history) {
+        if (!item || typeof item !== 'object' || (item.role !== 'user' && item.role !== 'assistant')) {
+            return { error: "Each history item needs a role of 'user' or 'assistant'" };
+        }
+        if (typeof item.content !== 'string') {
+            return { error: 'History content must be a string' };
+        }
+        if (item.content.length > maxHistoryContent) {
+            return { error: `History content must be at most ${maxHistoryContent} characters` };
+        }
+        // Empty turns are not accepted by Gemini; skip them.
+        if (item.content.trim() === '') continue;
+        cleaned.push({ role: item.role, content: item.content });
+    }
+    // Gemini rejects history that starts with a model turn: drop leading assistant turns.
+    while (cleaned.length > 0 && cleaned[0].role === 'assistant') cleaned.shift();
+    return { value: { message: message.trim(), language, history: cleaned } };
+}
+
+// Remove anything that looks like an API key before logging.
+function redact(text) {
+    let out = String(text || '');
+    const key = process.env.GEMINI_API_KEY;
+    if (key) out = out.split(key).join('[REDACTED]');
+    return out.replace(/AIza[0-9A-Za-z_-]{10,}|AQ\.[0-9A-Za-z_.-]{10,}/g, '[REDACTED]').slice(0, 500);
+}
+
+// Map a Gemini failure to a client-safe status and machine-readable code.
+function classifyGeminiError(err) {
+    const status = Number(err && (err.status || err.statusCode));
+    const msg = String((err && err.message) || '');
+    if (status === 429 || /RESOURCE_EXHAUSTED|quota|rate.?limit/i.test(msg)) {
+        return { status: 429, code: 'AI_QUOTA_EXCEEDED', error: 'The AI service is busy or its usage limit was reached. Please try again later.' };
+    }
+    if (err && (err.code === 'ETIMEDOUT' || err.name === 'AbortError' || status === 408 || status === 504)) {
+        return { status: 503, code: 'AI_UNAVAILABLE', error: 'The AI service timed out. Please try again.' };
+    }
+    if (status === 401 || status === 403 || /API key/i.test(msg)) {
+        // Server-side misconfiguration, not the caller's fault.
+        return { status: 503, code: 'AI_UNAVAILABLE', error: 'The AI service is temporarily unavailable. Please try again later.' };
+    }
+    if (status === 400 || /blocked|SAFETY/i.test(msg)) {
+        return { status: 400, code: 'AI_INVALID_REQUEST', error: 'The AI service could not process this request.' };
+    }
+    if ((status >= 500 && status < 600) || /fetch failed|ECONNRESET|ENOTFOUND|ECONNREFUSED|EAI_AGAIN|network/i.test(msg)) {
+        return { status: 503, code: 'AI_UNAVAILABLE', error: 'The AI service is temporarily unavailable. Please try again later.' };
+    }
+    return { status: 500, code: 'AI_ERROR', error: 'Failed to process message' };
+}
+
 // POST /api/chat
 router.post('/', async (req, res) => {
-    try {
-        const { message, language = 'en', history = [] } = req.body;
-
-        if (!message || typeof message !== 'string' || message.trim() === '') {
-            return res.status(400).json({ error: 'Message is required' });
-        }
-
-        let reply;
-        let isMock = false;
-
-        if (!isValidKey(process.env.GEMINI_API_KEY)) {
-            // No valid key — pure mock mode, no API call attempted
-            isMock = true;
-            reply = getMockResponse(message, language);
-        } else {
-            try {
-                reply = await getGeminiResponse(message.trim(), language, history);
-            } catch (aiError) {
-                console.error('Gemini API error:', aiError.message);
-                isMock = true;
-                reply = `⚠️ AI service temporarily unavailable.\n\n${getMockResponse(message, language)}`;
-            }
-        }
-
-        res.json({
-            reply,
-            language,
-            timestamp: new Date().toISOString(),
-            mock: isMock,
-        });
-    } catch (err) {
-        console.error('Chat route error:', err);
-        res.status(500).json({ error: 'Failed to process message', details: err.message });
+    const parsed = validateChatBody(req.body);
+    if (parsed.error) {
+        return sendError(res, 400, 'INVALID_REQUEST', parsed.error);
     }
+    const { message, language, history } = parsed.value;
+
+    let reply;
+    let isMock = false;
+    if (!isValidKey(process.env.GEMINI_API_KEY)) {
+        if (!isDemoMode()) {
+            console.error('Chat unavailable: GEMINI_API_KEY is missing or invalid and DEMO_MODE is not enabled');
+            return sendError(res, 503, 'CHAT_NOT_CONFIGURED', 'The AI assistant is not available right now. Please try again later.');
+        }
+        isMock = true;
+        reply = getMockResponse(message, language);
+    } else {
+        try {
+            reply = await getGeminiResponse(message, language, history);
+        } catch (aiError) {
+            const c = classifyGeminiError(aiError);
+            console.error(`Gemini API error [${c.code}] status=${aiError && aiError.status || 'n/a'}: ${redact(aiError && aiError.message)}`);
+            return sendError(res, c.status, c.code, c.error);
+        }
+    }
+    res.json({
+        reply,
+        language,
+        timestamp: new Date().toISOString(),
+        mock: isMock,
+    });
 });
 
 module.exports = router;
+module.exports.isValidKey = isValidKey;
+module.exports.isDemoMode = isDemoMode;
+module.exports.redact = redact;
