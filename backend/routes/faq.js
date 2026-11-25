@@ -62,14 +62,14 @@ const faqs = [
     {
         id: 10,
         category: 'Accommodation',
-        question: 'Can I stay in Indore and commute to Ujjain daily?',
-        answer: 'Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked. On Amrit Snan days, commute by 3-4 AM as trains and roads fill up very early.',
+        question: 'Is it safe to stay in tent cities?',
+        answer: 'Yes. The Simhastha Authority sets up well-organized tent cities with security, lighting, and basic amenities. Government camps are regularly patrolled. Keep valuables secure, use locker facilities, and keep emergency numbers handy. Traveling in groups after dark is recommended.',
     },
     {
         id: 11,
         category: 'Accommodation',
-        question: 'Is it safe to stay in tent cities?',
-        answer: 'Yes. The Simhastha Authority sets up well-organized tent cities with security, lighting, and basic amenities. Government camps are regularly patrolled. Keep valuables secure, use locker facilities, and keep emergency numbers handy. Traveling in groups after dark is recommended.',
+        question: 'Can I stay in Indore and commute to Ujjain daily?',
+        answer: 'Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked. On Amrit Snan days, commute by 3-4 AM as trains and roads fill up very early.',
     },
 
     // Religious Events

@@ -41,7 +41,7 @@ beforeEach(() => {
   process.env.RATE_LIMIT_MAX = '1000';
   geminiMock.calls = [];
   geminiMock.impl = async () => 'mock reply';
-  console.error = () => {};
+  console.error = () => { };
 });
 afterEach(() => {
   for (const k of ENV_KEYS) {
@@ -301,6 +301,19 @@ test('existing endpoints still behave as before', async () => {
   res = await request(app).get(`/api/services/${list[0].id}`);
   assert.equal(res.status, 200);
   assert.equal(res.body.id, list[0].id);
+
+  assert.equal(list.length, 6);
+  for (const id of ['food', 'water', 'sanitation', 'banking', 'charging', 'accommodation-nearby']) {
+    assert.ok(list.some((s) => s.id === id), `service category ${id} present`);
+    res = await request(app).get(`/api/services/${id}`);
+    assert.equal(res.status, 200);
+    assert.equal(res.body.id, id);
+  }
+
+  res = await request(app).get('/api/faq');
+  const faqList = Array.isArray(res.body) ? res.body : (res.body.faqs || Object.values(res.body).find(Array.isArray));
+  assert.equal(faqList.find((f) => f.id === 10).question, 'Is it safe to stay in tent cities?');
+  assert.equal(faqList.find((f) => f.id === 11).question, 'Can I stay in Indore and commute to Ujjain daily?');
 
   res = await request(app).get('/api/services/does-not-exist');
   assert.equal(res.status, 404);
