@@ -1,19 +1,9 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
+import { SUPPORTED_LANGUAGES } from '../i18n/languages.js';
 
-const languages = [
-    { code: 'en', label: 'English', native: 'English' },
-    { code: 'hi', label: 'Hindi', native: 'हिंदी' },
-    { code: 'bn', label: 'Bengali', native: 'বাংলা' },
-    { code: 'ta', label: 'Tamil', native: 'தமிழ்' },
-    { code: 'te', label: 'Telugu', native: 'తెలుగు' },
-    { code: 'mr', label: 'Marathi', native: 'मराठी' },
-    { code: 'gu', label: 'Gujarati', native: 'ગુજરાતી' },
-    { code: 'pa', label: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
-];
 
 export default function LanguageSelector({ selectedLanguage, onLanguageChange }) {
-    const current = languages.find((l) => l.code === selectedLanguage) || languages[0];
 
     return (
         <div className="relative">
@@ -25,9 +15,9 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
                     className="bg-transparent text-white text-sm font-medium appearance-none cursor-pointer outline-none pr-4"
                     aria-label="Select language"
                 >
-                    {languages.map((lang) => (
+                    {SUPPORTED_LANGUAGES.map((lang) => (
                         <option key={lang.code} value={lang.code} className="bg-orange-600 text-white">
-                            {lang.native} ({lang.label})
+                            {lang.nativeName} ({lang.englishName})
                         </option>
                     ))}
                 </select>
@@ -43,5 +33,3 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
         </div>
     );
 }
-
-export { languages };

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { MessageCircle, BookOpen, AlertCircle, Map, Store } from 'lucide-react';
 import Header from './components/Header';
 import ChatInterface from './components/ChatInterface';
@@ -8,7 +8,8 @@ import NavigationGuide from './components/NavigationGuide';
 import LocalServices from './components/LocalServices';
 import CountdownTimer from './components/CountdownTimer';
 import { useLabels } from './data/uiLabels';
-import { isSupportedLanguage, loadLanguage, saveLanguage } from './utils/language';
+import LanguageProvider from './i18n/LanguageProvider.jsx';
+import { useT } from './i18n/useT.js';
 
 const TAB_IDS = ['chat', 'faq', 'emergency', 'navigation', 'services'];
 const TAB_ICONS = {
@@ -27,16 +28,17 @@ const TAB_COMPONENTS = {
 };
 
 export default function App() {
+    return (
+        <LanguageProvider>
+            <AppShell />
+        </LanguageProvider>
+    );
+}
+
+function AppShell() {
     const [activeTab, setActiveTab] = useState('chat');
-    const [selectedLanguage, setSelectedLanguage] = useState(loadLanguage);
+    const { lang: selectedLanguage, setLang: handleLanguageChange } = useT();
     const labels = useLabels(selectedLanguage);
-
-    const handleLanguageChange = useCallback((code) => {
-        if (!isSupportedLanguage(code)) return;
-        setSelectedLanguage(code);
-        saveLanguage(code);
-    }, []);
-
     const ActiveComponent = TAB_COMPONENTS[activeTab];
 
     return (

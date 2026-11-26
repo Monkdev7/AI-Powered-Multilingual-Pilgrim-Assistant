@@ -1,13 +1,10 @@
-import { UI_LABELS } from '../data/uiLabels';
+import { isSupportedLanguage, DEFAULT_LANGUAGE } from '../i18n/languages.js';
+
+export { isSupportedLanguage, DEFAULT_LANGUAGE };
 
 // Namespaced like 'simhastha_chat_history'
 export const LANGUAGE_STORAGE_KEY = 'simhastha_language';
-export const DEFAULT_LANGUAGE = 'en';
 
-// Supported codes are the keys of UI_LABELS (en, hi, bn, ta, te, mr, gu, pa)
-export function isSupportedLanguage(code) {
-    return typeof code === 'string' && Object.prototype.hasOwnProperty.call(UI_LABELS, code);
-}
 
 function getStorage() {
     try {

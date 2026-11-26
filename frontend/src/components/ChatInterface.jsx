@@ -2,17 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User, Sparkles, RefreshCw, Share2 } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
 import { API_BASE } from '../utils/api';
+import { getLanguage } from '../i18n/languages.js';
 
-const LANGUAGE_LABELS = {
-    en: 'English',
-    hi: 'Hindi',
-    bn: 'Bengali',
-    ta: 'Tamil',
-    te: 'Telugu',
-    mr: 'Marathi',
-    gu: 'Gujarati',
-    pa: 'Punjabi',
-};
 
 const STORAGE_KEY = 'simhastha_chat_history';
 
@@ -438,7 +429,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                 </div>
                 <p className="text-xs text-center text-gray-400 mt-2">
                     Enter to send · Shift+Enter for new line · {L.respondingIn || 'Responding in'}{' '}
-                    <span className="text-orange-500 font-medium">{LANGUAGE_LABELS[selectedLanguage] || selectedLanguage}</span>
+                    <span className="text-orange-500 font-medium">{getLanguage(selectedLanguage).englishName}</span>
                 </p>
             </div>
         </div>
