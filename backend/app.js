@@ -6,6 +6,7 @@ const chatRoutes = require('./routes/chat');
 const emergencyRoutes = require('./routes/emergency');
 const faqRoutes = require('./routes/faq');
 const servicesRoutes = require('./routes/services');
+const { defaultRegistry, createRegistry } = require('./data/facts');
 
 const DEV_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173'];
 
@@ -33,7 +34,10 @@ function intEnv(name, def) {
   return Number.isFinite(n) && n > 0 ? n : def;
 }
 
-function createApp() {
+// options.facts: a facts registry (tests). options.today: 'YYYY-MM-DD' or () => string, used to build a
+// registry with an injected date (tests). Default: the shared registry with the live local date.
+function createApp(options = {}) {
+  const facts = options.facts || (options.today ? createRegistry({ today: options.today, warn: options.warn }) : defaultRegistry);
   const app = express();
   const allowedOrigins = getAllowedOrigins();
 
@@ -62,17 +66,21 @@ function createApp() {
   app.use(express.json({ limit: process.env.BODY_LIMIT || '128kb' }));
 
   // Routes
-  app.use('/api/chat', chatRoutes);
-  app.use('/api/emergency', emergencyRoutes);
-  app.use('/api/faq', faqRoutes);
+  app.use('/api/chat', chatRoutes.createRouter(facts));
+  app.use('/api/emergency', emergencyRoutes.createRouter(facts));
+  app.use('/api/faq', faqRoutes.createRouter(facts));
   app.use('/api/services', servicesRoutes);
 
   // Health check
   app.get('/api/health', (req, res) => {
+    const staleCount = facts.listStaleFacts().length;
     res.json({
       status: 'ok',
       message: 'Simhastha Pilgrim Assistant API is running',
       geminiConfigured: !!process.env.GEMINI_API_KEY,
+      // Operator signal only: records past their reviewBy date are hidden from public output.
+      factsReviewOverdue: staleCount > 0,
+      factsReviewOverdueCount: staleCount,
     });
   });
 

@@ -1,82 +1,47 @@
 const express = require('express');
-const router = express.Router();
+const defaultRegistry = require('../data/facts').defaultRegistry;
 
-const emergencyContacts = [
-    {
-        id: 1,
-        name: 'Police',
-        number: '100',
-        icon: 'shield',
-        color: 'blue',
-        description: 'For law and order emergencies',
-        available: '24/7',
-    },
-    {
-        id: 2,
-        name: 'Ambulance',
-        number: '108',
-        icon: 'ambulance',
-        color: 'red',
-        description: 'Medical emergencies and first aid',
-        available: '24/7',
-    },
-    {
-        id: 3,
-        name: 'Fire Brigade',
-        number: '101',
-        icon: 'flame',
-        color: 'orange',
-        description: 'Fire and rescue services',
-        available: '24/7',
-    },
-    {
-        id: 4,
-        name: 'Tourist Helpline',
-        number: '1800-180-5522',
-        icon: 'info',
-        color: 'green',
-        description: 'Tourist assistance and information',
-        available: '24/7',
-        tollFree: true,
-    },
-    {
-        id: 5,
-        name: 'Simhastha Control Room',
-        number: '0734-2551234',
-        icon: 'radio',
-        color: 'purple',
-        description: 'Central coordination — Simhastha 2028, Ujjain',
-        available: '24/7',
-    },
-    {
-        id: 6,
-        name: 'Women Helpline',
-        number: '1090',
-        icon: 'user',
-        color: 'pink',
-        description: 'Safety and assistance for women',
-        available: '24/7',
-    },
-    {
-        id: 7,
-        name: 'Child Helpline',
-        number: '1098',
-        icon: 'heart',
-        color: 'yellow',
-        description: 'Help for lost or distressed children',
-        available: '24/7',
-    },
-    {
-        id: 8,
-        name: 'NDRF',
-        number: '011-24363260',
-        icon: 'alert',
-        color: 'teal',
-        description: 'National Disaster Response Force',
-        available: '24/7',
-    },
-];
+// Presentation only (icon/colour/description). Numbers, labels and sources come from facts.json.
+const PRESENTATION = {
+    'emergency.national.112': { icon: 'alert', color: 'red', description: 'National unified emergency number' },
+    'emergency.police.100': { icon: 'shield', color: 'blue', description: 'Police' },
+    'emergency.fire.101': { icon: 'flame', color: 'orange', description: 'Fire and rescue' },
+    'emergency.ambulance.102': { icon: 'ambulance', color: 'red', description: 'Ambulance' },
+    'emergency.women.1091': { icon: 'user', color: 'pink', description: 'Women in distress' },
+    'emergency.child.1098': { icon: 'heart', color: 'yellow', description: 'Child helpline' },
+    'emergency.tourist.1363': { icon: 'info', color: 'green', description: 'National tourist helpline' },
+    'local.sp_office.0734_2527130': { icon: 'shield', color: 'blue', description: 'Office directory number (not a confirmed 24-hour line)' },
+};
 
+function sourceOf(r) {
+    const extra = (r.additionalSources || []).find((s) => s.sourceLastUpdatedOnPage);
+    return {
+        url: r.sourceUrl,
+        issuingBody: r.issuingBody,
+        lastVerified: r.lastVerified,
+        status: r.verificationStatus,
+        ...(r.sourcePublishedAt ? { sourcePublishedAt: r.sourcePublishedAt } : {}),
+        ...(extra ? { pageLastUpdated: extra.sourceLastUpdatedOnPage, pageUrl: extra.url } : {}),
+    };
+}
+
+// Public emergency contacts: only records the registry allows to be shown. Retired, hidden,
+// awaiting_confirmation (NDRF, 108) and stale (review overdue) records never reach this list.
+function buildContacts(facts = defaultRegistry) {
+    const list = facts.getPublicFacts()
+        .filter((r) => (r.category === 'emergency' || r.category === 'local_contact') && PRESENTATION[r.id])
+        .map((r) => ({
+            id: r.id,
+            name: r.label,
+            number: r.value,
+            ...PRESENTATION[r.id],
+            primary: r.primary === true,
+            group: r.group || 'emergency',
+            clickable: facts.isClickable(r),
+            source: sourceOf(r),
+        }));
+    return list.sort((a, b) => Number(b.primary) - Number(a.primary));
+}
 const infoCards = [
     {
         id: 'lost-found',
@@ -107,13 +72,24 @@ const infoCards = [
 ];
 
 // GET /api/emergency
-router.get('/', (req, res) => {
-    res.json({
-        contacts: emergencyContacts,
-        infoCards,
-        lastUpdated: '2028-03-01',
-        event: 'Simhastha Kumbh 2028, Ujjain, MP',
+function createRouter(facts = defaultRegistry) {
+    const router = express.Router();
+    router.get('/', (req, res) => {
+        const contacts = buildContacts(facts);
+        // Latest source-check date over the served records. Never a future date (registry validation).
+        const lastVerified = contacts.map((c) => c.source.lastVerified).sort().pop() || null;
+        res.json({
+            contacts,
+            infoCards,
+            lastVerified,
+            note: contacts.length
+                ? 'Numbers are as listed by the cited official sources. They have not been independently call-tested and are not event-specific Simhastha helplines.'
+                : 'No emergency numbers are currently available here. Please contact the official local authorities.',
+            event: 'Simhastha Kumbh 2028, Ujjain, MP',
+        });
     });
-});
-
-module.exports = router;
+    return router;
+}
+module.exports = createRouter();
+module.exports.createRouter = createRouter;
+module.exports.buildContacts = buildContacts;

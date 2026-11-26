@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const defaultRegistry = require('../data/facts').defaultRegistry;
 
 const LANGUAGE_NAMES = {
     en: 'English',
@@ -12,52 +12,124 @@ const LANGUAGE_NAMES = {
     pa: 'Punjabi',
 };
 
-const SYSTEM_PROMPT = `You are a warm, helpful, and knowledgeable AI assistant for Simhastha Kumbh 2028 pilgrims.
+const OFFICIAL_SOURCES_TEXT = 'Ujjain District Administration (https://ujjain.nic.in), the Shri Mahakaleshwar Temple official portal for Bhasma Aarti, and the Madhya Pradesh government / MPINFO for official announcements';
+
+const stripLabelTag = (label) => label.replace(/\s*\((proposed|unconfirmed)\)\s*$/i, '');
+const PROPOSED_FLAG = 'proposed, not officially confirmed';
+
+function formatDateLong(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${d} ${months[m - 1]} ${y}`;
+}
+
+function describeFact(r) {
+    const flag = r.verificationStatus === 'proposed' ? ` (${PROPOSED_FLAG})` : '';
+    if (r.category === 'emergency') {
+        return `- ${r.value}: ${r.label}${r.primary ? ' (primary emergency number; call first in any emergency)' : ''}`;
+    }
+    if (r.category === 'local_contact') {
+        return `- ${r.value}: ${r.label}. This is an office directory number, not a confirmed 24-hour line or event hotline.`;
+    }
+    if (r.id === 'temple.bhasmaarti.portal') return `- Official Bhasma Aarti booking portal: ${r.value}`;
+    if (r.category === 'temple') return `- ${r.value}: ${r.label}. For temple and Bhasma Aarti questions only; not an emergency line.`;
+    if (r.value && typeof r.value === 'object' && r.value.start) {
+        return `- ${stripLabelTag(r.label)}: ${formatDateLong(r.value.start)} to ${formatDateLong(r.value.end)}${flag}`;
+    }
+    return `- ${stripLabelTag(r.label)}: ${r.value}${flag}`;
+}
+
+// Builds the English system prompt. The facts block comes from the registry at startup.
+function buildSystemPrompt(records = defaultRegistry.getPromptFacts()) {
+    const block = (cat) => records.filter((r) => cat.includes(r.category)).map(describeFact);
+    const emergency = block(['emergency', 'local_contact']);
+    const temple = block(['temple']);
+    const calendar = block(['calendar']);
+    const primary = records.find((r) => r.category === 'emergency' && r.primary);
+    const emergencyAction = primary
+        ? `- If someone describes an emergency, tell them to call ${primary.value} first.`
+        : '- No emergency numbers are currently approved. If someone describes an emergency, tell them to contact the official local authorities (police, medical services or mela officials on site) right away. Do not state, guess or recall any phone number.';
+    const sourcesText = primary ? `${primary.value} for emergencies, ${OFFICIAL_SOURCES_TEXT}` : OFFICIAL_SOURCES_TEXT;
+    const healthTail = primary ? `in an emergency call ${primary.value}` : 'in an emergency contact the official local authorities (do not state any number)';
+    const noNumbers = emergency.length ? '' : '\n(none currently approved)';
+    const noCalendar = calendar.length ? '' : '\n(none currently approved: say that event dates are not currently verified)';
+    const noTemple = temple.length ? '' : '\n(none currently approved)';
+    return `You are a warm, helpful, and knowledgeable AI assistant for Simhastha Kumbh 2028 pilgrims.
 Your name is "KumbhSaathi" (meaning "Kumbh Companion").
 
-Your areas of expertise:
-- Simhastha Kumbh 2028 event details (held in Ujjain, Madhya Pradesh, March 27 – May 27, 2028)
-- Amrit Snan (sacred bathing) dates: Chaitra Purnima (Mar 27), Mesh Sankranti (Apr 13 — most important), Vaishakhi Amavasya (Apr 27), Vaisakh Purnima (May 12 / Buddha Purnima), Closing Snan (May 27)
-- Why "Simhastha": occurs when Jupiter enters Leo (Simha Rashi) and Sun enters Aries (Mesh Rashi) — held every 12 years in Ujjain. Last was 2016.
-- Ghats in Ujjain: Ram Ghat (principal bathing ghat on Kshipra river), Triveni Ghat, Mangalnath Ghat, Siddhavat Ghat, Narsinh Ghat
-- Holy river: Kshipra (also called Shipra) — the sacred river of Ujjain
-- Mahakaleshwar Temple: one of 12 Jyotirlingas of Lord Shiva; Bhasma Aarti at 4 AM daily — must visit; book passes at https://www.bhasmarti.com
-- Other temples: Kal Bhairav, Harsiddhi Mata (Shakti Peeth), Mangalnath, Sandipani Ashram, Chintaman Ganesh, Bade Ganeshji Ka Mandir
-- Accommodation: Tent cities near Ram Ghat, dharamshalas, IRCTC packages, akhara camps, Indore hotels (55 km)
-- Transportation: Trains to Ujjain Junction, MP Roadways buses, Indore airport (55 km) + taxi transfer
-- Religious rituals: Amrit Snan (holy dip in Kshipra), Simhastha Parikrama, Pind Daan at Siddhavat, Kshipra Aarti at Ram Ghat, Bhasma Aarti at Mahakaleshwar
-- Health warnings: Ujjain in April-May is extremely hot (30-43°C) — hydration, sunscreen, ORS, avoid midday sun are critical
-- Safety tips: Crowd management, heat safety, staying hydrated, keeping emergency numbers handy
-- Emergency: Simhastha Control Room: 0734-2551234, Police: 100, Ambulance: 108, Tourist Helpline: 1800-180-5522
-- Food: Government food camps, akhara langars (free), certified mela food courts
+APPROVED FACTS (the only phone numbers, dates and links you may state as facts):
+Emergency and helpline numbers, as listed by official sources (not independently call-tested; national numbers, not special Simhastha helplines):
+${emergency.join('\n')}${noNumbers}
+Temple (Shri Mahakaleshwar Temple, Ujjain):
+${temple.join('\n')}${noTemple}
+Event calendar:
+${calendar.join('\n')}${noCalendar}
+
+RULES FOR FACTS:
+- Never guess or invent phone numbers, dates, costs, distances, timings or facility locations.
+- Use only the approved facts above for numbers, dates and links. Items marked "${PROPOSED_FLAG}" must always be presented with that caveat.
+- Use each number only with its exact label above.
+- If a requested fact is not in the approved list, say plainly that this information is not currently verified, and direct the user to an appropriate official source: ${sourcesText}.
+- Do not claim that the app's data is officially confirmed, and do not state attendance figures.
+${emergencyAction}
+
+Your areas of general knowledge (without specific numbers or dates):
+- Simhastha Kumbh in Ujjain, Madhya Pradesh: held roughly every 12 years; the 2028 event is planned (see the approved calendar above, if any)
+- Why "Simhastha": it relates to Jupiter in Leo (Simha Rashi) and the Sun in Aries (Mesh Rashi). The previous Simhastha in Ujjain was in 2016.
+- Holy river: Kshipra (also called Shipra), the sacred river of Ujjain, with bathing ghats such as Ram Ghat
+- Mahakaleshwar Temple: one of 12 Jyotirlingas of Lord Shiva; Bhasma Aarti is performed there. For booking, point users only to the official portal in the approved facts.
+- Other temples: Kal Bhairav, Harsiddhi Mata, Mangalnath, Sandipani Ashram, Chintaman Ganesh, Bade Ganeshji Ka Mandir
+- Religious rituals: holy dip in Kshipra, Simhastha Parikrama, Pind Daan, Kshipra Aarti, Bhasma Aarti
+- General travel and stay advice: Ujjain is reachable by rail, road and via Indore airport; for schedules, prices and availability, say they are not currently verified and point to official sources
+- Health and safety: it is hot in April-May, so hydration, sunscreen, ORS and avoiding midday sun matter; keep approved emergency numbers handy; ${healthTail}
 
 Personality:
 - Greet with "Jai Mahakal!" or "Om Namah Shivaya!" when appropriate
 - Be compassionate and respectful of the spiritual nature of the event
 - Provide practical, actionable advice
 - Keep responses concise but complete
-- If you don't know something specific, acknowledge it and suggest contacting the Simhastha Authority
+- If you don't know something specific, acknowledge it and suggest an official source from the list above
 
 IMPORTANT: Always respond in the language specified. If asked to respond in Hindi, respond in Hindi script (Devanagari). If Tamil, use Tamil script. Always match the requested language.`;
+}
 
-const MOCK_RESPONSES = [
-    "Jai Mahakal! 🙏 Welcome to Simhastha Kumbh 2028! The grand Simhastha Kumbh Mela is being held in Ujjain, Madhya Pradesh from March 27 to May 27, 2028 — 62 days on the banks of the sacred Kshipra river. The most auspicious Amrit Snan dates are: Chaitra Purnima (Mar 27), Mesh Sankranti (Apr 13), Vaishakhi Amavasya (Apr 27), Vaisakh Purnima (May 12), and Closing Snan (May 27). How can I assist you?",
-    "Om Namah Shivaya! 🚂 To reach Ujjain, take a train to Ujjain Junction — it is the main station, just 2 km from Ram Ghat. Indian Railways will operate special Simhastha Kumbh trains from Delhi, Mumbai, Bhopal, Indore, and Ahmedabad. The nearest airport is Devi Ahilya Bai Holkar Airport in Indore (55 km), from where a taxi takes about 1-1.5 hours.",
-    "🏕️ Accommodation options for Simhastha 2028: 1) Government tent cities near Ram Ghat, 2) Private tent cities (budget to luxury), 3) Dharamshalas & akhara camps (some free), 4) Hotels in Ujjain city — book 2-3 months early, 5) Hotels in Indore (55 km away) as an overflow option. Prices triple close to Amrit Snan dates, so book early!",
-    "🆘 Emergency contacts for Simhastha 2028: Police: 100, Ambulance: 108, Simhastha Control Room: 0734-2551234, Tourist Helpline: 1800-180-5522, Women Helpline: 1090. 🌡️ Important: Ujjain in April-May is very hot (up to 43°C). Carry ORS, water, sunscreen and avoid going out between 11 AM-4 PM.",
-    "🔱 Ram Ghat on the Kshipra river is the most sacred bathing spot for Simhastha 2028. Before or after your bath, visit the Mahakaleshwar Jyotirlinga — one of the 12 Jyotirlingas of Lord Shiva. The Bhasma Aarti at Mahakaleshwar at 4 AM is a once-in-a-lifetime spiritual experience. Book your Bhasma Aarti passes online well in advance!",
-];
 
+// Mock replies (DEMO_MODE only) are generated from the same approved (non-stale) facts.
+function buildMockResponses(records = defaultRegistry.getPromptFacts()) {
+    const period = records.find((r) => r.id === 'calendar.simhastha2028.period');
+    const plan = records.find((r) => r.id === 'calendar.simhastha2028.snan_plan');
+    const portal = records.find((r) => r.id === 'temple.bhasmaarti.portal');
+    const emergency = records.filter((r) => r.category === 'emergency');
+    const primary = emergency.find((r) => r.primary);
+    const others = emergency.filter((r) => !r.primary).map((r) => `${r.label}: ${r.value}`).join(', ');
+    const sources = 'Please check official sources such as Ujjain District Administration (https://ujjain.nic.in) or the Madhya Pradesh government / MPINFO.';
+    const welcome = period && plan
+        ? `The planned period is ${formatDateLong(period.value.start)} to ${formatDateLong(period.value.end)} (${PROPOSED_FLAG}), with ${plan.value} (${PROPOSED_FLAG}). Individual bathing dates have not been officially confirmed yet.`
+        : 'Event dates are not currently verified in this app.';
+    const emergencyReply = primary
+        ? `In an emergency, call ${primary.value} (${primary.label}) first.${others ? ` Other numbers listed by official sources: ${others}.` : ''} These are national numbers, not special Simhastha helplines.`
+        : 'In an emergency, please contact the official local authorities right away. No emergency numbers are currently verified in this app.';
+    const templeReply = portal
+        ? `For Bhasma Aarti booking, use only the official portal: ${portal.value}.`
+        : 'For Bhasma Aarti booking, use only the official temple portal; its address is not currently verified in this app.';
+    return [
+        `Jai Mahakal! Welcome to Simhastha Kumbh 2028 in Ujjain, Madhya Pradesh. ${welcome} ${sources} How can I assist you?`,
+        `Om Namah Shivaya! For travel to Ujjain, trains, buses and flights via Indore are the usual options. Schedules, special trains and transfer details are not currently verified in this app, so please check IRCTC and the official sources. ${sources}`,
+        `Accommodation options for Simhastha 2028 include tent cities, dharamshalas, akhara camps and hotels in Ujjain or Indore. Prices and availability are not currently verified here, so please confirm with official sources. ${sources}`,
+        `${emergencyReply} It is hot in April-May: carry water and ORS, use sunscreen and avoid the midday sun.`,
+        `The Kshipra river and Ram Ghat are central to Simhastha bathing, and the Mahakaleshwar Jyotirlinga is one of the 12 Jyotirlingas of Lord Shiva. ${templeReply} Timings and availability are not currently verified in this app.`,
+    ];
+}
 let mockIndex = 0;
 
 const GEMINI_TIMEOUT_MS = () => parseInt(process.env.GEMINI_TIMEOUT_MS, 10) || 25000;
 
-async function getGeminiResponse(message, language, history) {
+async function getGeminiResponse(message, language, history, systemPrompt) {
     const { GoogleGenerativeAI } = require('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
         model: 'gemini-2.5-flash-lite',
-        systemInstruction: SYSTEM_PROMPT,
+        systemInstruction: systemPrompt,
     });
     // Build chat history for context (already validated and normalized)
     const formattedHistory = history.map((msg) => ({
@@ -95,21 +167,21 @@ async function getGeminiResponse(message, language, history) {
     }
 }
 
-function getMockResponse(message, language) {
-    const response = MOCK_RESPONSES[mockIndex % MOCK_RESPONSES.length];
+function getMockResponse(message, language, responses) {
+    const response = responses[mockIndex % responses.length];
     mockIndex++;
 
     const langPrefixes = {
-        hi: '🙏 नमस्ते! (Mock mode - API key not configured)\n\n',
-        bn: '🙏 নমস্কার! (Mock mode - API key not configured)\n\n',
-        ta: '🙏 வணக்கம்! (Mock mode - API key not configured)\n\n',
-        te: '🙏 నమస్కారం! (Mock mode - API key not configured)\n\n',
-        mr: '🙏 नमस्कार! (Mock mode - API key not configured)\n\n',
-        gu: '🙏 નમસ્તે! (Mock mode - API key not configured)\n\n',
-        pa: '🙏 ਸਤ ਸ੍ਰੀ ਅਕਾਲ! (Mock mode - API key not configured)\n\n',
+        hi: '🙏 नमस्ते! (Demo mode - sample reply, not live AI)\n\n',
+        bn: '🙏 নমস্কার! (Demo mode - sample reply, not live AI)\n\n',
+        ta: '🙏 வணக்கம்! (Demo mode - sample reply, not live AI)\n\n',
+        te: '🙏 నమస్కారం! (Demo mode - sample reply, not live AI)\n\n',
+        mr: '🙏 नमस्कार! (Demo mode - sample reply, not live AI)\n\n',
+        gu: '🙏 નમસ્તે! (Demo mode - sample reply, not live AI)\n\n',
+        pa: '🙏 ਸਤ ਸ੍ਰੀ ਅਕਾਲ! (Demo mode - sample reply, not live AI)\n\n',
     };
 
-    const prefix = langPrefixes[language] || '🙏 Hello! (Mock mode - add GEMINI_API_KEY to .env for real AI responses)\n\n';
+    const prefix = langPrefixes[language] || '🙏 Hello! (Demo mode - sample reply, not live AI)\n\n';
     return prefix + response;
 }
 
@@ -212,7 +284,10 @@ function classifyGeminiError(err) {
     return { status: 500, code: 'AI_ERROR', error: 'Failed to process message' };
 }
 
-// POST /api/chat
+// POST /api/chat. The facts registry is injectable (tests); prompt and mock replies are rebuilt per request
+// so a record that becomes stale while the server runs drops out without a restart.
+function createRouter(facts = defaultRegistry) {
+const router = express.Router();
 router.post('/', async (req, res) => {
     const parsed = validateChatBody(req.body);
     if (parsed.error) {
@@ -228,10 +303,10 @@ router.post('/', async (req, res) => {
             return sendError(res, 503, 'CHAT_NOT_CONFIGURED', 'The AI assistant is not available right now. Please try again later.');
         }
         isMock = true;
-        reply = getMockResponse(message, language);
+        reply = getMockResponse(message, language, buildMockResponses(facts.getPromptFacts()));
     } else {
         try {
-            reply = await getGeminiResponse(message, language, history);
+            reply = await getGeminiResponse(message, language, history, buildSystemPrompt(facts.getPromptFacts()));
         } catch (aiError) {
             const c = classifyGeminiError(aiError);
             console.error(`Gemini API error [${c.code}] status=${aiError && aiError.status || 'n/a'}: ${redact(aiError && aiError.message)}`);
@@ -246,7 +321,15 @@ router.post('/', async (req, res) => {
     });
 });
 
-module.exports = router;
+return router;
+}
+module.exports = createRouter();
+module.exports.createRouter = createRouter;
 module.exports.isValidKey = isValidKey;
 module.exports.isDemoMode = isDemoMode;
 module.exports.redact = redact;
+module.exports.buildSystemPrompt = buildSystemPrompt;
+module.exports.buildMockResponses = buildMockResponses;
+// Current prompt / mock replies for the default registry (getters: recomputed, so staleness is honoured).
+Object.defineProperty(module.exports, 'SYSTEM_PROMPT', { enumerable: true, get: () => buildSystemPrompt() });
+Object.defineProperty(module.exports, 'MOCK_RESPONSES', { enumerable: true, get: () => buildMockResponses() });

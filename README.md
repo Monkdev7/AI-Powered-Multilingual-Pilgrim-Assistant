@@ -25,10 +25,10 @@ Pilgrims visiting Simhastha Kumbh 2028 in Ujjain come from diverse linguistic an
 |---------|---------|
 | 🤖 **AI Chat Assistant** | Powered by Google Gemini 2.5 Flash Lite. Multilingual, context-aware, Simhastha-specific knowledge |
 | 🌐 **8 Languages** | English, हिंदी, বাংলা, தமிழ், తెలుగు, मराठी, ગુજરાતી, ਪੰਜਾਬੀ — UI labels + AI responses |
-| ⏳ **Live Countdown Timer** | Real-time countdown to March 27, 2028 with Bhasma Aarti booking link |
-| 🆘 **Emergency Panel** | One-tap call buttons · WhatsApp share · Heat emergency warnings |
+| ⏳ **Live Countdown Timer** | Real-time countdown to the planned start (27 March 2028, proposed) with a link to the official Shri Mahakaleshwar Temple Bhasma Aarti portal |
+| 🆘 **Emergency Panel** | 112 national emergency number shown first, official secondary numbers with sources · WhatsApp share · Heat emergency warnings |
 | ❓ **FAQ Section** | 28 questions · Search + category filter · WhatsApp share on answers |
-| 🗺️ **Navigation Guide** | 6 Ujjain ghats · 5 Amrit Snan dates · Transport options · Embedded map |
+| 🗺️ **Navigation Guide** | Ujjain ghats · Planned snan schedule (proposed) · Transport options · Embedded map |
 | 📍 **Ujjain Map** | Google Maps embed of Ram Ghat + key locations with direct Maps links |
 | 🏘️ **Local Services** | Food camps, water kiosks, toilets, ATMs, phone charging, accommodation |
 | 💾 **Chat Persistence** | Conversation history saved to localStorage — restored on next visit |
@@ -172,15 +172,9 @@ mahakumbh-pilgrim-assistant/
 
 ## 🗓️ Amrit Snan Dates — Simhastha Kumbh 2028, Ujjain
 
-| Date | Occasion | Significance |
-|------|----------|-------------|
-| **March 27** | Chaitra Purnima | Opening bath — event begins |
-| **April 13** | Mesh Sankranti | **Most sacred** — Sun enters Aries; primary Amrit Snan |
-| **April 27** | Vaishakhi Amavasya | New moon — silence (maun) observed |
-| **May 12** | Vaisakh Purnima / Buddha Purnima | Full moon bath |
-| **May 27** | Closing Snan | Final bath — 62-day event concludes |
+The planned event period is 27 March to 27 May 2028, with 3 Shahi Snan and 7 Parv Snan during 9 April to 8 May. These are **proposed** and awaiting official confirmation (source: Madhya Pradesh MPINFO publication dated 11-17 March 2024). Individual bathing dates have not been officially confirmed, so none are listed here. Attendance estimates have varied and there is no official figure.
 
-> ⚠️ Arrive at ghats by 4–5 AM on Amrit Snan days. Expect tens of millions of pilgrims.
+> ⚠ Arrive at ghats early on major bathing days and expect very large crowds.
 
 ---
 
@@ -226,11 +220,17 @@ Ujjain in April–May regularly hits **40–43°C**. The app includes dedicated 
 
 ---
 
+## Emergency numbers and facts
+
+The app shows **112** (national emergency number, source: [MHA ERSS](https://www.mha.gov.in/emergency-response-support-system-erss)) first, then secondary numbers listed by official sources (100 Police, 101 Fire, 102 Ambulance, 1091 Women in Distress, 1098 Child Helpline, 1363 Tourist Helpline). The number 108 is hidden until a second authoritative source confirms it. They have not been independently call-tested and are not special Simhastha helplines. Prices, timings, distances and facility details in Services and FAQ are inherited and not officially confirmed. All facts live in `backend/data/facts.json` (schema: `backend/data/facts.schema.md`). A record whose `reviewBy` date has passed is hidden from the API, the chat prompt and mock replies (the server still starts and logs a warning); `GET /api/health` reports `factsReviewOverdue` and a count.
+
+---
+
 ## 🔗 Useful Links
 
 | Resource | URL |
 |----------|-----|
-| Bhasma Aarti Booking | [bhasmarti.com](https://www.bhasmarti.com) |
+| Bhasma Aarti (official portal) | [shrimahakaleshwar.mp.gov.in](https://www.shrimahakaleshwar.mp.gov.in/services/bhasmaarti) |
 | Gemini API Key | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
 | GitHub Repo | [github.com/Monkdev7/AI-Powered-Multilingual-Pilgrim-Assistant](https://github.com/Monkdev7/AI-Powered-Multilingual-Pilgrim-Assistant) |
 

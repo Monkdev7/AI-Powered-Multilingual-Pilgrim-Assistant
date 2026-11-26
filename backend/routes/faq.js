@@ -1,5 +1,9 @@
 const express = require('express');
-const router = express.Router();
+const defaultRegistry = require('../data/facts').defaultRegistry;
+const VERIFICATION = {
+    status: 'unverified_inherited',
+    note: 'Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them.',
+};
 
 const faqs = [
     // Getting There
@@ -31,13 +35,13 @@ const faqs = [
         id: 5,
         category: 'Getting There',
         question: 'How do I get from Ujjain station to the ghats?',
-        answer: 'From Ujjain Junction: government shuttle buses (every 15-20 min), e-rickshaws (₹20-50), autos, or Simhastha mela buses. Ram Ghat is about 2 km from the station. Avoid private vehicles on Amrit Snan days as roads near the ghats are closed to traffic.',
+        answer: 'From Ujjain Junction: government shuttle buses (every 15-20 min), e-rickshaws (₹20-50), autos, or Simhastha mela buses. Ram Ghat is about 2 km from the station. Avoid private vehicles on major bathing days as roads near the ghats are closed to traffic.',
     },
     {
         id: 6,
         category: 'Getting There',
         question: 'When is the best time to visit to avoid heavy crowds?',
-        answer: 'Avoid Amrit Snan dates (Mar 27, Apr 13, Apr 27, May 12, May 27) if you prefer smaller crowds. Weekdays are calmer than weekends. For a peaceful bath, arrive at Ram Ghat before 6 AM on non-Amrit Snan days. April 13 (Mesh Sankranti) is the most crowded single day.',
+        answer: 'Avoid the main snan (bathing) days if you prefer smaller crowds. The individual dates have not been officially confirmed yet; check official announcements. Weekdays are usually calmer than weekends, and early morning is usually quieter for a bath.',
     },
 
     // Accommodation
@@ -51,7 +55,7 @@ const faqs = [
         id: 8,
         category: 'Accommodation',
         question: 'How much does accommodation cost during Simhastha?',
-        answer: 'Costs vary: Basic government tents: ₹200-500/night, Private tent cities: ₹500-5000+/night, Dharamshalas: ₹100-300/night, Hotels in Ujjain: ₹800-5000+/night, Indore hotels: ₹600-4000/night. Prices surge near Amrit Snan dates. Book at least 2-3 months in advance.',
+        answer: 'Costs vary: Basic government tents: ₹200-500/night, Private tent cities: ₹500-5000+/night, Dharamshalas: ₹100-300/night, Hotels in Ujjain: ₹800-5000+/night, Indore hotels: ₹600-4000/night. Prices may surge near major bathing days. Book at least 2-3 months in advance.',
     },
     {
         id: 9,
@@ -69,7 +73,7 @@ const faqs = [
         id: 11,
         category: 'Accommodation',
         question: 'Can I stay in Indore and commute to Ujjain daily?',
-        answer: 'Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked. On Amrit Snan days, commute by 3-4 AM as trains and roads fill up very early.',
+        answer: 'Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked.',
     },
 
     // Religious Events
@@ -77,7 +81,7 @@ const faqs = [
         id: 12,
         category: 'Religious Events',
         question: 'What are the Amrit Snan dates for Simhastha Kumbh 2028?',
-        answer: 'Main Amrit Snan dates: 1) Chaitra Purnima - March 27 (opening bath), 2) Mesh Sankranti - April 13 (most sacred — Sun enters Aries), 3) Vaishakhi Amavasya - April 27 (new moon — silence observed), 4) Vaisakh Purnima / Buddha Purnima - May 12, 5) Closing Snan - May 27. Millions gather on each of these dates.',
+        answer: 'The individual bathing dates have not been officially confirmed yet. The planned schedule is 3 Shahi Snan and 7 Parv Snan during 9 April to 8 May 2028 (proposed, awaiting official confirmation, based on a Madhya Pradesh government publication dated 11-17 March 2024). Please check official announcements from the Madhya Pradesh government or Ujjain District Administration (https://ujjain.nic.in).',
     },
     {
         id: 13,
@@ -89,7 +93,7 @@ const faqs = [
         id: 14,
         category: 'Religious Events',
         question: 'What is Mesh Sankranti and why is it the most important day?',
-        answer: 'Mesh Sankranti (April 13, 2028) is when the Sun enters Aries (Mesh Rashi). This astronomical alignment — combined with Jupiter in Leo — is the very reason Simhastha is held in Ujjain. It is the most spiritually potent day for bathing in Kshipra. Expect tens of millions of pilgrims and the grandest akhara procession.',
+        answer: 'Mesh Sankranti is when the Sun enters Aries (Mesh Rashi). This astronomical alignment, combined with Jupiter in Leo, is the reason Simhastha is held in Ujjain. Whether it will be a bathing date in 2028 has not been officially confirmed yet. Expect very large crowds on major bathing days.',
     },
     {
         id: 15,
@@ -127,7 +131,7 @@ const faqs = [
         id: 20,
         category: 'Health & Safety',
         question: 'What if I lose my companions in the Simhastha crowd?',
-        answer: 'If separated: 1) Go to the nearest police post or volunteer booth immediately, 2) Call Simhastha Control Room: 0734-2551234, 3) Loudspeaker announcements are made across mela grounds, 4) Visit Lost & Found Center near Ram Ghat Sector 1 gate. Prevention: agree on a meeting point, share phone numbers, write your number on children\'s wrists.',
+        answer: 'If separated: 1) Go to the nearest police post or volunteer booth immediately, 2) Call 112 (national emergency number), 3) Loudspeaker announcements are made across mela grounds, 4) Visit Lost & Found Center near Ram Ghat Sector 1 gate. Prevention: agree on a meeting point, share phone numbers, write your number on children\'s wrists.',
     },
     {
         id: 21,
@@ -147,7 +151,7 @@ const faqs = [
         id: 23,
         category: 'General',
         question: 'What is Simhastha Kumbh 2028 and why is it special?',
-        answer: 'Simhastha Kumbh 2028 is the grand Kumbh Mela held in Ujjain, Madhya Pradesh from March 27 to May 27, 2028 — 62 days on the Kshipra riverbank. It occurs every 12 years when Jupiter enters Leo (Simha Rashi) and the Sun enters Aries. The last Simhastha was in 2016. An estimated 30 crore (300 million) pilgrims are expected.',
+        answer: 'Simhastha Kumbh 2028 is the grand Kumbh Mela held in Ujjain, Madhya Pradesh from 27 March to 27 May 2028 (planned period, proposed and awaiting official confirmation) on the Kshipra riverbank. It occurs every 12 years when Jupiter enters Leo (Simha Rashi) and the Sun enters Aries. The last Simhastha was in 2016. Attendance estimates have varied; there is no official figure.',
     },
     {
         id: 24,
@@ -171,38 +175,52 @@ const faqs = [
         id: 27,
         category: 'General',
         question: 'Are ATMs and digital payments available at Simhastha?',
-        answer: 'Yes, ATMs from SBI, HDFC, and other banks will be deployed across mela grounds. ATMs may run dry on Amrit Snan days, so carry ₹2,000-3,000 in cash. Digital payments (UPI, Google Pay, PhonePe) are widely accepted at certified stalls and shops in the mela area.',
+        answer: 'Yes, ATMs from SBI, HDFC, and other banks will be deployed across mela grounds. ATMs may run dry on major bathing days, so carry ₹2,000-3,000 in cash. Digital payments (UPI, Google Pay, PhonePe) are widely accepted at certified stalls and shops in the mela area.',
     },
     {
         id: 28,
         category: 'General',
         question: 'Is Simhastha accessible for elderly and differently-abled pilgrims?',
-        answer: 'Yes. The Simhastha Authority makes special arrangements: wheelchair-accessible paths to major ghats, dedicated bathing areas for elderly and differently-abled, volunteer helpers, golf carts for mobility assistance, special medical support, and accessible toilet facilities. Call the tourist helpline (1800-180-5522) in advance to arrange specific assistance.',
+        answer: 'Yes. The Simhastha Authority makes special arrangements: wheelchair-accessible paths to major ghats, dedicated bathing areas for elderly and differently-abled, volunteer helpers, golf carts for mobility assistance, special medical support, and accessible toilet facilities. Check official sources such as Ujjain District Administration (https://ujjain.nic.in) in advance to arrange specific assistance.',
     },
 ];
 
+// The two answers below state calendar facts. They are kept only while the calendar records are
+// public (not stale); otherwise they say the information is not currently verified.
+const NO_DATES_ANSWER = 'Official dates for Simhastha Kumbh 2028, including bathing dates, are not currently verified in this app. Please check official announcements from the Madhya Pradesh government or Ujjain District Administration (https://ujjain.nic.in).';
+const NO_PERIOD_GENERAL = 'Simhastha Kumbh 2028 is the grand Kumbh Mela to be held in Ujjain, Madhya Pradesh on the Kshipra riverbank. The dates are not currently verified in this app; please check official announcements. It occurs every 12 years when Jupiter enters Leo (Simha Rashi) and the Sun enters Aries. The last Simhastha was in 2016.';
+function faqsFor(facts) {
+    const ids = new Set(facts.getPublicFacts().map((r) => r.id));
+    const hasPeriod = ids.has('calendar.simhastha2028.period');
+    const hasPlan = ids.has('calendar.simhastha2028.snan_plan');
+    return faqs.map((f) => {
+        if (f.id === 12 && !(hasPeriod && hasPlan)) return { ...f, answer: NO_DATES_ANSWER };
+        if (f.id === 23 && !hasPeriod) return { ...f, answer: NO_PERIOD_GENERAL };
+        return f;
+    });
+}
 // GET /api/faq
-router.get('/', (req, res) => {
-    const { category, search } = req.query;
-
-    let result = [...faqs];
-
-    if (category && category !== 'All') {
-        result = result.filter((f) => f.category === category);
-    }
-
-    if (search && search.trim() !== '') {
-        const q = search.toLowerCase();
-        result = result.filter(
-            (f) =>
-                f.question.toLowerCase().includes(q) ||
-                f.answer.toLowerCase().includes(q)
-        );
-    }
-
-    const categories = [...new Set(faqs.map((f) => f.category))];
-
-    res.json({ faqs: result, categories, total: result.length });
-});
-
-module.exports = router;
+function createRouter(facts = defaultRegistry) {
+    const router = express.Router();
+    router.get('/', (req, res) => {
+        const { category, search } = req.query;
+        const all = faqsFor(facts);
+        let result = [...all];
+        if (category && category !== 'All') {
+            result = result.filter((f) => f.category === category);
+        }
+        if (search && search.trim() !== '') {
+            const q = search.toLowerCase();
+            result = result.filter(
+                (f) =>
+                    f.question.toLowerCase().includes(q) ||
+                    f.answer.toLowerCase().includes(q)
+            );
+        }
+        const categories = [...new Set(all.map((f) => f.category))];
+        res.json({ faqs: result, categories, total: result.length, verification: VERIFICATION });
+    });
+    return router;
+}
+module.exports = createRouter();
+module.exports.createRouter = createRouter;

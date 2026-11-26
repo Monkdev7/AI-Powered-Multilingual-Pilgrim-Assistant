@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const VERIFICATION = {
+    status: 'unverified_inherited',
+    note: 'Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them.',
+};
 
 const services = [
     {
@@ -78,7 +82,7 @@ const services = [
                 name: 'Mobile Toilet Vans',
                 detail: 'Mobile toilet units deployed during peak days and near congested areas.',
                 location: 'Amrit Snan routes and crowded ghats',
-                timing: '24 hours during Amrit Snan days',
+                timing: '24 hours during major bathing days',
                 cost: 'Free',
             },
             {
@@ -94,7 +98,7 @@ const services = [
         id: 'banking',
         category: 'ATMs & Banking',
         icon: '🏧',
-        tip: 'Carry ₹2,000-3,000 cash on Amrit Snan days. ATMs may run dry.',
+        tip: 'Carry ₹2,000-3,000 cash on major bathing days. ATMs may run dry.',
         items: [
             {
                 name: 'ATMs',
@@ -149,7 +153,7 @@ const services = [
         id: 'accommodation-nearby',
         category: 'Local Accommodation',
         icon: '🏕',
-        tip: '💡 Book accommodation 2-3 months before Amrit Snan dates. Prices triple close to the event.',
+        tip: '💡 Book accommodation 2-3 months before the event. Prices triple close to the event.',
         items: [
             {
                 name: 'Kumbh Tent Cities',
@@ -178,7 +182,7 @@ const services = [
 
 // GET /api/services
 router.get('/', (req, res) => {
-    res.json({ services, total: services.length });
+    res.json({ services, total: services.length, verification: VERIFICATION });
 });
 
 // GET /api/services/:id
@@ -187,7 +191,7 @@ router.get('/:id', (req, res) => {
     if (!service) {
         return res.status(404).json({ error: 'Service category not found' });
     }
-    res.json(service);
+    res.json({ ...service, verification: VERIFICATION });
 });
 
 module.exports = router;
