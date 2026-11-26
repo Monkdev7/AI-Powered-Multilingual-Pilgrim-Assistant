@@ -18,6 +18,7 @@ import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { groupContacts, telHref, sourceHost } from '../utils/emergencyGroups.js';
+import { emergencyParams } from '../utils/apiParams.js';
 
 // Icon names as sent by the API
 const ICON_MAP = {
@@ -198,8 +199,8 @@ const SAFETY_TIPS = [
 ];
 
 export default function EmergencyPanel() {
-    const { t } = useT();
-    const { data, error, loading, retry } = useApiGet('/api/emergency', { validate: validateEmergencyResponse });
+    const { t, lang } = useT();
+    const { data, error, loading, retry } = useApiGet('/api/emergency', { params: emergencyParams(lang), validate: validateEmergencyResponse });
     const emergencyContacts = data?.contacts || [];
     const infoCards = data?.infoCards || [];
     const { primary, secondary, local } = groupContacts(emergencyContacts);

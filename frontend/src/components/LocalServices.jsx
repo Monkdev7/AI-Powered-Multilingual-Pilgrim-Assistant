@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
 import UnverifiedNotice from './UnverifiedNotice.jsx';
+import { servicesParams } from '../utils/apiParams.js';
 
 // The API sends no styling; card colors are keyed by service id (literal Tailwind classes)
 const CATEGORY_COLORS = {
@@ -105,8 +106,8 @@ function ChatTip() {
     );
 }
 export default function LocalServices() {
-    const { t } = useT();
-    const { data, error, loading, retry } = useApiGet('/api/services', { validate: validateServicesResponse });
+    const { t, lang } = useT();
+    const { data, error, loading, retry } = useApiGet('/api/services', { params: servicesParams(lang), validate: validateServicesResponse });
     const services = data?.services || [];
     return (
         <div className="p-4 space-y-4">

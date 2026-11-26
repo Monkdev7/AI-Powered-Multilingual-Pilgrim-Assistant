@@ -126,6 +126,7 @@ test('component static scan: stat values unchanged, booking link from the facts 
     assert.ok(cd.includes('href={TEMPLE_PORTAL_URL}'));
     assert.ok(!/bhasmarti/i.test(cd));
     const faq = readFileSync(join(ROOT, 'src/components/FAQSection.jsx'), 'utf8');
+    // Phase 5: the filter value is a stable category id (or 'All'), sent through faqParams, never a translated label.
     assert.match(faq, /useState\('All'\)/);
-    assert.match(faq, /selectedCategory !== 'All' \? selectedCategory : undefined/);
+    assert.match(faq, /faqParams\(\{ lang, category: selectedCategory, search: debouncedSearch \}\)/);
 });

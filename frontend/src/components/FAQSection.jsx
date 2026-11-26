@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
 import UnverifiedNotice from './UnverifiedNotice.jsx';
+import { ALL_CATEGORIES, faqParams, categoryOptionsFrom } from '../utils/apiParams.js';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const validateFaqResponse = (d) => Array.isArray(d?.faqs) && Array.isArray(d?.categories);
@@ -54,18 +55,20 @@ function FAQItem({ faq, isOpen, onToggle }) {
     );
 }
 
+// Keyed by the stable category id sent by the API (never by a translated label).
 const CATEGORY_ICONS = {
     'All': '📋',
-    'Getting There': '🚂',
-    'Accommodation': '🏕️',
-    'Religious Events': '🛕',
-    'Health & Safety': '🏥',
-    'General': 'ℹ️',
+    'getting-there': '🚂',
+    'accommodation': '🏕️',
+    'religious-events': '🛕',
+    'health-safety': '🏥',
+    'general': 'ℹ️',
 };
 
 export default function FAQSection() {
-    const { t } = useT();
+    const { t, lang } = useT();
     const [openId, setOpenId] = useState(null);
+    // Stable category id (or 'All'); translated labels are display-only.
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -80,20 +83,18 @@ export default function FAQSection() {
     }, [searchQuery]);
 
     const { data, error, loading, retry } = useApiGet('/api/faq', {
-        params: {
-            category: selectedCategory !== 'All' ? selectedCategory : undefined,
-            search: debouncedSearch || undefined,
-        },
+        params: faqParams({ lang, category: selectedCategory, search: debouncedSearch }),
         validate: validateFaqResponse,
     });
 
     // Categories come from the API response (the list is not narrowed by filters)
     useEffect(() => {
-        if (data?.categories) setCategories(data.categories);
+        if (data?.categories) setCategories(categoryOptionsFrom(data));
     }, [data]);
 
     const faqs = data?.faqs || [];
-    const faqCategories = ['All', ...categories];
+    const faqCategories = [{ id: ALL_CATEGORIES, label: t('faq.all') }, ...categories];
+    const selectedLabel = categories.find((c) => c.id === selectedCategory)?.label || selectedCategory;
     const isInitialLoad = loading && !data;
     const hasCategory = selectedCategory !== 'All';
     const resultsKey = hasCategory
@@ -159,15 +160,15 @@ export default function FAQSection() {
                 <div className="flex gap-2 min-w-max pb-1">
                     {faqCategories.map((cat) => (
                         <button
-                            key={cat}
-                            onClick={() => handleCategoryChange(cat)}
-                            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${selectedCategory === cat
+                            key={cat.id}
+                            onClick={() => handleCategoryChange(cat.id)}
+                            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${selectedCategory === cat.id
                                 ? 'bg-orange-500 text-white shadow-md'
                                 : 'bg-white text-orange-700 border border-orange-200 hover:bg-orange-50'
                                 }`}
                         >
-                            <span>{CATEGORY_ICONS[cat] || '📌'}</span>
-                            {cat === 'All' ? t('faq.all') : cat}
+                            <span>{CATEGORY_ICONS[cat.id] || '📌'}</span>
+                            {cat.label}
                         </button>
                     ))}
                 </div>
@@ -181,7 +182,7 @@ export default function FAQSection() {
                     <span>
                         {data && !error ? (
                             <>
-                                {t.plural(resultsKey, faqs.length, { category: selectedCategory, query: debouncedSearch })}
+                                {t.plural(resultsKey, faqs.length, { category: selectedLabel, query: debouncedSearch })}
                             </>
                         ) : (
                             t('faq.questions')
