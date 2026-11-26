@@ -59,7 +59,7 @@ test('static scan: the three components pass the selected language to useApiGet'
     assert.match(faq, /const \{ t, lang \} = useT\(\)/);
     assert.match(faq, /useApiGet\('\/api\/faq', \{\s*params: faqParams\(\{ lang,/);
     assert.match(em, /const \{ t, lang \} = useT\(\)/);
-    assert.match(em, /useApiGet\('\/api\/emergency', \{ params: emergencyParams\(lang\)/);
+    assert.match(em, /useFreshApiGet\('\/api\/emergency', \{ params: emergencyParams\(lang\)/);
     assert.match(sv, /const \{ t, lang \} = useT\(\)/);
     assert.match(sv, /useApiGet\('\/api\/services', \{ params: servicesParams\(lang\)/);
 });

@@ -14,7 +14,7 @@ import {
     ChevronRight,
     Share2,
 } from 'lucide-react';
-import { useApiGet } from '../hooks/useApiGet';
+import { useFreshApiGet } from '../hooks/useFreshApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { groupContacts, telHref, sourceHost } from '../utils/emergencyGroups.js';
@@ -200,7 +200,7 @@ const SAFETY_TIPS = [
 
 export default function EmergencyPanel() {
     const { t, lang } = useT();
-    const { data, error, loading, retry } = useApiGet('/api/emergency', { params: emergencyParams(lang), validate: validateEmergencyResponse });
+    const { data, error, loading, retry } = useFreshApiGet('/api/emergency', { params: emergencyParams(lang), validate: validateEmergencyResponse });
     const emergencyContacts = data?.contacts || [];
     const infoCards = data?.infoCards || [];
     const { primary, secondary, local } = groupContacts(emergencyContacts);
