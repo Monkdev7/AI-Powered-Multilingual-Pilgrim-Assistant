@@ -1,32 +1,43 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User, Sparkles, RefreshCw, Share2 } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
 import { API_BASE } from '../utils/api';
+import { classifyChatError } from '../utils/chatErrors.js';
+import {
+    STORAGE_KEY,
+    createWelcomeMessage,
+    createErrorMessage,
+    normalizeStoredMessages,
+    trimForStorage,
+    toApiHistory,
+    resolveMessageText,
+} from '../utils/chatHistory.js';
 import { getLanguage } from '../i18n/languages.js';
+import { tk } from '../i18n/index.js';
+import { useT } from '../i18n/useT.js';
 
+// Developer-only banner. The dynamic import sits in a dead branch in production builds, so the
+// banner (and its text) is not shipped to pilgrims.
+const DevDemoBanner = import.meta.env.DEV ? lazy(() => import('./DevDemoBanner.jsx')) : null;
 
-const STORAGE_KEY = 'simhastha_chat_history';
-
-const WELCOME_MESSAGE = {
-    id: 'welcome',
-    role: 'assistant',
-    content:
-        'Jai Mahakal! 🙏 I am KumbhSaathi, your Simhastha Kumbh 2028 assistant.\n\nI can help you with:\n• 🗓️ Amrit Snan bathing dates and schedules\n• 🗺️ Finding ghats and navigation tips in Ujjain\n• 🏕️ Accommodation options and booking\n• 🚂 Travel routes to Ujjain, Madhya Pradesh\n• 🛕 Religious rituals at Mahakaleshwar & Kshipra river\n• 🆘 Safety tips and emergency contacts\n\nAsk me anything in your preferred language!',
-    timestamp: new Date().toISOString(),
-};
-
+// Stable ids; the visible text comes from the catalog and is sent as the user's message.
 const SUGGESTED_QUESTIONS = [
-    'What are the Amrit Snan dates?',
-    'How to reach Ujjain?',
-    'Where can I stay?',
-    'What to pack for Simhastha?',
-    'Tell me about Mahakaleshwar Temple',
-    'Emergency contacts?',
+    { id: 'amritSnan', key: tk('chat.suggest.amritSnan') },
+    { id: 'reach', key: tk('chat.suggest.reach') },
+    { id: 'stay', key: tk('chat.suggest.stay') },
+    { id: 'pack', key: tk('chat.suggest.pack') },
+    { id: 'mahakal', key: tk('chat.suggest.mahakal') },
+    { id: 'emergency', key: tk('chat.suggest.emergency') },
 ];
 
-function formatTime(isoString) {
+// Placeholder that marks where the native language name goes inside a translated sentence.
+const LANGUAGE_SLOT = '\uE000';
+
+// Timestamps from old or hand-edited storage can be invalid; never let that crash rendering.
+function safeTime(formatTime, iso) {
+    if (!iso) return '';
     try {
-        return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return formatTime(iso);
     } catch {
         return '';
     }
@@ -95,11 +106,14 @@ function MarkdownText({ content, className = '' }) {
 }
 
 function MessageBubble({ message }) {
+    const { t, formatTime } = useT();
     const isUser = message.role === 'user';
+    // Welcome and new error bubbles are rendered from the catalog, so they follow language changes.
+    const text = resolveMessageText(message, t);
 
     const handleShare = () => {
-        const text = `*KumbhSaathi — Simhastha 2028*\n\n${message.content}\n\n_Powered by Simhastha Pilgrim Assistant_`;
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        const shareText = `*${t('chat.shareHeading')}*\n\n${text}\n\n_${t('chat.shareSignature')}_`;
+        const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
         window.open(url, '_blank');
     };
 
@@ -107,7 +121,7 @@ function MessageBubble({ message }) {
         <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in group`}>
             {!isUser && (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-sm">
-                    <Bot size={15} className="text-white" />
+                    <Bot size={15} className="text-white" aria-hidden="true" />
                 </div>
             )}
 
@@ -122,19 +136,19 @@ function MessageBubble({ message }) {
                     {isUser ? (
                         <p className="text-sm leading-relaxed whitespace-pre-line">{message.content}</p>
                     ) : (
-                        <MarkdownText content={message.content} />
+                        <MarkdownText content={text} />
                     )}
                 </div>
                 <div className={`flex items-center gap-2 mt-1 px-1 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                    <p className="text-xs text-gray-400">{formatTime(message.timestamp)}</p>
+                    <p className="text-xs text-gray-400">{safeTime(formatTime, message.timestamp)}</p>
                     {!isUser && (
                         <button
                             onClick={handleShare}
-                            title="Share on WhatsApp"
+                            title={t('chat.shareWhatsApp')}
                             className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-green-500"
-                            aria-label="Share on WhatsApp"
+                            aria-label={t('chat.shareWhatsApp')}
                         >
-                            <Share2 size={12} />
+                            <Share2 size={12} aria-hidden="true" />
                         </button>
                     )}
                 </div>
@@ -142,7 +156,7 @@ function MessageBubble({ message }) {
 
             {isUser && (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 ml-2 mt-1 shadow-sm">
-                    <User size={15} className="text-white" />
+                    <User size={15} className="text-white" aria-hidden="true" />
                 </div>
             )}
         </div>
@@ -150,39 +164,49 @@ function MessageBubble({ message }) {
 }
 
 function TypingIndicator() {
+    const { t } = useT();
     return (
-        <div className="flex justify-start mb-4 animate-fade-in">
+        <div className="flex justify-start mb-4 animate-fade-in" role="status" aria-live="polite">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-sm">
-                <Bot size={15} className="text-white" />
+                <Bot size={15} className="text-white" aria-hidden="true" />
             </div>
             <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-orange-100">
-                <div className="flex items-center gap-1.5 h-5">
-                    <span className="text-xs text-orange-500 mr-1 font-medium">Thinking</span>
-                    <div className="typing-dot"></div>
-                    <div className="typing-dot"></div>
-                    <div className="typing-dot"></div>
+                <div className="flex items-center gap-1.5 min-h-[1.25rem]">
+                    <span className="text-xs text-orange-500 mr-1 font-medium">{t('chat.thinking')}</span>
+                    <div className="typing-dot" aria-hidden="true"></div>
+                    <div className="typing-dot" aria-hidden="true"></div>
+                    <div className="typing-dot" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
     );
 }
 
-// Load saved messages from localStorage
+// Load saved messages from localStorage (old English welcome/error bubbles are kept and handled by the helpers)
 function loadSavedMessages() {
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
+        if (saved) return normalizeStoredMessages(saved);
     } catch {
-        // ignore parse errors
+        // ignore storage errors
     }
-    return [WELCOME_MESSAGE];
+    return [createWelcomeMessage()];
 }
 
-export default function ChatInterface({ selectedLanguage, labels = {} }) {
-    const L = labels.chat || {};
+// "Responding in {language}" with the native language name highlighted, in each language's word order.
+function LanguageIndicator({ code }) {
+    const { t } = useT();
+    const language = getLanguage(code);
+    const parts = t('chat.respondingIn', { language: LANGUAGE_SLOT }).split(LANGUAGE_SLOT);
+    const name = (
+        <span lang={language.code} className="text-orange-500 font-medium">{language.nativeName}</span>
+    );
+    if (parts.length !== 2) return <>{parts.join('')} {name}</>;
+    return <>{parts[0]}{name}{parts[1]}</>;
+}
+
+export default function ChatInterface({ selectedLanguage }) {
+    const { t } = useT();
     const [messages, setMessages] = useState(loadSavedMessages);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -195,8 +219,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
     useEffect(() => {
         try {
             // Keep only last 50 messages to avoid storage limits
-            const toSave = messages.slice(-50);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trimForStorage(messages)));
         } catch {
             // ignore storage errors
         }
@@ -230,10 +253,8 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
             }
             setIsLoading(true);
 
-            const history = messages
-                .filter((m) => m.id !== 'welcome' && !m.isError)
-                .slice(-10)
-                .map((m) => ({ role: m.role, content: m.content }));
+            // No welcome, no error bubbles, last 10 messages
+            const history = toApiHistory(messages);
 
             try {
                 const controller = new AbortController();
@@ -253,14 +274,25 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
+                    // Only the stable code and status are kept; the server text is never shown.
                     const errData = await response.json().catch(() => ({}));
-                    const apiError = new Error(errData.error || `Server error: ${response.status}`);
-                    apiError.code = errData.code || (response.status === 429 ? 'RATE_LIMITED' : undefined);
+                    const apiError = new Error(`Server error: ${response.status}`);
+                    apiError.code = typeof errData?.code === 'string' ? errData.code : undefined;
                     apiError.status = response.status;
                     throw apiError;
                 }
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch {
+                    data = null;
+                }
+                if (!data || typeof data.reply !== 'string') {
+                    const parseError = new Error('Unexpected response');
+                    parseError.kind = 'parse';
+                    throw parseError;
+                }
                 setIsMockMode(!!data.mock);
                 setRetryCount(0);
 
@@ -275,31 +307,9 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
             } catch (err) {
                 setRetryCount((c) => c + 1);
 
-                let errorContent;
-                if (err.name === 'AbortError') {
-                    errorContent = '⏱️ Request timed out. The server is taking too long to respond.\n\nPlease try again or check your connection.';
-                } else if (err.code === 'AI_QUOTA_EXCEEDED') {
-                    errorContent = '⚠ The AI assistant has reached its usage limit. Please try again later.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
-                } else if (err.code === 'AI_UNAVAILABLE' || err.code === 'CHAT_NOT_CONFIGURED' || err.status === 503) {
-                    errorContent = '⚠ The AI assistant is temporarily unavailable. Please try again in a few minutes.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
-                } else if (err.code === 'RATE_LIMITED') {
-                    errorContent = '⚠️ Too many requests. Please wait a moment and try again.\n\nFor immediate help:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
-                } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-                    errorContent = '📡 No connection to server. Please check that the backend is running.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234';
-                } else {
-                    errorContent = `⚠️ Something went wrong. Please try again.\n\nFor emergencies:\n• Police: 100\n• Ambulance: 108\n• Simhastha Control Room: 0734-2551234`;
-                }
-
-                setMessages((prev) => [
-                    ...prev,
-                    {
-                        id: (Date.now() + 1).toString(),
-                        role: 'assistant',
-                        content: errorContent,
-                        timestamp: new Date().toISOString(),
-                        isError: true,
-                    },
-                ]);
+                // Store the stable code/kind; the text is rendered through t() and follows language changes.
+                const code = classifyChatError(err);
+                setMessages((prev) => [...prev, createErrorMessage(code, (Date.now() + 1).toString())]);
             } finally {
                 setIsLoading(false);
                 setTimeout(() => inputRef.current?.focus(), 100);
@@ -316,7 +326,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
     };
 
     const handleClearChat = () => {
-        setMessages([WELCOME_MESSAGE]);
+        setMessages([createWelcomeMessage()]);
         setRetryCount(0);
         localStorage.removeItem(STORAGE_KEY);
         setTimeout(() => inputRef.current?.focus(), 100);
@@ -326,17 +336,20 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
 
     return (
         <div className="flex flex-col h-full">
-            {/* Mock mode notice */}
+            {/* Mock mode notice: developers get setup hints, pilgrims get a neutral localized note */}
             {isMockMode && (
-                <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 flex items-start gap-2">
-                    <Sparkles size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700">
-                        <strong>Demo mode:</strong> Add a valid{' '}
-                        <code className="bg-amber-100 px-1 rounded">GEMINI_API_KEY</code> (starts with <code className="bg-amber-100 px-1 rounded">AIza...</code>) to{' '}
-                        <code className="bg-amber-100 px-1 rounded">backend/.env</code> — get one free at{' '}
-                        <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer" className="underline text-amber-800 font-medium">aistudio.google.com</a>
-                    </p>
-                </div>
+                DevDemoBanner ? (
+                    <Suspense fallback={null}>
+                        <DevDemoBanner />
+                    </Suspense>
+                ) : (
+                    <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 flex items-start gap-2" role="note">
+                        <Sparkles size={15} className="text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <p className="text-xs text-amber-700">
+                            <strong>{t('chat.demoMode')}:</strong> {t('chat.demoNotice')}
+                        </p>
+                    </div>
+                )
             )}
 
             {/* Countdown — compact, shown once at top of chat */}
@@ -349,20 +362,21 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                 <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
                     <span className="text-sm font-semibold text-gray-700">KumbhSaathi AI</span>
-                    <span className="text-xs text-gray-400 hidden sm:inline">· Multilingual Assistant</span>                    {hasHistory && (
+                    <span className="text-xs text-gray-400 hidden sm:inline">· {t('chat.subtitle')}</span>
+                    {hasHistory && (
                         <span className="text-xs bg-orange-100 text-orange-600 rounded-full px-2 py-0.5 font-medium">
-                            {messages.length - 1} msg{messages.length > 2 ? 's' : ''}
+                            {t.plural('chat.messageCount', messages.length - 1)}
                         </span>
                     )}
                 </div>
                 <button
                     onClick={handleClearChat}
                     className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-orange-600 transition-colors px-2 py-1 rounded-lg hover:bg-orange-50"
-                    title="Clear chat history"
-                    aria-label="Clear chat history"
+                    title={t('chat.clearHistory')}
+                    aria-label={t('chat.clearHistory')}
                 >
-                    <RefreshCw size={13} />
-                    <span className="hidden sm:inline">{L.newChat || 'New Chat'}</span>
+                    <RefreshCw size={13} aria-hidden="true" />
+                    <span className="hidden sm:inline">{t('chat.newChat')}</span>
                 </button>
             </div>
 
@@ -370,7 +384,7 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
             {hasHistory && messages[0]?.id === 'welcome' && messages.length > 1 && (
                 <div className="mx-4 mb-1 text-center">
                     <span className="text-xs text-gray-400 bg-gray-50 rounded-full px-3 py-1">
-                        {L.restored || '💾 Chat restored from last session'}
+                        {t('chat.restored')}
                     </span>
                 </div>
             )}
@@ -387,15 +401,15 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
             {/* Suggested questions (show when only welcome message) */}
             {messages.length === 1 && !isLoading && (
                 <div className="px-4 pb-3">
-                    <p className="text-xs text-gray-500 mb-2 font-medium">💡 Try asking:</p>
+                    <p className="text-xs text-gray-500 mb-2 font-medium">{t('chat.tryAsking')}</p>
                     <div className="flex flex-wrap gap-2">
                         {SUGGESTED_QUESTIONS.map((q) => (
                             <button
-                                key={q}
-                                onClick={() => sendMessage(q)}
+                                key={q.id}
+                                onClick={() => sendMessage(t(q.key))}
                                 className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-3 py-1.5 transition-colors"
                             >
-                                {q}
+                                {t(q.key)}
                             </button>
                         ))}
                     </div>
@@ -410,26 +424,26 @@ export default function ChatInterface({ selectedLanguage, labels = {} }) {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder={L.placeholder || 'Ask about Simhastha, rituals, travel, safety...'}
+                        placeholder={t('chat.placeholder')}
                         rows={1}
                         maxLength={1000}
                         className="flex-1 bg-transparent resize-none outline-none text-sm text-gray-800 placeholder-gray-400 max-h-32 py-1"
                         style={{ minHeight: '24px' }}
                         disabled={isLoading}
-                        aria-label="Type your message"
+                        aria-label={t('chat.inputLabel')}
                     />
                     <button
                         onClick={() => sendMessage()}
                         disabled={!input.trim() || isLoading}
                         className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-200 disabled:cursor-not-allowed text-white rounded-xl p-2 transition-all active:scale-95 flex-shrink-0 mb-0.5"
-                        aria-label="Send message"
+                        aria-label={t('chat.send')}
+                        title={t('chat.send')}
                     >
-                        <Send size={16} />
+                        <Send size={16} aria-hidden="true" />
                     </button>
                 </div>
                 <p className="text-xs text-center text-gray-400 mt-2">
-                    Enter to send · Shift+Enter for new line · {L.respondingIn || 'Responding in'}{' '}
-                    <span className="text-orange-500 font-medium">{getLanguage(selectedLanguage).englishName}</span>
+                    {t('chat.hint')} · <LanguageIndicator code={selectedLanguage} />
                 </p>
             </div>
         </div>
