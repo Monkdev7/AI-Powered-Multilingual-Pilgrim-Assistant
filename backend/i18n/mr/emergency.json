@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "राष्ट्रीय आपत्कालीन सेवा",
+  "contact.emergency.national.112.description": "राष्ट्रीय एकात्मिक आपत्कालीन क्रमांक",
+  "contact.emergency.police.100.name": "पोलीस",
+  "contact.emergency.police.100.description": "पोलीस",
+  "contact.emergency.fire.101.name": "अग्निशमन",
+  "contact.emergency.fire.101.description": "अग्निशमन आणि बचाव",
+  "contact.emergency.ambulance.102.name": "रुग्णवाहिका",
+  "contact.emergency.ambulance.102.description": "रुग्णवाहिका",
+  "contact.emergency.women.1091.name": "संकटातील महिला",
+  "contact.emergency.women.1091.description": "संकटातील महिला",
+  "contact.emergency.child.1098.name": "बाल हेल्पलाइन",
+  "contact.emergency.child.1098.description": "बाल हेल्पलाइन",
+  "contact.emergency.tourist.1363.name": "पर्यटक हेल्पलाइन (राष्ट्रीय)",
+  "contact.emergency.tourist.1363.description": "राष्ट्रीय पर्यटक हेल्पलाइन",
+  "contact.local.sp_office.0734_2527130.name": "पोलीस अधीक्षक कार्यालय, उज्जैन (जिल्हा निर्देशिकेत नमूद)",
+  "contact.local.sp_office.0734_2527130.description": "कार्यालय निर्देशिका क्रमांक (24 तास चालू असल्याची पुष्टी असलेली लाइन नाही)",
+  "infoCard.lost-found.title": "हरवले-सापडले केंद्र",
+  "infoCard.medical.title": "वैद्यकीय आणि उष्माघात केंद्रे",
+  "note.available": "हे क्रमांक नमूद केलेल्या अधिकृत स्रोतांमध्ये नोंदवलेले आहेत. त्यांची स्वतंत्रपणे कॉल-चाचणी झालेली नाही, आणि हे राष्ट्रीय क्रमांक आहेत, सिंहस्थ कार्यक्रमाच्या विशेष हेल्पलाइन नाहीत."
+}

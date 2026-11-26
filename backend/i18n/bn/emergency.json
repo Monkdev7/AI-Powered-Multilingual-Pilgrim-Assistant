@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "জাতীয় জরুরি পরিষেবা",
+  "contact.emergency.national.112.description": "জাতীয় সমন্বিত জরুরি নম্বর",
+  "contact.emergency.police.100.name": "পুলিশ",
+  "contact.emergency.police.100.description": "পুলিশ",
+  "contact.emergency.fire.101.name": "দমকল",
+  "contact.emergency.fire.101.description": "দমকল ও উদ্ধার",
+  "contact.emergency.ambulance.102.name": "অ্যাম্বুলেন্স",
+  "contact.emergency.ambulance.102.description": "অ্যাম্বুলেন্স",
+  "contact.emergency.women.1091.name": "বিপদগ্রস্ত মহিলা",
+  "contact.emergency.women.1091.description": "বিপদগ্রস্ত মহিলা",
+  "contact.emergency.child.1098.name": "শিশু হেল্পলাইন",
+  "contact.emergency.child.1098.description": "শিশু হেল্পলাইন",
+  "contact.emergency.tourist.1363.name": "পর্যটক হেল্পলাইন (জাতীয়)",
+  "contact.emergency.tourist.1363.description": "জাতীয় পর্যটক হেল্পলাইন",
+  "contact.local.sp_office.0734_2527130.name": "পুলিশ সুপারের কার্যালয়, উজ্জয়িনী (জেলা নির্দেশিকায় তালিকাভুক্ত)",
+  "contact.local.sp_office.0734_2527130.description": "কার্যালয় নির্দেশিকার নম্বর (24 ঘণ্টার নিশ্চিত লাইন নয়)",
+  "infoCard.lost-found.title": "হারানো-প্রাপ্তি কেন্দ্র",
+  "infoCard.medical.title": "চিকিৎসা ও হিটস্ট্রোক কেন্দ্র",
+  "note.available": "নম্বরগুলি উল্লিখিত সরকারি সূত্রে তালিকাভুক্ত। এগুলি স্বাধীনভাবে কল করে পরীক্ষা করা হয়নি, এবং এগুলি জাতীয় নম্বর, সিংহস্থ আয়োজনের কোনো বিশেষ হেল্পলাইন নয়।"
+}

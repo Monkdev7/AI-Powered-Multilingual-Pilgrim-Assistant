@@ -1,16 +1,7 @@
 const express = require('express');
 const defaultRegistry = require('../data/facts').defaultRegistry;
 
-const LANGUAGE_NAMES = {
-    en: 'English',
-    hi: 'Hindi',
-    bn: 'Bengali',
-    ta: 'Tamil',
-    te: 'Telugu',
-    mr: 'Marathi',
-    gu: 'Gujarati',
-    pa: 'Punjabi',
-};
+const { LANGUAGE_NAMES } = require('../i18n/languages');
 
 const OFFICIAL_SOURCES_TEXT = 'Ujjain District Administration (https://ujjain.nic.in), the Shri Mahakaleshwar Temple official portal for Bhasma Aarti, and the Madhya Pradesh government / MPINFO for official announcements';
 

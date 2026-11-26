@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "தேசிய அவசர சேவை",
+  "contact.emergency.national.112.description": "தேசிய ஒருங்கிணைந்த அவசர எண்",
+  "contact.emergency.police.100.name": "காவல்துறை",
+  "contact.emergency.police.100.description": "காவல்துறை",
+  "contact.emergency.fire.101.name": "தீயணைப்பு",
+  "contact.emergency.fire.101.description": "தீயணைப்பு மற்றும் மீட்பு",
+  "contact.emergency.ambulance.102.name": "ஆம்புலன்ஸ்",
+  "contact.emergency.ambulance.102.description": "ஆம்புலன்ஸ்",
+  "contact.emergency.women.1091.name": "ஆபத்தில் உள்ள பெண்கள்",
+  "contact.emergency.women.1091.description": "ஆபத்தில் உள்ள பெண்கள்",
+  "contact.emergency.child.1098.name": "குழந்தைகள் உதவி எண்",
+  "contact.emergency.child.1098.description": "குழந்தைகள் உதவி எண்",
+  "contact.emergency.tourist.1363.name": "சுற்றுலா உதவி எண் (தேசிய)",
+  "contact.emergency.tourist.1363.description": "தேசிய சுற்றுலா உதவி எண்",
+  "contact.local.sp_office.0734_2527130.name": "காவல் கண்காணிப்பாளர் அலுவலகம், உஜ்ஜைன் (மாவட்ட கையேட்டில் பட்டியலிடப்பட்டது)",
+  "contact.local.sp_office.0734_2527130.description": "அலுவலக கையேட்டு எண் (24 மணி நேர உறுதிசெய்யப்பட்ட இணைப்பு அல்ல)",
+  "infoCard.lost-found.title": "காணாமல்போனவை–கண்டெடுக்கப்பட்டவை மையம்",
+  "infoCard.medical.title": "மருத்துவ மற்றும் ஹீட்ஸ்ட்ரோக் மையங்கள்",
+  "note.available": "இந்த எண்கள் குறிப்பிடப்பட்ட அதிகாரப்பூர்வ ஆதாரங்களில் பட்டியலிடப்பட்டவை. இவை தனியாக அழைத்து சோதிக்கப்படவில்லை; இவை தேசிய எண்கள், சிம்ஹஸ்த நிகழ்வுக்கான பிரத்யேக உதவி எண்கள் அல்ல."
+}

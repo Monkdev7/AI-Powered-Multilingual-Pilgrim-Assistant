@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "રાષ્ટ્રીય કટોકટી સેવા",
+  "contact.emergency.national.112.description": "રાષ્ટ્રીય એકીકૃત કટોકટી નંબર",
+  "contact.emergency.police.100.name": "પોલીસ",
+  "contact.emergency.police.100.description": "પોલીસ",
+  "contact.emergency.fire.101.name": "ફાયર બ્રિગેડ",
+  "contact.emergency.fire.101.description": "ફાયર અને બચાવ",
+  "contact.emergency.ambulance.102.name": "એમ્બ્યુલન્સ",
+  "contact.emergency.ambulance.102.description": "એમ્બ્યુલન્સ",
+  "contact.emergency.women.1091.name": "સંકટમાં મહિલાઓ",
+  "contact.emergency.women.1091.description": "સંકટમાં મહિલાઓ",
+  "contact.emergency.child.1098.name": "બાળ હેલ્પલાઇન",
+  "contact.emergency.child.1098.description": "બાળ હેલ્પલાઇન",
+  "contact.emergency.tourist.1363.name": "પ્રવાસી હેલ્પલાઇન (રાષ્ટ્રીય)",
+  "contact.emergency.tourist.1363.description": "રાષ્ટ્રીય પ્રવાસી હેલ્પલાઇન",
+  "contact.local.sp_office.0734_2527130.name": "પોલીસ અધીક્ષક કાર્યાલય, ઉજ્જૈન (જિલ્લા ડિરેક્ટરીમાં સૂચિબદ્ધ)",
+  "contact.local.sp_office.0734_2527130.description": "કાર્યાલય ડિરેક્ટરી નંબર (24 કલાકની પુષ્ટિ થયેલ લાઇન નથી)",
+  "infoCard.lost-found.title": "ખોવાયેલ-મળેલ કેન્દ્ર",
+  "infoCard.medical.title": "તબીબી અને હીટસ્ટ્રોક કેન્દ્રો",
+  "note.available": "આ નંબરો ઉલ્લેખિત સત્તાવાર સ્ત્રોતોમાં સૂચિબદ્ધ છે. તેમનું સ્વતંત્ર રીતે કૉલ-પરીક્ષણ થયું નથી, અને તે રાષ્ટ્રીય નંબરો છે, સિંહસ્થ કાર્યક્રમની ખાસ હેલ્પલાઇન નથી."
+}

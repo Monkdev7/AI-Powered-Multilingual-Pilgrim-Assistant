@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "राष्ट्रीय आपातकालीन सेवा",
+  "contact.emergency.national.112.description": "राष्ट्रीय एकीकृत आपातकालीन नंबर",
+  "contact.emergency.police.100.name": "पुलिस",
+  "contact.emergency.police.100.description": "पुलिस",
+  "contact.emergency.fire.101.name": "अग्निशमन",
+  "contact.emergency.fire.101.description": "अग्निशमन और बचाव",
+  "contact.emergency.ambulance.102.name": "एम्बुलेंस",
+  "contact.emergency.ambulance.102.description": "एम्बुलेंस",
+  "contact.emergency.women.1091.name": "संकट में महिलाएँ",
+  "contact.emergency.women.1091.description": "संकट में महिलाएँ",
+  "contact.emergency.child.1098.name": "बाल हेल्पलाइन",
+  "contact.emergency.child.1098.description": "बाल हेल्पलाइन",
+  "contact.emergency.tourist.1363.name": "पर्यटक हेल्पलाइन (राष्ट्रीय)",
+  "contact.emergency.tourist.1363.description": "राष्ट्रीय पर्यटक हेल्पलाइन",
+  "contact.local.sp_office.0734_2527130.name": "पुलिस अधीक्षक कार्यालय, उज्जैन (ज़िला निर्देशिका में सूचीबद्ध)",
+  "contact.local.sp_office.0734_2527130.description": "कार्यालय निर्देशिका नंबर (24 घंटे की पुष्ट लाइन नहीं)",
+  "infoCard.lost-found.title": "खोया-पाया केंद्र",
+  "infoCard.medical.title": "चिकित्सा और हीटस्ट्रोक केंद्र",
+  "note.available": "ये नंबर बताए गए आधिकारिक स्रोतों में सूचीबद्ध हैं। इनका स्वतंत्र रूप से कॉल-परीक्षण नहीं किया गया है, और ये राष्ट्रीय नंबर हैं, सिंहस्थ आयोजन की विशेष हेल्पलाइन नहीं।"
+}

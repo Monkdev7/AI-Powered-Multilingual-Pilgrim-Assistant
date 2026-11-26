@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "జాతీయ అత్యవసర సేవ",
+  "contact.emergency.national.112.description": "జాతీయ ఏకీకృత అత్యవసర నంబర్",
+  "contact.emergency.police.100.name": "పోలీస్",
+  "contact.emergency.police.100.description": "పోలీస్",
+  "contact.emergency.fire.101.name": "అగ్నిమాపక",
+  "contact.emergency.fire.101.description": "అగ్నిమాపక మరియు రక్షణ",
+  "contact.emergency.ambulance.102.name": "అంబులెన్స్",
+  "contact.emergency.ambulance.102.description": "అంబులెన్స్",
+  "contact.emergency.women.1091.name": "ఆపదలో ఉన్న మహిళలు",
+  "contact.emergency.women.1091.description": "ఆపదలో ఉన్న మహిళలు",
+  "contact.emergency.child.1098.name": "చైల్డ్ హెల్ప్‌లైన్",
+  "contact.emergency.child.1098.description": "చైల్డ్ హెల్ప్‌లైన్",
+  "contact.emergency.tourist.1363.name": "పర్యాటక హెల్ప్‌లైన్ (జాతీయ)",
+  "contact.emergency.tourist.1363.description": "జాతీయ పర్యాటక హెల్ప్‌లైన్",
+  "contact.local.sp_office.0734_2527130.name": "పోలీస్ సూపరింటెండెంట్ కార్యాలయం, ఉజ్జయిని (జిల్లా డైరెక్టరీలో జాబితా చేయబడింది)",
+  "contact.local.sp_office.0734_2527130.description": "కార్యాలయ డైరెక్టరీ నంబర్ (24 గంటల నిర్ధారిత లైన్ కాదు)",
+  "infoCard.lost-found.title": "తప్పిపోయినవి–దొరికినవి కేంద్రం",
+  "infoCard.medical.title": "వైద్య మరియు హీట్‌స్ట్రోక్ కేంద్రాలు",
+  "note.available": "ఈ నంబర్లు పేర్కొన్న అధికారిక మూలాల్లో జాబితా చేయబడ్డాయి. వీటిని స్వతంత్రంగా కాల్ చేసి పరీక్షించలేదు, ఇవి జాతీయ నంబర్లు, సింహస్థ కార్యక్రమానికి ప్రత్యేకమైన హెల్ప్‌లైన్లు కావు."
+}

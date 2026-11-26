@@ -1,0 +1,877 @@
+{
+  "today": "2026-11-26",
+  "cases": {
+    "/api/faq": {
+      "status": 200,
+      "body": {
+        "faqs": [
+          {
+            "id": 1,
+            "category": "Getting There",
+            "question": "How do I reach Ujjain for Simhastha Kumbh 2028?",
+            "answer": "Ujjain is well-connected by train (Ujjain Junction), road (NH-52, NH-47), and via nearby Indore airport (55 km). MP State Roadways runs regular buses. Indian Railways will operate special Simhastha trains from Delhi, Mumbai, Bhopal, and Ahmedabad. The nearest airport is Devi Ahilya Bai Holkar Airport, Indore."
+          },
+          {
+            "id": 2,
+            "category": "Getting There",
+            "question": "Which trains go to Ujjain for Simhastha 2028?",
+            "answer": "Indian Railways will operate special Simhastha trains from Delhi, Mumbai, Bhopal, Ahmedabad, Kolkata, and other cities. Book on IRCTC (irctc.co.in) at least 30-60 days in advance. Ujjain Junction is the main station — centrally located, just 2 km from Ram Ghat."
+          },
+          {
+            "id": 3,
+            "category": "Getting There",
+            "question": "Can I reach Ujjain by road?",
+            "answer": "Yes! Ujjain is connected via NH-52 (Agra-Mumbai), NH-47, and NH-146. MP State Roadways and private buses run from Indore (1.5 hrs), Bhopal (4 hrs), and Ahmedabad (5 hrs). Parking is at designated zones outside the mela area; shuttles ferry pilgrims to ghats."
+          },
+          {
+            "id": 4,
+            "category": "Getting There",
+            "question": "What is the nearest airport to Ujjain?",
+            "answer": "Devi Ahilya Bai Holkar Airport, Indore (IATA: IDR) is 55 km from Ujjain — about 1-1.5 hours by taxi. IndiGo, Air India, and SpiceJet fly here from Delhi, Mumbai, Bangalore, and other cities. Pre-book a taxi for the Indore–Ujjain transfer."
+          },
+          {
+            "id": 5,
+            "category": "Getting There",
+            "question": "How do I get from Ujjain station to the ghats?",
+            "answer": "From Ujjain Junction: government shuttle buses (every 15-20 min), e-rickshaws (₹20-50), autos, or Simhastha mela buses. Ram Ghat is about 2 km from the station. Avoid private vehicles on major bathing days as roads near the ghats are closed to traffic."
+          },
+          {
+            "id": 6,
+            "category": "Getting There",
+            "question": "When is the best time to visit to avoid heavy crowds?",
+            "answer": "Avoid the main snan (bathing) days if you prefer smaller crowds. The individual dates have not been officially confirmed yet; check official announcements. Weekdays are usually calmer than weekends, and early morning is usually quieter for a bath."
+          },
+          {
+            "id": 7,
+            "category": "Accommodation",
+            "question": "Where can I stay during Simhastha Kumbh 2028?",
+            "answer": "Options: 1) Government tent cities near Ram Ghat on Kshipra riverbank, 2) Private tent cities (budget to luxury), 3) Dharamshalas and akhara camps (some free), 4) Hotels in Ujjain city — book 2-3 months early, 5) Hotels in Indore (55 km) as an overflow option with daily commute by train or road."
+          },
+          {
+            "id": 8,
+            "category": "Accommodation",
+            "question": "How much does accommodation cost during Simhastha?",
+            "answer": "Costs vary: Basic government tents: ₹200-500/night, Private tent cities: ₹500-5000+/night, Dharamshalas: ₹100-300/night, Hotels in Ujjain: ₹800-5000+/night, Indore hotels: ₹600-4000/night. Prices may surge near major bathing days. Book at least 2-3 months in advance."
+          },
+          {
+            "id": 9,
+            "category": "Accommodation",
+            "question": "Are there free accommodation options in Ujjain?",
+            "answer": "Yes! Many akharas, dharamshalas, and temples offer free or nominal-cost accommodation. ISKCON Ujjain, Sandipani Ashram, and various akhara camps provide accommodation with participation in daily prayers. Book in advance as spaces fill quickly."
+          },
+          {
+            "id": 10,
+            "category": "Accommodation",
+            "question": "Is it safe to stay in tent cities?",
+            "answer": "Yes. The Simhastha Authority sets up well-organized tent cities with security, lighting, and basic amenities. Government camps are regularly patrolled. Keep valuables secure, use locker facilities, and keep emergency numbers handy. Traveling in groups after dark is recommended."
+          },
+          {
+            "id": 11,
+            "category": "Accommodation",
+            "question": "Can I stay in Indore and commute to Ujjain daily?",
+            "answer": "Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked."
+          },
+          {
+            "id": 12,
+            "category": "Religious Events",
+            "question": "What are the Amrit Snan dates for Simhastha Kumbh 2028?",
+            "answer": "The individual bathing dates have not been officially confirmed yet. The planned schedule is 3 Shahi Snan and 7 Parv Snan during 9 April to 8 May 2028 (proposed, awaiting official confirmation, based on a Madhya Pradesh government publication dated 11-17 March 2024). Please check official announcements from the Madhya Pradesh government or Ujjain District Administration (https://ujjain.nic.in)."
+          },
+          {
+            "id": 13,
+            "category": "Religious Events",
+            "question": "Why is Ujjain special for Kumbh Mela?",
+            "answer": "Ujjain is one of four sacred Kumbh Mela cities (with Prayagraj, Haridwar, and Nashik). According to legend, drops of divine nectar fell here during Samudra Manthan. It is called \"Simhastha\" because the mela occurs when Jupiter enters Leo (Simha Rashi). Ujjain is also home to Mahakaleshwar — one of the 12 Jyotirlingas of Lord Shiva."
+          },
+          {
+            "id": 14,
+            "category": "Religious Events",
+            "question": "What is Mesh Sankranti and why is it the most important day?",
+            "answer": "Mesh Sankranti is when the Sun enters Aries (Mesh Rashi). This astronomical alignment, combined with Jupiter in Leo, is the reason Simhastha is held in Ujjain. Whether it will be a bathing date in 2028 has not been officially confirmed yet. Expect very large crowds on major bathing days."
+          },
+          {
+            "id": 15,
+            "category": "Religious Events",
+            "question": "What is the Akhara procession at Simhastha?",
+            "answer": "The Amrit Snan procession is led by the thirteen akharas of Naga sadhus, saints, and ascetics in a traditional order. The spectacular procession features elephants, chariots, and thousands of ash-clad Naga sadhus. Devotees consider it auspicious to seek blessings from the saints during this once-in-12-years event."
+          },
+          {
+            "id": 16,
+            "category": "Religious Events",
+            "question": "What should I carry for the holy bath in Kshipra?",
+            "answer": "Carry: 2 extra sets of clothes, waterproof bag for valuables, small towel, copper vessel for holy Kshipra water, offerings (flowers, fruits, diyas), and a small first aid kit. Wear simple cotton clothes in saffron/yellow/white. Avoid expensive jewelry. Wet sandals are practical at the ghat."
+          },
+          {
+            "id": 17,
+            "category": "Religious Events",
+            "question": "What other rituals can I do during Simhastha 2028?",
+            "answer": "Beyond the holy dip: attend Bhasma Aarti at Mahakaleshwar Jyotirlinga (4 AM — book passes online in advance), witness Kshipra Aarti at Ram Ghat at sunset, perform Pind Daan at Siddhavat Ghat, visit Kal Bhairav Temple and Harsiddhi Mata, attend pravachans by saints, and complete the Simhastha Parikrama (ritual circumambulation)."
+          },
+          {
+            "id": 18,
+            "category": "Health & Safety",
+            "question": "What health precautions should I take for Simhastha 2028?",
+            "answer": "Critical: Ujjain in April-May can reach 40-43°C. Carry 2-3 litres of water at all times, drink only bottled/filtered water, eat at certified stalls, carry ORS sachets and heatstroke medicine, wear light cotton clothes with a cap or umbrella, apply SPF 50+ sunscreen, avoid being outdoors 11 AM-4 PM, and get Hepatitis A/B and Typhoid vaccinations."
+          },
+          {
+            "id": 19,
+            "category": "Health & Safety",
+            "question": "How do I handle crowd safety at Simhastha?",
+            "answer": "Crowd safety: Set a specific meeting point before entering crowded areas (Ram Ghat Gate or Mahakal Temple entrance), carry a whistle, keep phone charged with a power bank, avoid pushing in dense crowds, move with the crowd flow if caught in a surge, identify nearest exits when you arrive, and follow police and volunteer instructions."
+          },
+          {
+            "id": 20,
+            "category": "Health & Safety",
+            "question": "What if I lose my companions in the Simhastha crowd?",
+            "answer": "If separated: 1) Go to the nearest police post or volunteer booth immediately, 2) Call 112 (national emergency number), 3) Loudspeaker announcements are made across mela grounds, 4) Visit Lost & Found Center near Ram Ghat Sector 1 gate. Prevention: agree on a meeting point, share phone numbers, write your number on children's wrists."
+          },
+          {
+            "id": 21,
+            "category": "Health & Safety",
+            "question": "What medical facilities are available at Simhastha 2028?",
+            "answer": "The Simhastha Authority deploys medical camps across all sectors, main hospital within the mela grounds, heatstroke treatment centres (essential given April-May temperatures), mobile medical units, and ORS distribution points. Nearest major hospital: District Hospital Ujjain; for serious cases: MY Hospital Indore (55 km)."
+          },
+          {
+            "id": 22,
+            "category": "Health & Safety",
+            "question": "How do I deal with the intense heat at Simhastha?",
+            "answer": "Beat the heat: carry a 2-litre water bottle and refill at free kiosks, wear loose cotton clothes in light colours, use an umbrella or wide-brim hat, avoid direct sun 11 AM-4 PM, eat light meals and avoid oily food in the heat, carry ORS sachets and use them if you feel dizzy, and rest in shaded mela rest zones during peak heat hours."
+          },
+          {
+            "id": 23,
+            "category": "General",
+            "question": "What is Simhastha Kumbh 2028 and why is it special?",
+            "answer": "Simhastha Kumbh 2028 is the grand Kumbh Mela held in Ujjain, Madhya Pradesh from 27 March to 27 May 2028 (planned period, proposed and awaiting official confirmation) on the Kshipra riverbank. It occurs every 12 years when Jupiter enters Leo (Simha Rashi) and the Sun enters Aries. The last Simhastha was in 2016. Attendance estimates have varied; there is no official figure."
+          },
+          {
+            "id": 24,
+            "category": "General",
+            "question": "What should I pack for Simhastha Kumbh 2028?",
+            "answer": "Pack: light cotton clothes (April-May is 40°C+), wide-brim hat and umbrella for sun, sunscreen SPF 50+, multiple sets of clothes for bathing, ORS sachets and heatstroke medicine, phone charger and power bank, water bottle, ID documents (Aadhaar), cash, small lock for tent, whistle, and a light backpack. You'll walk 8-12 km daily."
+          },
+          {
+            "id": 25,
+            "category": "General",
+            "question": "What major temples should I visit in Ujjain during Simhastha?",
+            "answer": "Must-visit: Mahakaleshwar Jyotirlinga (one of 12 Jyotirlingas — Bhasma Aarti at 4 AM), Kal Bhairav Temple, Harsiddhi Mata Temple (Shakti Peeth), Mangalnath Temple (birthplace of Mars), Sandipani Ashram (where Krishna studied), Chintaman Ganesh Temple, Bade Ganeshji Ka Mandir, and Ram Ghat for evening Kshipra Aarti."
+          },
+          {
+            "id": 26,
+            "category": "General",
+            "question": "What ghat etiquette should I follow at Kshipra river?",
+            "answer": "Ghat etiquette: Maintain silence or speak softly, remove footwear before ghat areas, dress modestly (cover shoulders and knees), do not litter, do not photograph people bathing without consent, avoid using soap/shampoo directly in the river, follow designated entry/exit flow, and respect others' rituals and prayers."
+          },
+          {
+            "id": 27,
+            "category": "General",
+            "question": "Are ATMs and digital payments available at Simhastha?",
+            "answer": "Yes, ATMs from SBI, HDFC, and other banks will be deployed across mela grounds. ATMs may run dry on major bathing days, so carry ₹2,000-3,000 in cash. Digital payments (UPI, Google Pay, PhonePe) are widely accepted at certified stalls and shops in the mela area."
+          },
+          {
+            "id": 28,
+            "category": "General",
+            "question": "Is Simhastha accessible for elderly and differently-abled pilgrims?",
+            "answer": "Yes. The Simhastha Authority makes special arrangements: wheelchair-accessible paths to major ghats, dedicated bathing areas for elderly and differently-abled, volunteer helpers, golf carts for mobility assistance, special medical support, and accessible toilet facilities. Check official sources such as Ujjain District Administration (https://ujjain.nic.in) in advance to arrange specific assistance."
+          }
+        ],
+        "categories": [
+          "Getting There",
+          "Accommodation",
+          "Religious Events",
+          "Health & Safety",
+          "General"
+        ],
+        "total": 28,
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/faq?search=heat": {
+      "status": 200,
+      "body": {
+        "faqs": [
+          {
+            "id": 18,
+            "category": "Health & Safety",
+            "question": "What health precautions should I take for Simhastha 2028?",
+            "answer": "Critical: Ujjain in April-May can reach 40-43°C. Carry 2-3 litres of water at all times, drink only bottled/filtered water, eat at certified stalls, carry ORS sachets and heatstroke medicine, wear light cotton clothes with a cap or umbrella, apply SPF 50+ sunscreen, avoid being outdoors 11 AM-4 PM, and get Hepatitis A/B and Typhoid vaccinations."
+          },
+          {
+            "id": 21,
+            "category": "Health & Safety",
+            "question": "What medical facilities are available at Simhastha 2028?",
+            "answer": "The Simhastha Authority deploys medical camps across all sectors, main hospital within the mela grounds, heatstroke treatment centres (essential given April-May temperatures), mobile medical units, and ORS distribution points. Nearest major hospital: District Hospital Ujjain; for serious cases: MY Hospital Indore (55 km)."
+          },
+          {
+            "id": 22,
+            "category": "Health & Safety",
+            "question": "How do I deal with the intense heat at Simhastha?",
+            "answer": "Beat the heat: carry a 2-litre water bottle and refill at free kiosks, wear loose cotton clothes in light colours, use an umbrella or wide-brim hat, avoid direct sun 11 AM-4 PM, eat light meals and avoid oily food in the heat, carry ORS sachets and use them if you feel dizzy, and rest in shaded mela rest zones during peak heat hours."
+          },
+          {
+            "id": 24,
+            "category": "General",
+            "question": "What should I pack for Simhastha Kumbh 2028?",
+            "answer": "Pack: light cotton clothes (April-May is 40°C+), wide-brim hat and umbrella for sun, sunscreen SPF 50+, multiple sets of clothes for bathing, ORS sachets and heatstroke medicine, phone charger and power bank, water bottle, ID documents (Aadhaar), cash, small lock for tent, whistle, and a light backpack. You'll walk 8-12 km daily."
+          }
+        ],
+        "categories": [
+          "Getting There",
+          "Accommodation",
+          "Religious Events",
+          "Health & Safety",
+          "General"
+        ],
+        "total": 4,
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/faq?category=Health%20%26%20Safety": {
+      "status": 200,
+      "body": {
+        "faqs": [
+          {
+            "id": 18,
+            "category": "Health & Safety",
+            "question": "What health precautions should I take for Simhastha 2028?",
+            "answer": "Critical: Ujjain in April-May can reach 40-43°C. Carry 2-3 litres of water at all times, drink only bottled/filtered water, eat at certified stalls, carry ORS sachets and heatstroke medicine, wear light cotton clothes with a cap or umbrella, apply SPF 50+ sunscreen, avoid being outdoors 11 AM-4 PM, and get Hepatitis A/B and Typhoid vaccinations."
+          },
+          {
+            "id": 19,
+            "category": "Health & Safety",
+            "question": "How do I handle crowd safety at Simhastha?",
+            "answer": "Crowd safety: Set a specific meeting point before entering crowded areas (Ram Ghat Gate or Mahakal Temple entrance), carry a whistle, keep phone charged with a power bank, avoid pushing in dense crowds, move with the crowd flow if caught in a surge, identify nearest exits when you arrive, and follow police and volunteer instructions."
+          },
+          {
+            "id": 20,
+            "category": "Health & Safety",
+            "question": "What if I lose my companions in the Simhastha crowd?",
+            "answer": "If separated: 1) Go to the nearest police post or volunteer booth immediately, 2) Call 112 (national emergency number), 3) Loudspeaker announcements are made across mela grounds, 4) Visit Lost & Found Center near Ram Ghat Sector 1 gate. Prevention: agree on a meeting point, share phone numbers, write your number on children's wrists."
+          },
+          {
+            "id": 21,
+            "category": "Health & Safety",
+            "question": "What medical facilities are available at Simhastha 2028?",
+            "answer": "The Simhastha Authority deploys medical camps across all sectors, main hospital within the mela grounds, heatstroke treatment centres (essential given April-May temperatures), mobile medical units, and ORS distribution points. Nearest major hospital: District Hospital Ujjain; for serious cases: MY Hospital Indore (55 km)."
+          },
+          {
+            "id": 22,
+            "category": "Health & Safety",
+            "question": "How do I deal with the intense heat at Simhastha?",
+            "answer": "Beat the heat: carry a 2-litre water bottle and refill at free kiosks, wear loose cotton clothes in light colours, use an umbrella or wide-brim hat, avoid direct sun 11 AM-4 PM, eat light meals and avoid oily food in the heat, carry ORS sachets and use them if you feel dizzy, and rest in shaded mela rest zones during peak heat hours."
+          }
+        ],
+        "categories": [
+          "Getting There",
+          "Accommodation",
+          "Religious Events",
+          "Health & Safety",
+          "General"
+        ],
+        "total": 5,
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/faq?category=All": {
+      "status": 200,
+      "body": {
+        "faqs": [
+          {
+            "id": 1,
+            "category": "Getting There",
+            "question": "How do I reach Ujjain for Simhastha Kumbh 2028?",
+            "answer": "Ujjain is well-connected by train (Ujjain Junction), road (NH-52, NH-47), and via nearby Indore airport (55 km). MP State Roadways runs regular buses. Indian Railways will operate special Simhastha trains from Delhi, Mumbai, Bhopal, and Ahmedabad. The nearest airport is Devi Ahilya Bai Holkar Airport, Indore."
+          },
+          {
+            "id": 2,
+            "category": "Getting There",
+            "question": "Which trains go to Ujjain for Simhastha 2028?",
+            "answer": "Indian Railways will operate special Simhastha trains from Delhi, Mumbai, Bhopal, Ahmedabad, Kolkata, and other cities. Book on IRCTC (irctc.co.in) at least 30-60 days in advance. Ujjain Junction is the main station — centrally located, just 2 km from Ram Ghat."
+          },
+          {
+            "id": 3,
+            "category": "Getting There",
+            "question": "Can I reach Ujjain by road?",
+            "answer": "Yes! Ujjain is connected via NH-52 (Agra-Mumbai), NH-47, and NH-146. MP State Roadways and private buses run from Indore (1.5 hrs), Bhopal (4 hrs), and Ahmedabad (5 hrs). Parking is at designated zones outside the mela area; shuttles ferry pilgrims to ghats."
+          },
+          {
+            "id": 4,
+            "category": "Getting There",
+            "question": "What is the nearest airport to Ujjain?",
+            "answer": "Devi Ahilya Bai Holkar Airport, Indore (IATA: IDR) is 55 km from Ujjain — about 1-1.5 hours by taxi. IndiGo, Air India, and SpiceJet fly here from Delhi, Mumbai, Bangalore, and other cities. Pre-book a taxi for the Indore–Ujjain transfer."
+          },
+          {
+            "id": 5,
+            "category": "Getting There",
+            "question": "How do I get from Ujjain station to the ghats?",
+            "answer": "From Ujjain Junction: government shuttle buses (every 15-20 min), e-rickshaws (₹20-50), autos, or Simhastha mela buses. Ram Ghat is about 2 km from the station. Avoid private vehicles on major bathing days as roads near the ghats are closed to traffic."
+          },
+          {
+            "id": 6,
+            "category": "Getting There",
+            "question": "When is the best time to visit to avoid heavy crowds?",
+            "answer": "Avoid the main snan (bathing) days if you prefer smaller crowds. The individual dates have not been officially confirmed yet; check official announcements. Weekdays are usually calmer than weekends, and early morning is usually quieter for a bath."
+          },
+          {
+            "id": 7,
+            "category": "Accommodation",
+            "question": "Where can I stay during Simhastha Kumbh 2028?",
+            "answer": "Options: 1) Government tent cities near Ram Ghat on Kshipra riverbank, 2) Private tent cities (budget to luxury), 3) Dharamshalas and akhara camps (some free), 4) Hotels in Ujjain city — book 2-3 months early, 5) Hotels in Indore (55 km) as an overflow option with daily commute by train or road."
+          },
+          {
+            "id": 8,
+            "category": "Accommodation",
+            "question": "How much does accommodation cost during Simhastha?",
+            "answer": "Costs vary: Basic government tents: ₹200-500/night, Private tent cities: ₹500-5000+/night, Dharamshalas: ₹100-300/night, Hotels in Ujjain: ₹800-5000+/night, Indore hotels: ₹600-4000/night. Prices may surge near major bathing days. Book at least 2-3 months in advance."
+          },
+          {
+            "id": 9,
+            "category": "Accommodation",
+            "question": "Are there free accommodation options in Ujjain?",
+            "answer": "Yes! Many akharas, dharamshalas, and temples offer free or nominal-cost accommodation. ISKCON Ujjain, Sandipani Ashram, and various akhara camps provide accommodation with participation in daily prayers. Book in advance as spaces fill quickly."
+          },
+          {
+            "id": 10,
+            "category": "Accommodation",
+            "question": "Is it safe to stay in tent cities?",
+            "answer": "Yes. The Simhastha Authority sets up well-organized tent cities with security, lighting, and basic amenities. Government camps are regularly patrolled. Keep valuables secure, use locker facilities, and keep emergency numbers handy. Traveling in groups after dark is recommended."
+          },
+          {
+            "id": 11,
+            "category": "Accommodation",
+            "question": "Can I stay in Indore and commute to Ujjain daily?",
+            "answer": "Yes! Many pilgrims base themselves in Indore (55 km) and commute by train (about 1 hr) or road (1.5 hrs). This is a great option when Ujjain accommodation is fully booked."
+          },
+          {
+            "id": 12,
+            "category": "Religious Events",
+            "question": "What are the Amrit Snan dates for Simhastha Kumbh 2028?",
+            "answer": "The individual bathing dates have not been officially confirmed yet. The planned schedule is 3 Shahi Snan and 7 Parv Snan during 9 April to 8 May 2028 (proposed, awaiting official confirmation, based on a Madhya Pradesh government publication dated 11-17 March 2024). Please check official announcements from the Madhya Pradesh government or Ujjain District Administration (https://ujjain.nic.in)."
+          },
+          {
+            "id": 13,
+            "category": "Religious Events",
+            "question": "Why is Ujjain special for Kumbh Mela?",
+            "answer": "Ujjain is one of four sacred Kumbh Mela cities (with Prayagraj, Haridwar, and Nashik). According to legend, drops of divine nectar fell here during Samudra Manthan. It is called \"Simhastha\" because the mela occurs when Jupiter enters Leo (Simha Rashi). Ujjain is also home to Mahakaleshwar — one of the 12 Jyotirlingas of Lord Shiva."
+          },
+          {
+            "id": 14,
+            "category": "Religious Events",
+            "question": "What is Mesh Sankranti and why is it the most important day?",
+            "answer": "Mesh Sankranti is when the Sun enters Aries (Mesh Rashi). This astronomical alignment, combined with Jupiter in Leo, is the reason Simhastha is held in Ujjain. Whether it will be a bathing date in 2028 has not been officially confirmed yet. Expect very large crowds on major bathing days."
+          },
+          {
+            "id": 15,
+            "category": "Religious Events",
+            "question": "What is the Akhara procession at Simhastha?",
+            "answer": "The Amrit Snan procession is led by the thirteen akharas of Naga sadhus, saints, and ascetics in a traditional order. The spectacular procession features elephants, chariots, and thousands of ash-clad Naga sadhus. Devotees consider it auspicious to seek blessings from the saints during this once-in-12-years event."
+          },
+          {
+            "id": 16,
+            "category": "Religious Events",
+            "question": "What should I carry for the holy bath in Kshipra?",
+            "answer": "Carry: 2 extra sets of clothes, waterproof bag for valuables, small towel, copper vessel for holy Kshipra water, offerings (flowers, fruits, diyas), and a small first aid kit. Wear simple cotton clothes in saffron/yellow/white. Avoid expensive jewelry. Wet sandals are practical at the ghat."
+          },
+          {
+            "id": 17,
+            "category": "Religious Events",
+            "question": "What other rituals can I do during Simhastha 2028?",
+            "answer": "Beyond the holy dip: attend Bhasma Aarti at Mahakaleshwar Jyotirlinga (4 AM — book passes online in advance), witness Kshipra Aarti at Ram Ghat at sunset, perform Pind Daan at Siddhavat Ghat, visit Kal Bhairav Temple and Harsiddhi Mata, attend pravachans by saints, and complete the Simhastha Parikrama (ritual circumambulation)."
+          },
+          {
+            "id": 18,
+            "category": "Health & Safety",
+            "question": "What health precautions should I take for Simhastha 2028?",
+            "answer": "Critical: Ujjain in April-May can reach 40-43°C. Carry 2-3 litres of water at all times, drink only bottled/filtered water, eat at certified stalls, carry ORS sachets and heatstroke medicine, wear light cotton clothes with a cap or umbrella, apply SPF 50+ sunscreen, avoid being outdoors 11 AM-4 PM, and get Hepatitis A/B and Typhoid vaccinations."
+          },
+          {
+            "id": 19,
+            "category": "Health & Safety",
+            "question": "How do I handle crowd safety at Simhastha?",
+            "answer": "Crowd safety: Set a specific meeting point before entering crowded areas (Ram Ghat Gate or Mahakal Temple entrance), carry a whistle, keep phone charged with a power bank, avoid pushing in dense crowds, move with the crowd flow if caught in a surge, identify nearest exits when you arrive, and follow police and volunteer instructions."
+          },
+          {
+            "id": 20,
+            "category": "Health & Safety",
+            "question": "What if I lose my companions in the Simhastha crowd?",
+            "answer": "If separated: 1) Go to the nearest police post or volunteer booth immediately, 2) Call 112 (national emergency number), 3) Loudspeaker announcements are made across mela grounds, 4) Visit Lost & Found Center near Ram Ghat Sector 1 gate. Prevention: agree on a meeting point, share phone numbers, write your number on children's wrists."
+          },
+          {
+            "id": 21,
+            "category": "Health & Safety",
+            "question": "What medical facilities are available at Simhastha 2028?",
+            "answer": "The Simhastha Authority deploys medical camps across all sectors, main hospital within the mela grounds, heatstroke treatment centres (essential given April-May temperatures), mobile medical units, and ORS distribution points. Nearest major hospital: District Hospital Ujjain; for serious cases: MY Hospital Indore (55 km)."
+          },
+          {
+            "id": 22,
+            "category": "Health & Safety",
+            "question": "How do I deal with the intense heat at Simhastha?",
+            "answer": "Beat the heat: carry a 2-litre water bottle and refill at free kiosks, wear loose cotton clothes in light colours, use an umbrella or wide-brim hat, avoid direct sun 11 AM-4 PM, eat light meals and avoid oily food in the heat, carry ORS sachets and use them if you feel dizzy, and rest in shaded mela rest zones during peak heat hours."
+          },
+          {
+            "id": 23,
+            "category": "General",
+            "question": "What is Simhastha Kumbh 2028 and why is it special?",
+            "answer": "Simhastha Kumbh 2028 is the grand Kumbh Mela held in Ujjain, Madhya Pradesh from 27 March to 27 May 2028 (planned period, proposed and awaiting official confirmation) on the Kshipra riverbank. It occurs every 12 years when Jupiter enters Leo (Simha Rashi) and the Sun enters Aries. The last Simhastha was in 2016. Attendance estimates have varied; there is no official figure."
+          },
+          {
+            "id": 24,
+            "category": "General",
+            "question": "What should I pack for Simhastha Kumbh 2028?",
+            "answer": "Pack: light cotton clothes (April-May is 40°C+), wide-brim hat and umbrella for sun, sunscreen SPF 50+, multiple sets of clothes for bathing, ORS sachets and heatstroke medicine, phone charger and power bank, water bottle, ID documents (Aadhaar), cash, small lock for tent, whistle, and a light backpack. You'll walk 8-12 km daily."
+          },
+          {
+            "id": 25,
+            "category": "General",
+            "question": "What major temples should I visit in Ujjain during Simhastha?",
+            "answer": "Must-visit: Mahakaleshwar Jyotirlinga (one of 12 Jyotirlingas — Bhasma Aarti at 4 AM), Kal Bhairav Temple, Harsiddhi Mata Temple (Shakti Peeth), Mangalnath Temple (birthplace of Mars), Sandipani Ashram (where Krishna studied), Chintaman Ganesh Temple, Bade Ganeshji Ka Mandir, and Ram Ghat for evening Kshipra Aarti."
+          },
+          {
+            "id": 26,
+            "category": "General",
+            "question": "What ghat etiquette should I follow at Kshipra river?",
+            "answer": "Ghat etiquette: Maintain silence or speak softly, remove footwear before ghat areas, dress modestly (cover shoulders and knees), do not litter, do not photograph people bathing without consent, avoid using soap/shampoo directly in the river, follow designated entry/exit flow, and respect others' rituals and prayers."
+          },
+          {
+            "id": 27,
+            "category": "General",
+            "question": "Are ATMs and digital payments available at Simhastha?",
+            "answer": "Yes, ATMs from SBI, HDFC, and other banks will be deployed across mela grounds. ATMs may run dry on major bathing days, so carry ₹2,000-3,000 in cash. Digital payments (UPI, Google Pay, PhonePe) are widely accepted at certified stalls and shops in the mela area."
+          },
+          {
+            "id": 28,
+            "category": "General",
+            "question": "Is Simhastha accessible for elderly and differently-abled pilgrims?",
+            "answer": "Yes. The Simhastha Authority makes special arrangements: wheelchair-accessible paths to major ghats, dedicated bathing areas for elderly and differently-abled, volunteer helpers, golf carts for mobility assistance, special medical support, and accessible toilet facilities. Check official sources such as Ujjain District Administration (https://ujjain.nic.in) in advance to arrange specific assistance."
+          }
+        ],
+        "categories": [
+          "Getting There",
+          "Accommodation",
+          "Religious Events",
+          "Health & Safety",
+          "General"
+        ],
+        "total": 28,
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/emergency": {
+      "status": 200,
+      "body": {
+        "contacts": [
+          {
+            "id": "emergency.national.112",
+            "name": "National emergency",
+            "number": "112",
+            "icon": "alert",
+            "color": "red",
+            "description": "National unified emergency number",
+            "primary": true,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.mha.gov.in/emergency-response-support-system-erss",
+              "issuingBody": "Ministry of Home Affairs, Government of India",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed"
+            }
+          },
+          {
+            "id": "emergency.police.100",
+            "name": "Police",
+            "number": "100",
+            "icon": "shield",
+            "color": "blue",
+            "description": "Police",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.incredibleindia.gov.in/en/emergency",
+              "issuingBody": "Ministry of Tourism, Government of India (Incredible India)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed"
+            }
+          },
+          {
+            "id": "emergency.fire.101",
+            "name": "Fire",
+            "number": "101",
+            "icon": "flame",
+            "color": "orange",
+            "description": "Fire and rescue",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.incredibleindia.gov.in/en/emergency",
+              "issuingBody": "Ministry of Tourism, Government of India (Incredible India)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed"
+            }
+          },
+          {
+            "id": "emergency.ambulance.102",
+            "name": "Ambulance",
+            "number": "102",
+            "icon": "ambulance",
+            "color": "red",
+            "description": "Ambulance",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.incredibleindia.gov.in/en/emergency",
+              "issuingBody": "Ministry of Tourism, Government of India (Incredible India)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed",
+              "pageLastUpdated": "2019-06-29",
+              "pageUrl": "https://ujjain.nic.in/en/helpline/"
+            }
+          },
+          {
+            "id": "emergency.women.1091",
+            "name": "Women in Distress",
+            "number": "1091",
+            "icon": "user",
+            "color": "pink",
+            "description": "Women in distress",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.incredibleindia.gov.in/en/emergency",
+              "issuingBody": "Ministry of Tourism, Government of India (Incredible India)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed",
+              "pageLastUpdated": "2019-06-29",
+              "pageUrl": "https://ujjain.nic.in/en/helpline/"
+            }
+          },
+          {
+            "id": "emergency.child.1098",
+            "name": "Child Helpline",
+            "number": "1098",
+            "icon": "heart",
+            "color": "yellow",
+            "description": "Child helpline",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.india.gov.in/directory/helpline",
+              "issuingBody": "Government of India (India.gov.in National Portal)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed",
+              "pageLastUpdated": "2019-06-29",
+              "pageUrl": "https://ujjain.nic.in/en/helpline/"
+            }
+          },
+          {
+            "id": "emergency.tourist.1363",
+            "name": "Tourist helpline (national)",
+            "number": "1363",
+            "icon": "info",
+            "color": "green",
+            "description": "National tourist helpline",
+            "primary": false,
+            "group": "emergency",
+            "clickable": true,
+            "source": {
+              "url": "https://www.incredibleindia.gov.in/en/emergency",
+              "issuingBody": "Ministry of Tourism, Government of India (Incredible India)",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed"
+            }
+          },
+          {
+            "id": "local.sp_office.0734_2527130",
+            "name": "Superintendent of Police office, Ujjain (listed in district directory)",
+            "number": "0734-2527130",
+            "icon": "shield",
+            "color": "blue",
+            "description": "Office directory number (not a confirmed 24-hour line)",
+            "primary": false,
+            "group": "local_directory",
+            "clickable": true,
+            "source": {
+              "url": "https://ujjain.nic.in/en/divisions/district-administration/",
+              "issuingBody": "Ujjain District Administration",
+              "lastVerified": "2026-11-26",
+              "status": "officially_listed"
+            }
+          }
+        ],
+        "infoCards": [
+          {
+            "id": "lost-found",
+            "title": "Lost & Found Center",
+            "icon": "search",
+            "color": "amber",
+            "details": [
+              "Main Lost & Found: Sector 1, near Ram Ghat main entrance, Ujjain",
+              "Report lost persons at nearest Police Post immediately",
+              "Lost children: Announced on loudspeaker at all entry gates",
+              "Keep a recent photo of companions on your phone",
+              "Tie a distinct band on children's wrists with your phone number"
+            ]
+          },
+          {
+            "id": "medical",
+            "title": "Medical & Heatstroke Centres",
+            "icon": "cross",
+            "color": "red",
+            "details": [
+              "Medical camps across all sectors of Simhastha grounds",
+              "Special heatstroke treatment centres (April-May is 40°C+)",
+              "Free treatment at all government medical camps",
+              "Ambulances stationed near all major ghats including Ram Ghat",
+              "ORS distribution points at all sector entry gates"
+            ]
+          }
+        ],
+        "lastVerified": "2026-11-26",
+        "note": "Numbers are as listed by the cited official sources. They have not been independently call-tested and are not event-specific Simhastha helplines.",
+        "event": "Simhastha Kumbh 2028, Ujjain, MP"
+      }
+    },
+    "/api/services": {
+      "status": 200,
+      "body": {
+        "services": [
+          {
+            "id": "food",
+            "category": "Food & Langars",
+            "icon": "🍚",
+            "items": [
+              {
+                "name": "Government Food Camps",
+                "detail": "Free meals at all sectors. Dal, rice, roti served.",
+                "location": "Near each sector entry gate",
+                "timing": "7 AM – 10 PM",
+                "cost": "Free"
+              },
+              {
+                "name": "Akhara Langars",
+                "detail": "Religious organizations serve free food to all pilgrims.",
+                "location": "Near major akharas in tent city",
+                "timing": "6 AM – 9 PM",
+                "cost": "Free (donation optional)"
+              },
+              {
+                "name": "Mela Food Courts",
+                "detail": "Certified stalls with snacks, thalis, and tea.",
+                "location": "All sectors",
+                "timing": "5 AM – 11 PM",
+                "cost": "₹20 – ₹150"
+              },
+              {
+                "name": "Mobile Canteens",
+                "detail": "IRCTC and MP Tourism mobile canteens with standard pricing and hygienic food.",
+                "location": "Near major ghats in Ujjain",
+                "timing": "6 AM – 9 PM",
+                "cost": "₹30 – ₹200"
+              }
+            ]
+          },
+          {
+            "id": "water",
+            "category": "Drinking Water",
+            "icon": "💧",
+            "warning": "Do NOT drink river water. Use designated drinking water points only.",
+            "items": [
+              {
+                "name": "Drinking Water Kiosks",
+                "detail": "RO-purified water kiosks every 200-300 meters across the mela grounds.",
+                "location": "Entire mela area",
+                "timing": "24 hours",
+                "cost": "Free"
+              },
+              {
+                "name": "Packaged Water",
+                "detail": "ISI-marked bottled water from certified vendors.",
+                "location": "All major markets",
+                "timing": "All day",
+                "cost": "₹15 – ₹25"
+              }
+            ]
+          },
+          {
+            "id": "sanitation",
+            "category": "Toilets & Sanitation",
+            "icon": "🚻",
+            "tip": "Locate the nearest toilet block when you arrive at any sector.",
+            "items": [
+              {
+                "name": "Community Toilet Blocks",
+                "detail": "Permanent and mobile toilet blocks throughout the mela grounds.",
+                "location": "Near all major ghats",
+                "timing": "24 hours",
+                "cost": "₹2 – ₹5"
+              },
+              {
+                "name": "Mobile Toilet Vans",
+                "detail": "Mobile toilet units deployed during peak days and near congested areas.",
+                "location": "Amrit Snan routes and crowded ghats",
+                "timing": "24 hours during major bathing days",
+                "cost": "Free"
+              },
+              {
+                "name": "Pink Toilets (Women)",
+                "detail": "Dedicated facilities for women at all major sectors.",
+                "location": "All sectors — pink signs",
+                "timing": "24 hours",
+                "cost": "₹2"
+              }
+            ]
+          },
+          {
+            "id": "banking",
+            "category": "ATMs & Banking",
+            "icon": "🏧",
+            "tip": "Carry ₹2,000-3,000 cash on major bathing days. ATMs may run dry.",
+            "items": [
+              {
+                "name": "ATMs",
+                "detail": "SBI, HDFC, ICICI, PNB ATMs deployed across the mela grounds.",
+                "location": "Near main entry points",
+                "timing": "24 hours",
+                "cost": "Bank charges apply"
+              },
+              {
+                "name": "UPI / Digital Payments",
+                "detail": "Google Pay, PhonePe, Paytm accepted at most certified stalls.",
+                "location": "Across all markets",
+                "timing": "All day",
+                "cost": "No extra charge"
+              },
+              {
+                "name": "Currency Exchange",
+                "detail": "RBI-authorized foreign exchange counters for international pilgrims.",
+                "location": "Near Sector 1 main entrance, Ujjain mela grounds",
+                "timing": "9 AM – 6 PM",
+                "cost": "Standard exchange rates"
+              }
+            ]
+          },
+          {
+            "id": "charging",
+            "category": "Phone Charging",
+            "icon": "🔋",
+            "warning": "⚠️ A dead phone = serious risk. Always keep at least 30% battery. Carry a power bank!",
+            "items": [
+              {
+                "name": "Phone Charging Stations",
+                "detail": "Solar-powered and grid-connected charging stations set up across the mela.",
+                "location": "Near food courts and waiting areas at all major sectors",
+                "timing": "6 AM – 10 PM",
+                "cost": "₹10 – ₹20 per hour"
+              },
+              {
+                "name": "Power Banks",
+                "detail": "Carry your own power bank (10,000 mAh minimum recommended). Available to purchase at Ujjain and Indore markets.",
+                "location": "Purchase at Freeganj or Tower Chowk market, Ujjain before entering the mela",
+                "timing": "As needed",
+                "cost": "₹500-₹1500 to purchase"
+              }
+            ]
+          },
+          {
+            "id": "accommodation-nearby",
+            "category": "Local Accommodation",
+            "icon": "🏕",
+            "tip": "💡 Book accommodation 2-3 months before the event. Prices triple close to the event.",
+            "items": [
+              {
+                "name": "Kumbh Tent Cities",
+                "detail": "Organized tent cities with cots, blankets, and basic amenities in Simhastha Kumbh sectors near Ram Ghat, Ujjain.",
+                "location": "Sectors 1-20, near Ram Ghat & Kshipra riverbank",
+                "timing": "Check-in 24 hrs",
+                "cost": "₹300 – ₹5,000/night"
+              },
+              {
+                "name": "Dharamshalas",
+                "detail": "Traditional pilgrim rest houses run by temples and religious organizations in Ujjain. Book in advance.",
+                "location": "Freeganj, Kothi Road, near Mahakal Temple",
+                "timing": "24 hours",
+                "cost": "₹100 – ₹500/night"
+              },
+              {
+                "name": "Indore Hotels (Overflow)",
+                "detail": "When Ujjain is full, Indore (55 km) hotels are a great base. Daily commute by train (1 hr) or road (1.5 hrs).",
+                "location": "Indore city — well connected to Ujjain",
+                "timing": "24 hours",
+                "cost": "₹600 – ₹5,000/night"
+              }
+            ]
+          }
+        ],
+        "total": 6,
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/services/food": {
+      "status": 200,
+      "body": {
+        "id": "food",
+        "category": "Food & Langars",
+        "icon": "🍚",
+        "items": [
+          {
+            "name": "Government Food Camps",
+            "detail": "Free meals at all sectors. Dal, rice, roti served.",
+            "location": "Near each sector entry gate",
+            "timing": "7 AM – 10 PM",
+            "cost": "Free"
+          },
+          {
+            "name": "Akhara Langars",
+            "detail": "Religious organizations serve free food to all pilgrims.",
+            "location": "Near major akharas in tent city",
+            "timing": "6 AM – 9 PM",
+            "cost": "Free (donation optional)"
+          },
+          {
+            "name": "Mela Food Courts",
+            "detail": "Certified stalls with snacks, thalis, and tea.",
+            "location": "All sectors",
+            "timing": "5 AM – 11 PM",
+            "cost": "₹20 – ₹150"
+          },
+          {
+            "name": "Mobile Canteens",
+            "detail": "IRCTC and MP Tourism mobile canteens with standard pricing and hygienic food.",
+            "location": "Near major ghats in Ujjain",
+            "timing": "6 AM – 9 PM",
+            "cost": "₹30 – ₹200"
+          }
+        ],
+        "verification": {
+          "status": "unverified_inherited",
+          "note": "Prices, timings, distances, facilities and other details are inherited and not officially confirmed. Check official sources before relying on them."
+        }
+      }
+    },
+    "/api/services/nope": {
+      "status": 404,
+      "body": {
+        "error": "Service category not found"
+      }
+    }
+  }
+}

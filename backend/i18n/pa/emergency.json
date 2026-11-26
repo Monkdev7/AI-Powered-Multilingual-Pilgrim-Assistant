@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "status": "needs-review",
+    "reviewer": "",
+    "date": "",
+    "notes": "AI-drafted translation. Needs review by a native speaker. Medical and safety instruction lines are kept in English (see keptEnglish) until human review.",
+    "keptEnglish": [
+      "infoCard.lost-found.details.0",
+      "infoCard.lost-found.details.1",
+      "infoCard.lost-found.details.2",
+      "infoCard.lost-found.details.3",
+      "infoCard.lost-found.details.4",
+      "infoCard.medical.details.0",
+      "infoCard.medical.details.1",
+      "infoCard.medical.details.2",
+      "infoCard.medical.details.3",
+      "infoCard.medical.details.4",
+      "note.none",
+      "event"
+    ]
+  },
+  "contact.emergency.national.112.name": "ਰਾਸ਼ਟਰੀ ਐਮਰਜੈਂਸੀ ਸੇਵਾ",
+  "contact.emergency.national.112.description": "ਰਾਸ਼ਟਰੀ ਇਕਸਾਰ ਐਮਰਜੈਂਸੀ ਨੰਬਰ",
+  "contact.emergency.police.100.name": "ਪੁਲਿਸ",
+  "contact.emergency.police.100.description": "ਪੁਲਿਸ",
+  "contact.emergency.fire.101.name": "ਫ਼ਾਇਰ",
+  "contact.emergency.fire.101.description": "ਫ਼ਾਇਰ ਅਤੇ ਬਚਾਅ",
+  "contact.emergency.ambulance.102.name": "ਐਂਬੂਲੈਂਸ",
+  "contact.emergency.ambulance.102.description": "ਐਂਬੂਲੈਂਸ",
+  "contact.emergency.women.1091.name": "ਸੰਕਟ ਵਿੱਚ ਔਰਤਾਂ",
+  "contact.emergency.women.1091.description": "ਸੰਕਟ ਵਿੱਚ ਔਰਤਾਂ",
+  "contact.emergency.child.1098.name": "ਬਾਲ ਹੈਲਪਲਾਈਨ",
+  "contact.emergency.child.1098.description": "ਬਾਲ ਹੈਲਪਲਾਈਨ",
+  "contact.emergency.tourist.1363.name": "ਸੈਰ-ਸਪਾਟਾ ਹੈਲਪਲਾਈਨ (ਰਾਸ਼ਟਰੀ)",
+  "contact.emergency.tourist.1363.description": "ਰਾਸ਼ਟਰੀ ਸੈਰ-ਸਪਾਟਾ ਹੈਲਪਲਾਈਨ",
+  "contact.local.sp_office.0734_2527130.name": "ਪੁਲਿਸ ਸੁਪਰਡੈਂਟ ਦਫ਼ਤਰ, ਉਜੈਨ (ਜ਼ਿਲ੍ਹਾ ਡਾਇਰੈਕਟਰੀ ਵਿੱਚ ਸੂਚੀਬੱਧ)",
+  "contact.local.sp_office.0734_2527130.description": "ਦਫ਼ਤਰ ਡਾਇਰੈਕਟਰੀ ਨੰਬਰ (24 ਘੰਟੇ ਦੀ ਪੁਸ਼ਟੀ ਕੀਤੀ ਲਾਈਨ ਨਹੀਂ)",
+  "infoCard.lost-found.title": "ਗੁੰਮ-ਮਿਲਿਆ ਕੇਂਦਰ",
+  "infoCard.medical.title": "ਡਾਕਟਰੀ ਅਤੇ ਹੀਟਸਟ੍ਰੋਕ ਕੇਂਦਰ",
+  "note.available": "ਇਹ ਨੰਬਰ ਦੱਸੇ ਗਏ ਸਰਕਾਰੀ ਸਰੋਤਾਂ ਵਿੱਚ ਸੂਚੀਬੱਧ ਹਨ। ਇਨ੍ਹਾਂ ਦੀ ਸੁਤੰਤਰ ਤੌਰ ਤੇ ਕਾਲ-ਜਾਂਚ ਨਹੀਂ ਕੀਤੀ ਗਈ, ਅਤੇ ਇਹ ਰਾਸ਼ਟਰੀ ਨੰਬਰ ਹਨ, ਸਿੰਹਸਥ ਸਮਾਗਮ ਦੀਆਂ ਖ਼ਾਸ ਹੈਲਪਲਾਈਨਾਂ ਨਹੀਂ।"
+}
