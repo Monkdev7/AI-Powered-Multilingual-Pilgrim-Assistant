@@ -15,6 +15,8 @@ import {
 import { getLanguage } from '../i18n/languages.js';
 import { tk } from '../i18n/index.js';
 import { useT } from '../i18n/useT.js';
+import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
+import OfflineEmergencyLink from './OfflineEmergencyLink.jsx';
 
 // Developer-only banner. The dynamic import sits in a dead branch in production builds, so the
 // banner (and its text) is not shipped to pilgrims.
@@ -207,6 +209,7 @@ function LanguageIndicator({ code }) {
 
 export default function ChatInterface({ selectedLanguage }) {
     const { t } = useT();
+    const online = useOnlineStatus();
     const [messages, setMessages] = useState(loadSavedMessages);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -236,7 +239,8 @@ export default function ChatInterface({ selectedLanguage }) {
     const sendMessage = useCallback(
         async (text, isRetry = false) => {
             const messageText = (text || input).trim();
-            if (!messageText || isLoading) return;
+            // Offline: nothing is sent and the draft stays in the input (the offline note explains why).
+            if (!messageText || isLoading || !online) return;
 
             setInput('');
 
@@ -315,7 +319,7 @@ export default function ChatInterface({ selectedLanguage }) {
                 setTimeout(() => inputRef.current?.focus(), 100);
             }
         },
-        [input, isLoading, messages, selectedLanguage]
+        [input, isLoading, online, messages, selectedLanguage]
     );
 
     const handleKeyDown = (e) => {
@@ -407,7 +411,8 @@ export default function ChatInterface({ selectedLanguage }) {
                             <button
                                 key={q.id}
                                 onClick={() => sendMessage(t(q.key))}
-                                className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-3 py-1.5 transition-colors"
+                                disabled={!online}
+                                className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-3 py-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {t(q.key)}
                             </button>
@@ -418,6 +423,12 @@ export default function ChatInterface({ selectedLanguage }) {
 
             {/* Input area */}
             <div className="border-t border-orange-100 bg-white px-4 py-3">
+                {!online && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-2 flex flex-col gap-2">
+                        <p id="chat-offline-note" className="text-xs text-amber-800">{t('offline.chat')}</p>
+                        <OfflineEmergencyLink className="w-full" />
+                    </div>
+                )}
                 <div className="flex items-end gap-2 bg-orange-50 rounded-2xl border border-orange-200 px-4 py-2 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-200 transition-all">
                     <textarea
                         ref={inputRef}
@@ -431,10 +442,11 @@ export default function ChatInterface({ selectedLanguage }) {
                         style={{ minHeight: '24px' }}
                         disabled={isLoading}
                         aria-label={t('chat.inputLabel')}
+                        aria-describedby={!online ? 'chat-offline-note' : undefined}
                     />
                     <button
                         onClick={() => sendMessage()}
-                        disabled={!input.trim() || isLoading}
+                        disabled={!input.trim() || isLoading || !online}
                         className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-200 disabled:cursor-not-allowed text-white rounded-xl p-2 transition-all active:scale-95 flex-shrink-0 mb-0.5"
                         aria-label={t('chat.send')}
                         title={t('chat.send')}

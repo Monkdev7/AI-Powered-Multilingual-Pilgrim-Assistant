@@ -2,6 +2,8 @@ import React from 'react';
 import { Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
 import { getErrorMessage } from '../utils/api';
 import { useT } from '../i18n/useT.js';
+import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
+import OfflineEmergencyLink from './OfflineEmergencyLink.jsx';
 
 export function LoadingState({ label }) {
     const { t } = useT();
@@ -13,12 +15,14 @@ export function LoadingState({ label }) {
     );
 }
 
-export function ErrorState({ error, onRetry }) {
+export function ErrorState({ error, onRetry, showEmergency = false }) {
     const { t } = useT();
+    const online = useOnlineStatus();
     return (
         <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-center" role="alert">
             <AlertTriangle size={28} className="mx-auto mb-2 text-red-400" aria-hidden="true" />
-            <p className="text-sm text-red-700 mb-3">{getErrorMessage(error, t)}</p>
+            <p className="text-sm text-red-700 mb-3">{online ? getErrorMessage(error, t) : t('offline.unavailable')}</p>
+            {showEmergency && <OfflineEmergencyLink className="mb-3 w-full sm:w-auto" />}
             <button
                 type="button"
                 onClick={onRetry}

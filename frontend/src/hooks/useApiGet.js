@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { apiGet, ApiError, isAbortedError } from '../utils/api';
+import { useOnlineStatus } from './useOnlineStatus.js';
 
 // GET a backend resource with loading/error state, abort of stale requests and retry.
 // The request starts in a timer (default 0 ms) so React StrictMode's immediate
@@ -11,6 +12,13 @@ export function useApiGet(path, { params, validate, delay = 0 } = {}) {
     const [attempt, setAttempt] = useState(0);
     const validateRef = useRef(validate);
     validateRef.current = validate;
+    // Reload once when the connection returns (offline -> online). Going offline does not clear data already loaded.
+    const online = useOnlineStatus();
+    const wasOnline = useRef(online);
+    useEffect(() => {
+        if (online && !wasOnline.current) setAttempt((a) => a + 1);
+        wasOnline.current = online;
+    }, [online]);
 
     useEffect(() => {
         const controller = new AbortController();

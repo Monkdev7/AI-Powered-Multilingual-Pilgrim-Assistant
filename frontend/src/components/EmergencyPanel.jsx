@@ -283,7 +283,7 @@ export default function EmergencyPanel() {
                     {t('emergency.numbersHeading')}
                 </h3>
                 {error ? (
-                    <ErrorState error={error} onRetry={retry} />
+                    <ErrorState error={error} onRetry={retry} showEmergency />
                 ) : loading ? (
                     <LoadingState label={t('emergency.loading')} />
                 ) : emergencyContacts.length === 0 ? (

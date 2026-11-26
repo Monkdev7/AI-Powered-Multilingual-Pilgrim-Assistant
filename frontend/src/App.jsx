@@ -8,6 +8,7 @@ import NavigationGuide from './components/NavigationGuide';
 import LocalServices from './components/LocalServices';
 import CountdownTimer from './components/CountdownTimer';
 import TranslationNotice from './components/TranslationNotice';
+import OfflineBanner from './components/OfflineBanner';
 import LanguageProvider from './i18n/LanguageProvider.jsx';
 import { tk } from './i18n/index.js';
 import { useT } from './i18n/useT.js';
@@ -87,6 +88,8 @@ function AppShell() {
                     >
                         {/* Translation draft notice (non-English languages only). Inside the content area so the chat height is unchanged. */}
                         <TranslationNotice />
+                        {/* Connection status: inside the content area, so the chat height and the bottom nav are unaffected. */}
+                        <OfflineBanner />
                         {/* Countdown: show at top of all non-chat tabs */}
                         {!isChat && (
                             <div className="px-4 pt-4">
