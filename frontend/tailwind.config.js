@@ -26,7 +26,7 @@ export default {
                 },
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Gujarati', 'Noto Sans Gurmukhi', 'system-ui', 'sans-serif'],
             },
             animation: {
                 'bounce-slow': 'bounce 2s infinite',

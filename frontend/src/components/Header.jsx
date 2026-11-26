@@ -6,7 +6,7 @@ export default function Header({ selectedLanguage, onLanguageChange }) {
         <header className="bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 shadow-lg sticky top-0 z-50">
             {/* Om pattern strip */}
             <div className="bg-orange-700/30 text-center py-0.5 text-xs text-orange-100 tracking-widest font-medium overflow-hidden">
-                <span>🔱 &nbsp; ॐ नमः शिवाय &nbsp; 🙏 &nbsp; जय महाकाल &nbsp; 🕉️ &nbsp; हर हर महादेव &nbsp; 🔱 &nbsp; ॐ नमः शिवाय &nbsp; 🙏 &nbsp; जय महाकाल &nbsp; 🕉️ &nbsp; हर हर महादेव</span>
+                <span lang="hi">🔱 &nbsp; ॐ नमः शिवाय &nbsp; 🙏 &nbsp; जय महाकाल &nbsp; 🕉️ &nbsp; हर हर महादेव &nbsp; 🔱 &nbsp; ॐ नमः शिवाय &nbsp; 🙏 &nbsp; जय महाकाल &nbsp; 🕉️ &nbsp; हर हर महादेव</span>
             </div>
 
             <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
