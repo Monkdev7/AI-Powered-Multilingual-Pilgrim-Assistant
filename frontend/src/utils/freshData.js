@@ -1,8 +1,8 @@
-﻿// Framework-free controller for data that must never be shown stale (the Emergency payload).
+// Framework-free controller for data that must never be shown stale (the Emergency payload).
 // Nothing is kept across offline/refresh: every transition replaces the whole state, and a generation
 // token plus AbortController make late responses from earlier requests harmless.
 // States: { data, error, loading }. `data` is non-null only after a fresh, validated response.
-export function createFreshController({ load, validate, isOnline, onChange, errors, delay = 0 }) {
+export function createFreshController({ load, validate, isOnline, onChange, errors, delay = 0, seed }) {
     let gen = 0;
     let timer = null;
     let abort = null;
@@ -21,11 +21,12 @@ export function createFreshController({ load, validate, isOnline, onChange, erro
         abort = null;
     };
     const offlineState = () => ({ data: null, error: errors.offline(), loading: false });
-    function refresh() {
+    // keepData (optional, used only by the first fetch for new params while online): show `seed()` as the loading-state data.
+    function refresh({ keepData = false } = {}) {
         cancel();
         if (disposed) return;
         if (!isOnline()) return set(offlineState());
-        set({ data: null, error: null, loading: true });
+        set({ data: keepData && seed ? seed() ?? null : null, error: null, loading: true });
         const mine = gen;
         const ac = new AbortController();
         abort = ac;

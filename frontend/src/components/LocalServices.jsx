@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, MapPin, Clock, Info } from 'lucide-react';
-import { useApiGet } from '../hooks/useApiGet';
+import { useFreshApiGet } from '../hooks/useFreshApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
@@ -107,7 +107,7 @@ function ChatTip() {
 }
 export default function LocalServices() {
     const { t, lang } = useT();
-    const { data, error, loading, retry } = useApiGet('/api/services', { params: servicesParams(lang), validate: validateServicesResponse });
+    const { data, error, loading, retry } = useFreshApiGet('/api/services', { params: servicesParams(lang), validate: validateServicesResponse });
     const services = data?.services || [];
     return (
         <div className="p-4 space-y-4">

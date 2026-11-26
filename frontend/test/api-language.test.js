@@ -57,11 +57,11 @@ test('static scan: the three components pass the selected language to useApiGet'
     const em = read('src/components/EmergencyPanel.jsx');
     const sv = read('src/components/LocalServices.jsx');
     assert.match(faq, /const \{ t, lang \} = useT\(\)/);
-    assert.match(faq, /useApiGet\('\/api\/faq', \{\s*params: faqParams\(\{ lang,/);
+    assert.match(faq, /useFreshApiGet\('\/api\/faq', \{\s*params: faqParams\(\{ lang,/);
     assert.match(em, /const \{ t, lang \} = useT\(\)/);
     assert.match(em, /useFreshApiGet\('\/api\/emergency', \{ params: emergencyParams\(lang\)/);
     assert.match(sv, /const \{ t, lang \} = useT\(\)/);
-    assert.match(sv, /useApiGet\('\/api\/services', \{ params: servicesParams\(lang\)/);
+    assert.match(sv, /useFreshApiGet\('\/api\/services', \{ params: servicesParams\(lang\)/);
 });
 
 test('static scan: FAQ filter state holds category ids, chips show response labels, and Phase 2 states and Phase 4 features remain', () => {

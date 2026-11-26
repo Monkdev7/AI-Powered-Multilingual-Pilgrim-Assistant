@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Search, X, BookOpen, Share2 } from 'lucide-react';
-import { useApiGet } from '../hooks/useApiGet';
+import { useFreshApiGet } from '../hooks/useFreshApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
@@ -73,7 +73,6 @@ export default function FAQSection() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [debouncedSearch, setDebouncedSearch] = useState('');
-    const [categories, setCategories] = useState([]);
 
     // Debounce typing so each keystroke does not trigger a backend request
     useEffect(() => {
@@ -82,15 +81,15 @@ export default function FAQSection() {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const { data, error, loading, retry } = useApiGet('/api/faq', {
+    const { data, error, loading, retry } = useFreshApiGet('/api/faq', {
         params: faqParams({ lang, category: selectedCategory, search: debouncedSearch }),
         validate: validateFaqResponse,
+        keepPrevious: true,
     });
 
-    // Categories come from the API response (the list is not narrowed by filters)
-    useEffect(() => {
-        if (data?.categories) setCategories(categoryOptionsFrom(data));
-    }, [data]);
+    // Categories come from the API response (the list is not narrowed by filters). Derived, never held in state,
+    // so they disappear together with the data when the browser goes offline.
+    const categories = useMemo(() => (data?.categories ? categoryOptionsFrom(data) : []), [data]);
 
     const faqs = data?.faqs || [];
     const faqCategories = [{ id: ALL_CATEGORIES, label: t('faq.all') }, ...categories];
