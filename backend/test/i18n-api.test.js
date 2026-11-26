@@ -17,7 +17,7 @@ const LANGS = ['en', 'hi', 'bn', 'ta', 'te', 'mr', 'gu', 'pa'];
 const NON_EN = LANGS.filter((l) => l !== 'en');
 const TODAY = golden.today;
 const FAR = '2040-01-01';
-const quiet = () => {};
+const quiet = () => { };
 const app = createApp({ today: TODAY, warn: quiet });
 const get = (url, a = app) => request(a).get(url);
 const I18N_DIR = path.join(__dirname, '..', 'i18n');
@@ -41,7 +41,7 @@ function stripAdditive(body) {
     return b;
 }
 
-const KEPT_FAQ = ['faq.18.answer', 'faq.19.answer', 'faq.20.answer', 'faq.21.answer', 'faq.22.answer', 'faq.24.answer'];
+const KEPT_FAQ = ['faq.10.answer', 'faq.18.answer', 'faq.19.answer', 'faq.20.answer', 'faq.21.answer', 'faq.22.answer', 'faq.24.answer', 'faq.28.answer'];
 const KEPT_EMERGENCY = [
     ...['lost-found', 'medical'].flatMap((c) => [0, 1, 2, 3, 4].map((i) => `infoCard.${c}.details.${i}`)),
     'note.none',
@@ -186,7 +186,7 @@ test('GET /api/faq for all eight languages: 28 ids 1-28, 5 category ids, same or
         } else {
             assert.equal(b.translation.status, 'needs-review');
             assert.deepEqual([...b.translation.fallbackIds].sort(), [...KEPT_FAQ].sort(), `${lang} fallbacks are exactly the kept-English answers`);
-            for (const id of [18, 19, 20, 21, 22, 24]) assert.equal(b.faqs[id - 1].answer, base.faqs[id - 1].answer, `${lang} faq ${id} answer stays English`);
+            for (const id of [10, 18, 19, 20, 21, 22, 24, 28]) assert.equal(b.faqs[id - 1].answer, base.faqs[id - 1].answer, `${lang} faq ${id} answer stays English`);
             for (const c of b.categoryOptions) assert.notEqual(c.label, base.categoryOptions.find((x) => x.id === c.id).label);
         }
     }
@@ -547,4 +547,56 @@ test('responses never claim verified or call-tested status; English proposed/unc
     assert.match(en.faqs[11].answer, /proposed, awaiting official confirmation/);
     assert.match(en.faqs[5].answer, /have not been officially confirmed yet/);
     assert.match(en.faqs[13].answer, /has not been officially confirmed yet/);
+});
+// ---------- FAQ 10 and 28: unsupported facility guarantees removed; English fallback in all locales ----------
+const REMOVED_FACILITY_CLAIMS = /well-organized|security, lighting, and basic|regularly patrolled|locker|wheelchair|golf|special medical support|dedicated bathing|volunteer helpers|accessible toilet|special arrangements/i;
+test('FAQ 10 and 28 (English): no unsupported facility guarantees; cautious wording points to the official administration', async () => {
+    const faqs = (await get('/api/faq')).body.faqs;
+    for (const id of [10, 28]) {
+        const f = faqs.find((x) => x.id === id);
+        assert.ok(f, `faq ${id} exists`);
+        assert.ok(!REMOVED_FACILITY_CLAIMS.test(f.answer), `faq ${id} still has a removed claim: ${f.answer}`);
+        assert.ok(!/^Yes\b/.test(f.answer), `faq ${id} must not answer with an unqualified Yes`);
+        assert.match(f.answer, /not (been )?officially confirmed/i, `faq ${id} states the arrangements are not officially confirmed`);
+        assert.match(f.answer, /Ujjain District Administration \(https:\/\/ujjain\.nic\.in\)/, `faq ${id} points to the official administration`);
+    }
+    // ids, questions and neighbours are untouched
+    assert.deepEqual(faqs.map((f) => f.id), Array.from({ length: 28 }, (_, i) => i + 1));
+    assert.equal(faqs.find((f) => f.id === 10).question, 'Is it safe to stay in tent cities?');
+    assert.equal(faqs.find((f) => f.id === 28).question, 'Is Simhastha accessible for elderly and differently-abled pilgrims?');
+});
+
+test('FAQ 10 and 28: all seven locales serve the English answer via fallback (declared, reported, never reviewed); questions stay translated', async () => {
+    const base = (await get('/api/faq')).body;
+    for (const lang of NON_EN) {
+        const overlay = readOverlay(lang, 'faq');
+        for (const id of [10, 28]) {
+            assert.ok(!(`faq.${id}.answer` in overlay), `${lang}: no translated faq.${id}.answer may remain`);
+            assert.ok(overlay._meta.keptEnglish.includes(`faq.${id}.answer`), `${lang}: faq.${id}.answer is declared keptEnglish`);
+            assert.ok(`faq.${id}.question` in overlay, `${lang}: faq.${id}.question is still translated`);
+        }
+        assert.equal(overlay._meta.status, 'needs-review');
+        assert.equal(overlay._meta.reviewer, '');
+        const body = (await get(`/api/faq?lang=${lang}`)).body;
+        for (const id of [10, 28]) {
+            const f = body.faqs.find((x) => x.id === id);
+            assert.equal(f.answer, base.faqs.find((x) => x.id === id).answer, `${lang} faq ${id} answer is the English text`);
+            assert.notEqual(f.question, base.faqs.find((x) => x.id === id).question, `${lang} faq ${id} question is translated`);
+            assert.ok(!REMOVED_FACILITY_CLAIMS.test(f.answer), `${lang} faq ${id} has no removed claim`);
+            assert.ok(body.translation.fallbackIds.includes(`faq.${id}.answer`), `${lang} reports faq.${id}.answer as a fallback`);
+        }
+        assert.equal(body.translation.status, 'needs-review');
+    }
+});
+
+test('FAQ 10 and 28: no locale overlay or public output still contains the removed facility claims', async () => {
+    for (const lang of NON_EN) {
+        const text = JSON.stringify(readOverlay(lang, 'faq'));
+        assert.ok(!/faq\.(10|28)\.answer"\s*:/.test(text.replace(/"keptEnglish"[\s\S]*?\]/, '')), `${lang} overlay has no answer for 10/28`);
+    }
+    for (const lang of LANGS) {
+        const q = lang === 'en' ? '' : `?lang=${lang}`;
+        const body = JSON.stringify((await get(`/api/faq${q}`)).body);
+        assert.ok(!REMOVED_FACILITY_CLAIMS.test(body), `${lang} /api/faq output contains a removed facility claim`);
+    }
 });
