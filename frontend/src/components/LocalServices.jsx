@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, MapPin, Clock, Info } from 'lucide-react';
 import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
+import { useT } from '../i18n/useT.js';
+import { tk } from '../i18n/index.js';
 
 // The API sends no styling; card colors are keyed by service id (literal Tailwind classes)
 const CATEGORY_COLORS = {
@@ -42,6 +44,7 @@ function ServiceItem({ item }) {
 }
 
 function ServiceCategory({ service }) {
+    const { t } = useT();
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -53,7 +56,7 @@ function ServiceCategory({ service }) {
                 <span className="text-2xl flex-shrink-0">{service.icon}</span>
                 <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-800 text-sm">{service.category}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{service.items.length} service{service.items.length !== 1 ? 's' : ''} available</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{t.plural('services.available', service.items.length)}</p>
                 </div>
                 <div className="flex-shrink-0">
                     {expanded ? (
@@ -87,7 +90,21 @@ function ServiceCategory({ service }) {
     );
 }
 
+// Marks where the styled tab name goes inside the translated tip sentence (word order differs per language).
+const TAB_SLOT = '\uE000';
+function ChatTip() {
+    const { t } = useT();
+    const [before, after = ''] = t('services.chatTip', { chatTab: TAB_SLOT }).split(TAB_SLOT);
+    return (
+        <p className="text-sm text-gray-700">
+            {before}
+            <span className="text-orange-600 font-semibold">{t('services.chatTab')}</span>
+            {after}
+        </p>
+    );
+}
 export default function LocalServices() {
+    const { t } = useT();
     const { data, error, loading, retry } = useApiGet('/api/services', { validate: validateServicesResponse });
     const services = data?.services || [];
     return (
@@ -97,8 +114,8 @@ export default function LocalServices() {
                 <div className="flex items-center gap-3">
                     <div className="text-3xl">🏘️</div>
                     <div>
-                        <h2 className="text-lg font-bold">Local Services</h2>
-                        <p className="text-teal-100 text-sm">Food, water, sanitation, banking & more</p>
+                        <h2 className="text-lg font-bold">{t('services.title')}</h2>
+                        <p className="text-teal-100 text-sm">{t('services.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -106,14 +123,14 @@ export default function LocalServices() {
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-2">
                 {[
-                    { icon: '🍚', label: 'Food Camps', count: '500+' },
-                    { icon: '🚻', label: 'Toilet Units', count: '1,00,000+' },
-                    { icon: '🏥', label: 'Medical Camps', count: '40+' },
+                    { icon: '🍚', labelKey: tk('services.stat.food'), count: '500+' },
+                    { icon: '🚻', labelKey: tk('services.stat.toilets'), count: '1,00,000+' },
+                    { icon: '🏥', labelKey: tk('services.stat.medical'), count: '40+' },
                 ].map((stat) => (
-                    <div key={stat.label} className="bg-white border border-orange-100 rounded-xl p-3 text-center">
+                    <div key={stat.labelKey} className="bg-white border border-orange-100 rounded-xl p-3 text-center">
                         <div className="text-xl mb-1">{stat.icon}</div>
                         <div className="font-bold text-orange-600 text-sm">{stat.count}</div>
-                        <div className="text-xs text-gray-500">{stat.label}</div>
+                        <div className="text-xs text-gray-500">{t(stat.labelKey)}</div>
                     </div>
                 ))}
             </div>
@@ -122,17 +139,17 @@ export default function LocalServices() {
             <div className="space-y-3">
                 <p className="text-xs text-gray-500 flex items-center gap-1.5">
                     <Info size={12} className="text-orange-400" />
-                    Tap any category to expand service details
+                    {t('services.tapHint')}
                 </p>
                 {error ? (
                     <ErrorState error={error} onRetry={retry} />
                 ) : loading ? (
-                    <LoadingState label="Loading services..." />
+                    <LoadingState label={t('services.loading')} />
                 ) : services.length === 0 ? (
                     <div className="text-center py-12 text-gray-400">
                         <Info size={40} className="mx-auto mb-3 opacity-30" />
-                        <p className="font-medium">No services available</p>
-                        <p className="text-sm mt-1">Please check back later</p>
+                        <p className="font-medium">{t('services.emptyTitle')}</p>
+                        <p className="text-sm mt-1">{t('services.emptyHint')}</p>
                     </div>
                 ) : (
                     services.map((service) => (
@@ -144,10 +161,7 @@ export default function LocalServices() {
             {/* Bottom tip */}
             <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex items-start gap-2.5">
                 <span className="text-lg flex-shrink-0">💬</span>
-                <p className="text-sm text-gray-700">
-                    Need specific help? Ask our AI assistant in the{' '}
-                    <span className="text-orange-600 font-semibold">Chat tab</span> for personalized guidance in your language!
-                </p>
+                <ChatTip />
             </div>
         </div>
     );

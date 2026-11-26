@@ -13,8 +13,11 @@ export const GLOSSARY = {
     amritSnan: { en: 'Amrit Snan', hi: 'अमृत स्नान', bn: 'অমৃত স্নান', ta: 'அம்ருத ஸ்நானம்', te: 'అమృత స్నానం', mr: 'अमृत स्नान', gu: 'અમૃત સ્નાન', pa: 'ਅੰਮ੍ਰਿਤ ਇਸ਼ਨਾਨ' },
     bhasmaAarti: { en: 'Bhasma Aarti', hi: 'भस्म आरती', bn: 'ভস্ম আরতি', ta: 'பஸ்ம ஆரத்தி', te: 'భస్మ ఆరతి', mr: 'भस्म आरती', gu: 'ભસ્મ આરતી', pa: 'ਭਸਮ ਆਰਤੀ' },
     jaiMahakal: { en: 'Jai Mahakal', hi: 'जय महाकाल', bn: 'জয় মহাকাল', ta: 'ஜெய் மகாகால்', te: 'జై మహాకాల్', mr: 'जय महाकाल', gu: 'જય મહાકાલ', pa: 'ਜੈ ਮਹਾਕਾਲ' },
+    // Terms added in INC3. Draft; native review pending.
+    ghat: { en: 'ghat', hi: 'घाट', bn: 'ঘাট', ta: 'படித்துறை', te: 'ఘాట్', mr: 'घाट', gu: 'ઘાટ', pa: 'ਘਾਟ' },
+    ghats: { en: 'ghats', hi: 'घाट', bn: 'ঘাটগুলি', ta: 'படித்துறைகள்', te: 'ఘాట్లు', mr: 'घाट', gu: 'ઘાટ', pa: 'ਘਾਟ' },
+    ramGhat: { en: 'Ram Ghat', hi: 'राम घाट', bn: 'রাম ঘাট', ta: 'ராம் படித்துறை', te: 'రామ్ ఘాట్', mr: 'राम घाट', gu: 'રામ ઘાટ', pa: 'ਰਾਮ ਘਾਟ' },
 };
-
 export function glossaryTerm(id, lang) {
     const entry = GLOSSARY[id];
     if (!entry) return undefined;

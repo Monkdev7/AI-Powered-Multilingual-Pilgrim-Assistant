@@ -2,13 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Search, X, BookOpen, Share2 } from 'lucide-react';
 import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
+import { useT } from '../i18n/useT.js';
+import { tk } from '../i18n/index.js';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const validateFaqResponse = (d) => Array.isArray(d?.faqs) && Array.isArray(d?.categories);
+// Plural groups for the results line; "All" is the English-keyed filter value (also sent to the API).
+const RESULT_KEYS = {
+    plain: tk('faq.results'),
+    category: tk('faq.resultsCategory'),
+    search: tk('faq.resultsSearch'),
+    categorySearch: tk('faq.resultsCategorySearch'),
+};
 
 function FAQItem({ faq, isOpen, onToggle }) {
+    const { t } = useT();
     const handleShare = () => {
-        const text = `*${faq.question}*\n\n${faq.answer}\n\n_Simhastha Pilgrim Assistant 2028_`;
+        const text = `*${faq.question}*\n\n${faq.answer}\n\n_${t('share.signature')}_`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
 
@@ -32,10 +42,10 @@ function FAQItem({ faq, isOpen, onToggle }) {
                     <button
                         onClick={handleShare}
                         className="mt-3 flex items-center gap-1.5 text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
-                        aria-label="Share this answer on WhatsApp"
+                        aria-label={t('faq.shareAria')}
                     >
                         <Share2 size={12} />
-                        Share on WhatsApp
+                        {t('faq.share')}
                     </button>
                 </div>
             )}
@@ -52,8 +62,8 @@ const CATEGORY_ICONS = {
     'General': 'ℹ️',
 };
 
-export default function FAQSection({ labels = {} }) {
-    const L = labels.faq || {};
+export default function FAQSection() {
+    const { t } = useT();
     const [openId, setOpenId] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
@@ -84,6 +94,10 @@ export default function FAQSection({ labels = {} }) {
     const faqs = data?.faqs || [];
     const faqCategories = ['All', ...categories];
     const isInitialLoad = loading && !data;
+    const hasCategory = selectedCategory !== 'All';
+    const resultsKey = hasCategory
+        ? (debouncedSearch ? RESULT_KEYS.categorySearch : RESULT_KEYS.category)
+        : (debouncedSearch ? RESULT_KEYS.search : RESULT_KEYS.plain);
     const handleToggle = (id) => {
         setOpenId((prev) => (prev === id ? null : id));
     };
@@ -111,8 +125,8 @@ export default function FAQSection({ labels = {} }) {
                 <div className="flex items-center gap-3">
                     <div className="text-3xl">❓</div>
                     <div>
-                        <h2 className="text-lg font-bold">Frequently Asked Questions</h2>
-                        <p className="text-orange-100 text-sm">{L.subtitle || 'Everything you need to know about Simhastha Kumbh 2028'}</p>
+                        <h2 className="text-lg font-bold">{t('faq.title')}</h2>
+                        <p className="text-orange-100 text-sm">{t('faq.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -124,12 +138,14 @@ export default function FAQSection({ labels = {} }) {
                     type="text"
                     value={searchQuery}
                     onChange={handleSearch}
-                    placeholder={L.searchPlaceholder || 'Search FAQs...'}
+                    placeholder={t('faq.searchPlaceholder')}
+                    aria-label={t('faq.searchPlaceholder')}
                     className="input-field pl-10 pr-10"
                 />
                 {searchQuery && (
                     <button
                         onClick={clearSearch}
+                        aria-label={t('faq.clearSearch')}
                         className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
                         <X size={16} />
@@ -150,7 +166,7 @@ export default function FAQSection({ labels = {} }) {
                                 }`}
                         >
                             <span>{CATEGORY_ICONS[cat] || '📌'}</span>
-                            {cat}
+                            {cat === 'All' ? t('faq.all') : cat}
                         </button>
                     ))}
                 </div>
@@ -163,12 +179,10 @@ export default function FAQSection({ labels = {} }) {
                     <span>
                         {data && !error ? (
                             <>
-                                {faqs.length} question{faqs.length !== 1 ? 's' : ''}
-                                {selectedCategory !== 'All' && ` in ${selectedCategory}`}
-                                {debouncedSearch && ` matching "${debouncedSearch}"`}
+                                {t.plural(resultsKey, faqs.length, { category: selectedCategory, query: debouncedSearch })}
                             </>
                         ) : (
-                            'Questions'
+                            t('faq.questions')
                         )}
                     </span>
                 </p>
@@ -177,7 +191,7 @@ export default function FAQSection({ labels = {} }) {
                         onClick={() => { clearSearch(); handleCategoryChange('All'); }}
                         className="text-xs text-orange-500 hover:text-orange-700 font-medium"
                     >
-                        {L.clearFilters || 'Clear filters'}
+                        {t('faq.clearFilters')}
                     </button>
                 )}
             </div>
@@ -186,12 +200,12 @@ export default function FAQSection({ labels = {} }) {
             {error ? (
                 <ErrorState error={error} onRetry={retry} />
             ) : isInitialLoad ? (
-                <LoadingState label="Loading FAQs..." />
+                <LoadingState label={t('faq.loading')} />
             ) : faqs.length === 0 ? (
                 <div className="text-center py-12 text-gray-400">
                     <Search size={40} className="mx-auto mb-3 opacity-30" />
-                    <p className="font-medium">{L.noResults || 'No FAQs found'}</p>
-                    <p className="text-sm mt-1">{L.noResultsHint || 'Try a different search term or category'}</p>
+                    <p className="font-medium">{t('faq.noResults')}</p>
+                    <p className="text-sm mt-1">{t('faq.noResultsHint')}</p>
                 </div>
             ) : (
                 <div className={`space-y-2 transition-opacity ${loading ? 'opacity-60' : ''}`} aria-busy={loading}>
@@ -209,7 +223,7 @@ export default function FAQSection({ labels = {} }) {
             <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex items-start gap-2.5">
                 <span className="text-lg flex-shrink-0">💬</span>
                 <p className="text-sm text-gray-700">
-                    {L.chatTip || "Didn't find your answer? Ask our AI assistant in the Chat tab — it speaks 8 languages!"}
+                    {t('faq.chatTip')}
                 </p>
             </div>
         </div>

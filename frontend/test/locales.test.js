@@ -6,7 +6,8 @@ import { GLOSSARY } from '../src/i18n/glossary.js';
 import en from '../src/i18n/locales/en.js';
 
 const STATUSES = ['source', 'draft', 'needs-review', 'reviewed'];
-const tokens = (s) => (s.match(/\{[^}]+\}/g) || []).sort();
+// Glossary tokens ({g:id}) are checked separately (i18n-content.test.js); English keeps the literal term.
+const tokens = (s) => (s.match(/\{(?!g:)[^}]+\}/g) || []).sort();
 const catalogs = {};
 for (const code of LANGUAGE_CODES) catalogs[code] = await loadLocale(code);
 
@@ -73,7 +74,7 @@ test('translations use the language script', () => {
     for (const code of LANGUAGE_CODES) {
         if (code === 'en') continue;
         for (const [k, v] of Object.entries(catalogs[code].messages)) {
-            const letters = v.replace(/\{[^}]+\}/g, '').replace(/KumbhSaathi|WhatsApp|FAQ|AI/g, '').match(/\p{L}/gu) || [];
+            const letters = v.replace(/\{[^}]+\}/g, '').replace(/KumbhSaathi|WhatsApp|FAQ|AI|Google Maps|Enter|Shift/g, '').match(/\p{L}/gu) || [];
             if (letters.length < 8) continue;
             const inScript = letters.filter((c) => new RegExp(`\\p{Script=${scriptOf[code]}}`, 'u').test(c)).length;
             assert.ok(inScript / letters.length >= 0.6, `${code}:${k}`);

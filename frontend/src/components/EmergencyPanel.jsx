@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
+import { useT } from '../i18n/useT.js';
 
 // Icon names as sent by the API
 const ICON_MAP = {
@@ -47,6 +48,12 @@ const DEFAULT_COLOR_STYLE = { bgColor: 'bg-gray-50', borderColor: 'border-gray-2
 
 // Stable id of the control-room contact in the /api/emergency response (shown in the banner)
 const CONTROL_ROOM_CONTACT_ID = 5;
+// Unreviewed emergency/medical content stays English in every UI language until a dedicated review
+// workflow translates it. These replace the old L.* labels that existed in no language.
+const CONTROL_ROOM_FALLBACK_NAME = 'Simhastha Control Room';
+const HEAT_WARNING_TITLE = 'Heat Emergency Warning';
+const HEAT_WARNING_TEXT = 'Ujjain in April-May reaches';
+const HEAT_WARNING_RISK = 'Heatstroke is a serious risk.';
 
 // Decorative per-detail emoji for the info cards, keyed by card id. The API sends plain
 // text details, so these restore the old bullets. Each emoji is matched to a detail by its
@@ -85,6 +92,7 @@ function EmptyState({ message }) {
 }
 
 function ContactCard({ contact: apiContact, callLabel }) {
+    const { t } = useT();
     const contact = { ...(COLOR_STYLES[apiContact.color] || DEFAULT_COLOR_STYLE), ...apiContact };
     const IconComponent = ICON_MAP[contact.icon] || Shield;
 
@@ -101,7 +109,7 @@ function ContactCard({ contact: apiContact, callLabel }) {
                     <p className="text-xs text-gray-500 mt-0.5">{contact.description}</p>
                 </div>
                 {contact.tollFree && (
-                    <span className="badge bg-green-100 text-green-700 flex-shrink-0 text-xs px-2 py-0.5 rounded-full">Free</span>
+                    <span className="badge bg-green-100 text-green-700 flex-shrink-0 text-xs px-2 py-0.5 rounded-full">{t('emergency.free')}</span>
                 )}
             </div>
 
@@ -113,10 +121,10 @@ function ContactCard({ contact: apiContact, callLabel }) {
                 <a
                     href={`tel:${contact.number.replace(/[-\s]/g, '')}`}
                     className={`${contact.buttonColor} text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 shadow-sm flex items-center gap-1.5`}
-                    aria-label={`Call ${contact.name} at ${contact.number}`}
+                    aria-label={t('emergency.callAria', { name: contact.name, number: contact.number })}
                 >
                     <Phone size={12} aria-hidden="true" />
-                    {callLabel || 'Call'}
+                    {callLabel}
                 </a>
             </div>
         </div>
@@ -124,6 +132,7 @@ function ContactCard({ contact: apiContact, callLabel }) {
 }
 
 function InfoCard({ card: apiCard, onShare }) {
+    const { t } = useT();
     const card = { ...(COLOR_STYLES[apiCard.color] || DEFAULT_COLOR_STYLE), ...apiCard };
     const IconComponent = ICON_MAP[card.icon] || Info;
     const detailPreview = card.details[0] || '';
@@ -141,8 +150,8 @@ function InfoCard({ card: apiCard, onShare }) {
                     type="button"
                     onClick={() => onShare(card)}
                     className="text-gray-400 hover:text-green-500 transition-colors flex-shrink-0"
-                    aria-label={`Share ${card.title} on WhatsApp`}
-                    title="Share on WhatsApp"
+                    aria-label={t('emergency.shareInfoAria', { title: card.title })}
+                    title={t('emergency.shareTitle')}
                 >
                     <Share2 size={14} />
                 </button>
@@ -178,8 +187,8 @@ const SAFETY_TIPS = [
     'Carry a physical copy of your accommodation address',
 ];
 
-export default function EmergencyPanel({ labels = {} }) {
-    const L = labels.emergency || {};
+export default function EmergencyPanel() {
+    const { t } = useT();
     const { data, error, loading, retry } = useApiGet('/api/emergency', { validate: validateEmergencyResponse });
     const emergencyContacts = data?.contacts || [];
     const infoCards = data?.infoCards || [];
@@ -195,12 +204,12 @@ export default function EmergencyPanel({ labels = {} }) {
 
     const handleShareAll = () => {
         const lines = emergencyContacts.map(c => `• ${c.name}: ${c.number}`).join('\n');
-        const text = `*Emergency Contacts — Simhastha Kumbh 2028, Ujjain*\n\n${lines}\n\n_Simhastha Pilgrim Assistant 2028_`;
+        const text = `*${t('emergency.shareAllHeading')}*\n\n${lines}\n\n_${t('share.signature')}_`;
         shareToWhatsApp(text);
     };
 
     const handleShareInfo = (card) => {
-        const text = `*${card.title} — Simhastha 2028*\n\n${card.details.join('\n')}\n\n_Simhastha Pilgrim Assistant 2028_`;
+        const text = `*${t('emergency.shareInfoHeading', { title: card.title })}*\n\n${card.details.join('\n')}\n\n_${t('share.signature')}_`;
         shareToWhatsApp(text);
     };
 
@@ -212,8 +221,8 @@ export default function EmergencyPanel({ labels = {} }) {
                     <div className="flex items-center gap-3">
                         <div className="text-3xl" aria-hidden="true">🆘</div>
                         <div>
-                            <h2 className="text-lg font-bold">{L.title || 'Emergency Contacts'}</h2>
-                            <p className="text-red-100 text-sm">{L.subtitle || 'All services available 24/7 — save these numbers!'}</p>
+                            <h2 className="text-lg font-bold">{t('emergency.title')}</h2>
+                            <p className="text-red-100 text-sm">{t('emergency.subtitle')}</p>
                         </div>
                     </div>
                     <button
@@ -221,8 +230,8 @@ export default function EmergencyPanel({ labels = {} }) {
                         onClick={handleShareAll}
                         disabled={!data}
                         className="bg-white/20 hover:bg-white/30 text-white rounded-xl p-2 transition-colors flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Share all emergency contacts on WhatsApp"
-                        title="Share all contacts on WhatsApp"
+                        aria-label={t('emergency.shareAllAria')}
+                        title={t('emergency.shareAllTitle')}
                     >
                         <Share2 size={16} />
                     </button>
@@ -231,14 +240,14 @@ export default function EmergencyPanel({ labels = {} }) {
                 {/* Most important */}
                 <div className="mt-3 bg-white/20 rounded-xl px-4 py-2.5 flex items-center justify-between gap-3">
                     <div>
-                        <p className="text-xs text-red-100 font-medium uppercase tracking-wide">{L.mostImportant || 'Most Important'}</p>
-                        <p className="text-white font-bold text-lg leading-tight">{L.controlRoomLabel || 'Simhastha Control Room'}</p>
+                        <p className="text-xs text-red-100 font-medium uppercase tracking-wide">{t('emergency.mostImportant')}</p>
+                        <p className="text-white font-bold text-lg leading-tight">{controlRoom?.name || CONTROL_ROOM_FALLBACK_NAME}</p>
                     </div>
                     {controlRoom && (
                         <a
                             href={`tel:${controlRoom.number.replace(/[-\s]/g, '')}`}
                             className="bg-white text-red-600 font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-red-50 transition-colors active:scale-95 shadow-sm flex-shrink-0"
-                            aria-label={`Call ${controlRoom.name} at ${controlRoom.number}`}
+                            aria-label={t('emergency.callAria', { name: controlRoom.name, number: controlRoom.number })}
                         >
                             <Phone size={14} aria-hidden="true" />
                             {controlRoom.number}
@@ -251,18 +260,18 @@ export default function EmergencyPanel({ labels = {} }) {
             <section aria-labelledby="emergency-numbers-heading">
                 <h3 id="emergency-numbers-heading" className="section-title mb-3 flex items-center gap-2">
                     <Phone size={16} className="text-orange-500" aria-hidden="true" />
-                    {L.numbersHeading || 'Emergency Numbers'}
+                    {t('emergency.numbersHeading')}
                 </h3>
                 {error ? (
                     <ErrorState error={error} onRetry={retry} />
                 ) : loading ? (
-                    <LoadingState label="Loading emergency contacts..." />
+                    <LoadingState label={t('emergency.loading')} />
                 ) : emergencyContacts.length === 0 ? (
-                    <EmptyState message="No emergency contacts are available right now. Please try again later or ask on-site police or mela staff for help." />
+                    <EmptyState message={t('emergency.emptyContacts')} />
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {emergencyContacts.map((contact) => (
-                            <ContactCard key={contact.id} contact={contact} callLabel={L.call} />
+                            <ContactCard key={contact.id} contact={contact} callLabel={t('emergency.call')} />
                         ))}
                     </div>
                 )}
@@ -273,10 +282,10 @@ export default function EmergencyPanel({ labels = {} }) {
                 <section aria-labelledby="services-info-heading">
                     <h3 id="services-info-heading" className="section-title mb-3 flex items-center gap-2">
                         <Info size={16} className="text-orange-500" aria-hidden="true" />
-                        {L.infoHeading || 'Services & Information'}
+                        {t('emergency.infoHeading')}
                     </h3>
                     {infoCards.length === 0 ? (
-                        <EmptyState message="No additional information is available right now." />
+                        <EmptyState message={t('emergency.emptyInfo')} />
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {infoCards.map((card) => (
@@ -290,10 +299,10 @@ export default function EmergencyPanel({ labels = {} }) {
             {/* Heat warning — Ujjain-specific */}
             <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
                 <h3 className="font-bold text-red-800 mb-2 flex items-center gap-2" id="heat-warning-heading">
-                    <span aria-hidden="true">🌡️</span> {L.heatWarningTitle || 'Heat Emergency Warning'}
+                    <span aria-hidden="true">🌡️</span> {HEAT_WARNING_TITLE}
                 </h3>
                 <p className="text-sm text-red-700 mb-2">
-                    {L.heatWarningText || 'Ujjain in April-May reaches'} <strong>40-43°C</strong>. {L.heatWarningRisk || 'Heatstroke is a serious risk.'}
+                    {HEAT_WARNING_TEXT} <strong>40-43°C</strong>. {HEAT_WARNING_RISK}
                 </p>
                 <div className="space-y-1.5" role="list" aria-labelledby="heat-warning-heading">
                     {[
@@ -314,7 +323,7 @@ export default function EmergencyPanel({ labels = {} }) {
             <section className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4" aria-labelledby="safety-tips-heading">
                 <h3 id="safety-tips-heading" className="font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <AlertTriangle size={16} className="text-amber-500" aria-hidden="true" />
-                    {L.safetyTips || 'Quick Safety Tips'}
+                    {t('emergency.safetyTips')}
                 </h3>
                 <div className="space-y-2" role="list" aria-labelledby="safety-tips-heading">
                     {SAFETY_TIPS.map((tip, i) => (
