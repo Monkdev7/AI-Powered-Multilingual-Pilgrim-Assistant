@@ -58,6 +58,19 @@
   src: url('/fonts/NotoSansGurmukhi-v29.woff2') format('woff2');
   unicode-range: U+0951-0952, U+0964-0965, U+0A01-0A76, U+200C-200D, U+20B9, U+25CC, U+262C, U+A830-A839;
 }
+/*
+ * Mantra-only subset of Noto Sans Devanagari (OFL 1.1, see public/fonts/NOTICE.md). It carries only
+ * the 16 code points of the fixed header mantra, so non-Hindi/Marathi pages do not download the
+ * full Devanagari file. Used by the Header mantra class (defined at the end of this file). hi/mr text uses the full face above.
+ */
+@font-face {
+  font-family: 'Noto Sans Devanagari Mantra';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/NotoSansDevanagari-Mantra-v2.007.woff') format('woff');
+  unicode-range: U+0903, U+0915, U+091C, U+0926, U+0928, U+092E, U+092F, U+0930, U+0932, U+0935, U+0936, U+0939, U+093E, U+093F, U+0947, U+0950;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -218,3 +231,10 @@ html:is(:lang(hi), :lang(mr), :lang(bn), :lang(ta), :lang(te), :lang(gu), :lang(
 html:is(:lang(hi), :lang(mr), :lang(bn), :lang(ta), :lang(te), :lang(gu), :lang(pa)) :is(.leading-none, .leading-tight, .leading-snug, .text-xs, .text-sm, .text-base) {
   line-height: 1.6;
 }
+/* Fixed header mantra: always the subset face first, in every UI language. Must follow the :lang() rules. */
+.font-mantra {
+  font-family: 'Noto Sans Devanagari Mantra', 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+}
+/* Indic line-height override: fixed-height or deliberately tight elements opt out so they are not clipped or resized.
+   - !leading-none on the countdown digits (Latin digits, no stacked marks; keeps the fixed-size tiles stable).
+   The override above beats utilities, so ONLY these opt-outs use the important modifier. */
