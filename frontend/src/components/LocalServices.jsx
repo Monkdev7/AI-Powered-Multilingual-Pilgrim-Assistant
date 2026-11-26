@@ -4,6 +4,7 @@ import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
+import UnverifiedNotice from './UnverifiedNotice.jsx';
 
 // The API sends no styling; card colors are keyed by service id (literal Tailwind classes)
 const CATEGORY_COLORS = {
@@ -120,6 +121,7 @@ export default function LocalServices() {
                 </div>
             </div>
 
+            <UnverifiedNotice />
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-2">
                 {[

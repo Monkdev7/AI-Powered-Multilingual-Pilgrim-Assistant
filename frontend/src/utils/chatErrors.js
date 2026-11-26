@@ -1,19 +1,19 @@
 // Chat error classification and display text. Pure and Node-safe.
 import { errorKeyForCode, isBackendErrorCode } from './errorCodes.js';
 
-// Emergency numbers shown under chat errors. Single source for this file; values must not change
-// without a factual-verification pass. The English wording is deliberate: unreviewed emergency
-// content is not translated yet (see inc4-notes.md).
+// Emergency numbers shown under chat errors. Single source for this file; values mirror backend/data/facts.json
+// (test/facts-sync.test.js checks them). 112 is the national emergency number and is listed first.
+// The English wording is deliberate: unreviewed emergency content is not translated yet (see inc4-notes.md).
 export const EMERGENCY_NUMBERS = Object.freeze({
+    national: '112',
     police: '100',
-    ambulance: '108',
-    controlRoom: '0734-2551234',
+    ambulance: '102',
 });
 
 const FOOTER_LINES = Object.freeze([
+    ['National emergency: {number}', 'national'],
     ['Police: {number}', 'police'],
     ['Ambulance: {number}', 'ambulance'],
-    ['Simhastha Control Room: {number}', 'controlRoom'],
 ]);
 
 // Emoji prefixes are decoration, not text, so they live outside the catalogs.

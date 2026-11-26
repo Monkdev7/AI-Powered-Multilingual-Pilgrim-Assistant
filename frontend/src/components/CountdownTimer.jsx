@@ -3,6 +3,8 @@ import { ExternalLink } from 'lucide-react';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
 import { SIMHASTHA_START_ISO } from '../constants/event.js';
+import { TEMPLE_PORTAL_URL } from '../constants/facts.js';
+import ProposedLabel from './ProposedLabel.jsx';
 // Simhastha 2028 start: March 27, 2028
 const SIMHASTHA_START = new Date('2028-03-27T00:00:00');
 const SIMHASTHA_END = new Date('2028-05-27T23:59:59');
@@ -67,6 +69,7 @@ export default function CountdownTimer({ compact = false }) {
                     <div className="min-w-0">
                         <p className="text-white font-bold text-xs break-words sm:truncate">{t('countdown.beginsInShort')}</p>
                         <p className="text-orange-100 text-xs">{t('countdown.dateCompact', { date: startDate })}</p>
+                        <ProposedLabel className="text-orange-100" />
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -98,6 +101,7 @@ export default function CountdownTimer({ compact = false }) {
                 <div>
                     <p className="text-white font-bold text-sm">{t('countdown.beginsIn')}</p>
                     <p className="text-orange-100 text-xs">{t('countdown.dateFull', { date: startDate })}</p>
+                    <ProposedLabel className="text-orange-100" />
                 </div>
             </div>
             <div className="flex items-start justify-center gap-3">
@@ -116,7 +120,7 @@ export default function CountdownTimer({ compact = false }) {
                     <p className="text-orange-100 text-xs mt-0.5">{t('countdown.bhasmaPromo')}</p>
                 </div>
                 <a
-                    href="https://www.bhasmarti.com"
+                    href={TEMPLE_PORTAL_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white text-orange-600 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-orange-50 transition-colors flex-shrink-0 active:scale-95"

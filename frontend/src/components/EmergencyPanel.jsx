@@ -17,6 +17,7 @@ import {
 import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
+import { groupContacts, telHref, sourceHost } from '../utils/emergencyGroups.js';
 
 // Icon names as sent by the API
 const ICON_MAP = {
@@ -46,11 +47,9 @@ const COLOR_STYLES = {
 };
 const DEFAULT_COLOR_STYLE = { bgColor: 'bg-gray-50', borderColor: 'border-gray-200', iconColor: 'text-gray-600', buttonColor: 'bg-gray-500 hover:bg-gray-600' };
 
-// Stable id of the control-room contact in the /api/emergency response (shown in the banner)
-const CONTROL_ROOM_CONTACT_ID = 5;
 // Unreviewed emergency/medical content stays English in every UI language until a dedicated review
 // workflow translates it. These replace the old L.* labels that existed in no language.
-const CONTROL_ROOM_FALLBACK_NAME = 'Simhastha Control Room';
+const PRIMARY_FALLBACK_NAME = 'National emergency number';
 const HEAT_WARNING_TITLE = 'Heat Emergency Warning';
 const HEAT_WARNING_TEXT = 'Ujjain in April-May reaches';
 const HEAT_WARNING_RISK = 'Heatstroke is a serious risk.';
@@ -79,7 +78,7 @@ const getDetailBullet = (cardId, detail) => (INFO_CARD_BULLETS[cardId] || []).fi
 
 const validateEmergencyResponse = (d) =>
     Array.isArray(d?.contacts) &&
-    d.contacts.every((c) => c && c.id != null && typeof c.name === 'string' && typeof c.number === 'string') &&
+    d.contacts.every((c) => c && c.id != null && typeof c.name === 'string' && typeof c.number === 'string' && (c.source == null || typeof c.source === 'object')) &&
     Array.isArray(d?.infoCards) &&
     d.infoCards.every((c) => c && c.id != null && typeof c.title === 'string' && Array.isArray(c.details) && c.details.every((x) => typeof x === 'string'));
 
@@ -95,6 +94,8 @@ function ContactCard({ contact: apiContact, callLabel }) {
     const { t } = useT();
     const contact = { ...(COLOR_STYLES[apiContact.color] || DEFAULT_COLOR_STYLE), ...apiContact };
     const IconComponent = ICON_MAP[contact.icon] || Shield;
+    const href = telHref(contact);
+    const host = sourceHost(contact);
 
     return (
         <div
@@ -118,15 +119,24 @@ function ContactCard({ contact: apiContact, callLabel }) {
                     <Phone size={13} className="text-gray-500" aria-hidden="true" />
                     <span className="font-bold text-gray-800 text-base tracking-wide">{contact.number}</span>
                 </div>
-                <a
-                    href={`tel:${contact.number.replace(/[-\s]/g, '')}`}
-                    className={`${contact.buttonColor} text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 shadow-sm flex items-center gap-1.5`}
-                    aria-label={t('emergency.callAria', { name: contact.name, number: contact.number })}
-                >
-                    <Phone size={12} aria-hidden="true" />
-                    {callLabel}
-                </a>
+                {href && (
+                    <a
+                        href={href}
+                        className={`${contact.buttonColor} text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 shadow-sm flex items-center gap-1.5`}
+                        aria-label={t('emergency.callAria', { name: contact.name, number: contact.number })}
+                    >
+                        <Phone size={12} aria-hidden="true" />
+                        {callLabel}
+                    </a>
+                )}
             </div>
+            {host && (
+                <p className="text-xs text-gray-500 break-words">
+                    <a href={contact.source.url} target="_blank" rel="noopener noreferrer" className="underline">
+                        {t('emergency.source', { source: host })}
+                    </a>
+                </p>
+            )}
         </div>
     );
 }
@@ -192,7 +202,9 @@ export default function EmergencyPanel() {
     const { data, error, loading, retry } = useApiGet('/api/emergency', { validate: validateEmergencyResponse });
     const emergencyContacts = data?.contacts || [];
     const infoCards = data?.infoCards || [];
-    const controlRoom = emergencyContacts.find((c) => c.id === CONTROL_ROOM_CONTACT_ID);
+    const { primary, secondary, local } = groupContacts(emergencyContacts);
+    const primaryHref = telHref(primary);
+    const primaryHost = primary ? sourceHost(primary) : null;
 
     const shareToWhatsApp = (text) => {
         const shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -241,19 +253,26 @@ export default function EmergencyPanel() {
                 <div className="mt-3 bg-white/20 rounded-xl px-4 py-2.5 flex items-center justify-between gap-3">
                     <div>
                         <p className="text-xs text-red-100 font-medium uppercase tracking-wide">{t('emergency.mostImportant')}</p>
-                        <p className="text-white font-bold text-lg leading-tight">{controlRoom?.name || CONTROL_ROOM_FALLBACK_NAME}</p>
+                        <p className="text-white font-bold text-lg leading-tight">{primary?.name || PRIMARY_FALLBACK_NAME}</p>
                     </div>
-                    {controlRoom && (
+                    {primaryHref && (
                         <a
-                            href={`tel:${controlRoom.number.replace(/[-\s]/g, '')}`}
-                            className="bg-white text-red-600 font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:bg-red-50 transition-colors active:scale-95 shadow-sm flex-shrink-0"
-                            aria-label={t('emergency.callAria', { name: controlRoom.name, number: controlRoom.number })}
+                            href={primaryHref}
+                            className="bg-white text-red-600 font-extrabold px-5 py-3 rounded-xl text-2xl flex items-center gap-2 hover:bg-red-50 transition-colors active:scale-95 shadow-md flex-shrink-0"
+                            aria-label={t('emergency.callAria', { name: primary.name, number: primary.number })}
                         >
-                            <Phone size={14} aria-hidden="true" />
-                            {controlRoom.number}
+                            <Phone size={20} aria-hidden="true" />
+                            {primary.number}
                         </a>
                     )}
                 </div>
+                {primaryHost && (
+                    <p className="mt-2 text-xs text-red-100 break-words">
+                        <a href={primary.source.url} target="_blank" rel="noopener noreferrer" className="underline">
+                            {t('emergency.source', { source: primaryHost })}
+                        </a>
+                    </p>
+                )}
             </div>
 
             {/* Contacts grid */}
@@ -269,13 +288,30 @@ export default function EmergencyPanel() {
                 ) : emergencyContacts.length === 0 ? (
                     <EmptyState message={t('emergency.emptyContacts')} />
                 ) : (
+                    <>
+                        <p className="text-xs text-gray-500 mb-3">{t('emergency.listingNote')}</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {secondary.map((contact) => (
+                                <ContactCard key={contact.id} contact={contact} callLabel={t('emergency.call')} />
+                            ))}
+                        </div>
+                    </>
+                )}
+            </section>
+            {/* Local directory contacts: kept apart from emergency actions */}
+            {local.length > 0 && (
+                <section aria-labelledby="local-contacts-heading">
+                    <h3 id="local-contacts-heading" className="section-title mb-3 flex items-center gap-2">
+                        <Info size={16} className="text-orange-500" aria-hidden="true" />
+                        {t('emergency.localHeading')}
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {emergencyContacts.map((contact) => (
+                        {local.map((contact) => (
                             <ContactCard key={contact.id} contact={contact} callLabel={t('emergency.call')} />
                         ))}
                     </div>
-                )}
-            </section>
+                </section>
+            )}
 
             {/* Info cards (same request as the contacts; shown once loaded) */}
             {data && (

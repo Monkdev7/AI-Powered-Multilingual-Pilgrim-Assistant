@@ -92,13 +92,15 @@ test('error text never contains raw server text; stable key is used for every cl
 
 // ---------- emergency numbers ----------
 test('emergency numbers: one constant, exact values, English footer identical in every language', () => {
-    assert.deepEqual({ ...EMERGENCY_NUMBERS }, { police: '100', ambulance: '108', controlRoom: '0734-2551234' });
+    assert.deepEqual({ ...EMERGENCY_NUMBERS }, { national: '112', police: '100', ambulance: '102' });
     const src = read('src/utils/chatErrors.js');
-    for (const n of ['100', '108', '0734-2551234']) assert.equal(src.split(`'${n}'`).length - 1, 1, `${n} defined once`);
+    for (const n of ['112', '100', '102']) assert.equal(src.split(`'${n}'`).length - 1, 1, `${n} defined once`);
     const footer = emergencyFooter('AI_ERROR');
+    assert.match(footer, /National emergency: 112/);
     assert.match(footer, /Police: 100/);
-    assert.match(footer, /Ambulance: 108/);
-    assert.match(footer, /Simhastha Control Room: 0734-2551234/);
+    assert.match(footer, /Ambulance: 102/);
+    assert.ok(footer.indexOf('112') < footer.indexOf('100'), '112 is listed first');
+    assert.ok(!/0734|1800|108|1090|Control Room/.test(footer));
     assert.match(emergencyFooter('RATE_LIMITED'), /^For immediate help:/);
     assert.equal(emergencyFooter('timeout'), '');
     for (const c of LANGUAGE_CODES) {

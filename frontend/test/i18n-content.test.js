@@ -53,12 +53,13 @@ test('numbers, prices, dates and URLs in English text are preserved in every loc
 });
 
 test('no emergency number literals in locale files (numbers come from the API through placeholders)', () => {
-    const numbers = ['1800-180-5522', '0734-2551234', '011-24363260'];
+    const numbers = ['1800-180-5522', '0734-2551234', '011-24363260', '0734-2527130', '1800-233-1008', '18001805522', '07342551234'];
     for (const c of LANGUAGE_CODES) {
         const src = readFileSync(join(ROOT, 'src/i18n/locales', `${c}.js`), 'utf8');
         for (const n of numbers) assert.ok(!src.includes(n), `${c} contains ${n}`);
+        assert.ok(!/bhasmarti/i.test(src), `${c} contains the old booking URL`);
         for (const [k, v] of Object.entries(catalogs[c].messages)) {
-            assert.ok(!/(^|[^\d])(100|101|108|1090|1098)([^\d]|$)/.test(v.replace(/\{[^}]+\}/g, '')), `${c}:${k} embeds an emergency number`);
+            assert.ok(!/(^|[^\d])(100|101|102|108|112|1090|1091|1098|1363)([^\d]|$)/.test(v.replace(/\{[^}]+\}/g, '')), `${c}:${k} embeds an emergency number`);
         }
     }
 });
@@ -118,10 +119,12 @@ test('dates: Asia/Kolkata, Latin digits, no day shift for 2028-03-27 in every la
     assert.equal(createFormatter('en').formatDate('2028-03-27', { year: 'numeric', month: 'short', day: 'numeric' }), 'Mar 27, 2028');
 });
 
-test('component static scan: stat values and bhasmarti URL unchanged, English-keyed filter value kept', () => {
+test('component static scan: stat values unchanged, booking link from the facts constant, English-keyed filter value kept', () => {
     const ls = readFileSync(join(ROOT, 'src/components/LocalServices.jsx'), 'utf8');
     for (const v of ["'500+'", "'1,00,000+'", "'40+'"]) assert.ok(ls.includes(v), v);
-    assert.ok(readFileSync(join(ROOT, 'src/components/CountdownTimer.jsx'), 'utf8').includes('https://www.bhasmarti.com'));
+    const cd = readFileSync(join(ROOT, 'src/components/CountdownTimer.jsx'), 'utf8');
+    assert.ok(cd.includes('href={TEMPLE_PORTAL_URL}'));
+    assert.ok(!/bhasmarti/i.test(cd));
     const faq = readFileSync(join(ROOT, 'src/components/FAQSection.jsx'), 'utf8');
     assert.match(faq, /useState\('All'\)/);
     assert.match(faq, /selectedCategory !== 'All' \? selectedCategory : undefined/);

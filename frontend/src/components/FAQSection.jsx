@@ -4,6 +4,7 @@ import { useApiGet } from '../hooks/useApiGet';
 import { LoadingState, ErrorState } from './ApiStates';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
+import UnverifiedNotice from './UnverifiedNotice.jsx';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const validateFaqResponse = (d) => Array.isArray(d?.faqs) && Array.isArray(d?.categories);
@@ -172,6 +173,7 @@ export default function FAQSection() {
                 </div>
             </div>
 
+            <UnverifiedNotice />
             {/* Results count */}
             <div className="flex items-center justify-between">
                 <p className="text-xs text-gray-500 flex items-center gap-1.5">

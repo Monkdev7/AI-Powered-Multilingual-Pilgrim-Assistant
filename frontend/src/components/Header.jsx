@@ -2,6 +2,7 @@ import React from 'react';
 import LanguageSelector from './LanguageSelector';
 import { useT } from '../i18n/useT.js';
 import { SIMHASTHA_START_ISO, SIMHASTHA_END_ISO } from '../constants/event.js';
+import ProposedLabel from './ProposedLabel.jsx';
 export default function Header({ selectedLanguage, onLanguageChange }) {
     const { t, formatDate } = useT();
     return (
@@ -21,6 +22,7 @@ export default function Header({ selectedLanguage, onLanguageChange }) {
                         <p className="text-orange-100 text-xs sm:text-sm font-medium">
                             {t('header.subtitle', { start: formatDate(SIMHASTHA_START_ISO), end: formatDate(SIMHASTHA_END_ISO) })}
                         </p>
+                        <ProposedLabel className="text-orange-100" />
                     </div>
                 </div>
                 {/* Right side */}

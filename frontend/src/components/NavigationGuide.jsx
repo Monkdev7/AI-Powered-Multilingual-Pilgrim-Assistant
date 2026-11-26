@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { MapPin, Calendar, Navigation, Lightbulb, Clock, DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
-import { ghats, shahiSnanDates, transportOptions, navigationTips } from '../data/navigationData';
+import { ghats, transportOptions, navigationTips } from '../data/navigationData';
 import { useT } from '../i18n/useT.js';
 import { tk } from '../i18n/index.js';
+import ProposedLabel from './ProposedLabel.jsx';
+import { PROPOSED_SNAN_PLAN } from '../constants/facts.js';
+import { withoutUnsourcedArrivalAdvice, isUnsourcedArrivalAdvice } from '../utils/arrivalAdvice.js';
 // Only static controls and headings are translated here. Ghat facts, dates, distances, transport and
 // tips content (and the advice boxes built from them) stay English until the factual-review phase.
 
@@ -60,34 +63,10 @@ function GhatCard({ ghat }) {
                     </div>
                     <div className="flex items-start gap-2 text-xs text-gray-600">
                         <Lightbulb size={12} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                        <span><strong>{t('nav.ghat.tip')}</strong> {ghat.tips}</span>
+                        <span><strong>{t('nav.ghat.tip')}</strong> {withoutUnsourcedArrivalAdvice(ghat.tips)}</span>
                     </div>
                 </div>
             )}
-        </div>
-    );
-}
-
-function DateCard({ date }) {
-    return (
-        <div className={`bg-gradient-to-r ${date.color} rounded-2xl p-4 text-white shadow-md animate-fade-in`}>
-            <div className="flex items-start gap-3">
-                <div className="text-3xl flex-shrink-0">{date.icon}</div>
-                <div className="flex-1">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <h3 className="font-bold text-base">{date.name}</h3>
-                        <span className="bg-white/25 text-white text-xs px-2 py-0.5 rounded-full font-medium">
-                            {date.importance}
-                        </span>
-                    </div>
-                    <p className="text-white/80 text-xs mb-1.5">{date.hindi}</p>
-                    <div className="bg-white/20 rounded-lg px-3 py-2 mb-2">
-                        <p className="font-bold text-base">{date.date}</p>
-                        <p className="text-white/80 text-xs">{date.day}</p>
-                    </div>
-                    <p className="text-white/90 text-xs leading-relaxed">{date.significance}</p>
-                </div>
-            </div>
         </div>
     );
 }
@@ -161,7 +140,7 @@ function TransportCard({ option }) {
 }
 
 export default function NavigationGuide() {
-    const { t } = useT();
+    const { t, formatDate } = useT();
     const [activeSection, setActiveSection] = useState('ghats');
 
     const sections = [
@@ -225,22 +204,26 @@ export default function NavigationGuide() {
                         <Calendar size={16} className="text-orange-500" />
                         <h3 className="section-title">{t('nav.dates.heading')}</h3>
                     </div>
+                    <ProposedLabel className="text-amber-800 font-semibold" />
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2">
                         <span className="text-lg flex-shrink-0">⚠️</span>
-                        <p className="text-xs text-amber-800">
-                            These dates see <strong>massive crowds</strong> of tens of millions. Plan accommodation and travel
-                            well in advance. Arrive at ghats by <strong>4-5 AM</strong> on Amrit Snan days.
-                        </p>
+                        <p className="text-xs text-amber-800" data-testid="crowd-notice">{t('nav.dates.crowdNotice')}</p>
                     </div>
-                    <div className="space-y-3">
-                        {shahiSnanDates.map((date) => (
-                            <DateCard key={date.id} date={date} />
-                        ))}
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5">
+                        <p className="text-xs text-amber-800" data-testid="proposed-dates-notice">
+                            {t('nav.dates.proposedNotice', {
+                                shahi: PROPOSED_SNAN_PLAN.shahi,
+                                parv: PROPOSED_SNAN_PLAN.parv,
+                                fromDate: formatDate(PROPOSED_SNAN_PLAN.from, { day: 'numeric', month: 'long' }),
+                                toDate: formatDate(PROPOSED_SNAN_PLAN.to, { day: 'numeric', month: 'long', year: 'numeric' }),
+                            })}
+                        </p>
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
                         <p className="text-xs font-bold text-blue-800 mb-1">📅 Simhastha Kumbh 2028 Full Duration</p>
                         <p className="text-xs text-blue-700">March 27, 2028 (Chaitra Purnima) — May 27, 2028 (Vaisakh Purnima)</p>
-                        <p className="text-xs text-blue-600 mt-1">Total: 62 days · Ujjain, Madhya Pradesh · Kshipra River</p>
+                        <p className="text-xs text-blue-600 mt-1">Ujjain, Madhya Pradesh · Kshipra River</p>
+                        <ProposedLabel className="text-blue-700 mt-1" />
                     </div>
                 </div>
             )}
@@ -331,7 +314,7 @@ export default function NavigationGuide() {
                         <h3 className="section-title">{t('nav.tips.heading')}</h3>
                     </div>
                     <div className="space-y-2.5">
-                        {navigationTips.map((item, i) => (
+                        {navigationTips.filter((item) => !isUnsourcedArrivalAdvice(item.tip)).map((item, i) => (
                             <div
                                 key={i}
                                 className="bg-white border border-orange-100 rounded-xl p-4 flex items-start gap-3 hover:border-orange-200 hover:shadow-sm transition-all animate-fade-in"
