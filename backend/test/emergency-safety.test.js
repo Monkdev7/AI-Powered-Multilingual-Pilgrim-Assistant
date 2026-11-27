@@ -4,16 +4,20 @@ const assert = require('node:assert/strict');
 const request = require('supertest');
 
 const geminiMock = { models: [] };
-const sdkPath = require.resolve('@google/generative-ai');
+const sdkPath = require.resolve('@google/genai');
 require.cache[sdkPath] = {
   id: sdkPath,
   filename: sdkPath,
   loaded: true,
   exports: {
-    GoogleGenerativeAI: class {
-      getGenerativeModel(opts) {
-        geminiMock.models.push(opts);
-        return { startChat: () => ({ sendMessage: async () => ({ response: Promise.resolve({ text: () => 'ok' }) }) }) };
+    GoogleGenAI: class {
+      constructor() {
+        this.models = {
+          generateContent: async ({ model, config }) => {
+            geminiMock.models.push({ model, systemInstruction: config.systemInstruction });
+            return { text: 'ok' };
+          },
+        };
       }
     },
   },
@@ -249,7 +253,7 @@ test('overdue reviewBy is soft (no validation error); future lastVerified is sti
   future.records[0].lastVerified = '2999-01-01';
   assert.ok(facts.validateFacts(future).some((e) => /future/.test(e)));
   assert.deepEqual(facts.validateFacts(data, { today: '2999-01-01' }), []);
-  assert.ok(facts.createRegistry({ today: '2999-01-01', warn() {} }).listStaleFacts().length > 0);
+  assert.ok(facts.createRegistry({ today: '2999-01-01', warn() { } }).listStaleFacts().length > 0);
 });
 
 test('services and faq carry an unverified_inherited verification field and no official-confirmation claims', async () => {

@@ -6,7 +6,7 @@ The planned event period is **27 March to 27 May 2028**. This period is proposed
 
 ## Features
 
-- **AI chat** (Google Gemini `gemini-2.5-flash-lite`) that answers in the selected language. Conversation history is kept in the browser's `localStorage`.
+- **AI chat** (Google Gemini `gemini-3.5-flash-lite`, configurable via `GEMINI_MODEL`) that answers in the selected language. Conversation history is kept in the browser's `localStorage`.
 - **Eight languages**: English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati and Punjabi (`en hi bn ta te mr gu pa`).
 - **FAQ** with search and category filters, **Local services**, and **Emergency** contacts with one-tap `tel:` links and source attribution.
 - **Navigation guide**: ghats, proposed event period, transport options and an embedded map.
@@ -25,12 +25,12 @@ FAQ, emergency and services content is localized by the backend through the `?la
 |---|---|
 | Frontend | React 18, Vite 5, Tailwind CSS 3, Lucide icons, self-hosted Noto Sans (Indic scripts), Inter via Google Fonts |
 | Service worker | Hand-written (`frontend/pwa/sw.template.js`), emitted at build time by a small Vite plugin (`frontend/pwa/swPlugin.js`) |
-| Backend | Node.js >= 20, Express 4, Helmet, express-rate-limit, `@google/generative-ai` |
+| Backend | Node.js 22 to 24, Express 4, Helmet, express-rate-limit, `@google/genai` |
 | Tests | `node:test` in both packages |
 
 ## Quick start
 
-Requires Node.js 20 or newer and a [Gemini API key](https://aistudio.google.com/apikey).
+Requires Node.js 22, 23 or 24 and a [Gemini API key](https://aistudio.google.com/apikey).
 
 ```bash
 git clone https://github.com/Monkdev7/AI-Powered-Multilingual-Pilgrim-Assistant.git
@@ -73,6 +73,7 @@ Backend (`backend/.env`; `backend/.env.example` lists every variable):
 | Variable | Purpose | Default |
 |---|---|---|
 | `GEMINI_API_KEY` | Gemini API key. Never commit it. | none |
+| `GEMINI_MODEL` | Optional Gemini model id | `gemini-3.5-flash-lite` |
 | `PORT` | Server port | `5000` |
 | `NODE_ENV` | `production` removes the default CORS origins and ignores `DEMO_MODE` | unset |
 | `CORS_ORIGINS` | Comma-separated allowed browser origins | `http://localhost:5173`, `http://127.0.0.1:5173` (none in production) |
@@ -126,7 +127,7 @@ The app shows **112** first, and then 100, 101, 102, 1091, 1098 and 1363, with s
 Nothing in this repository is deployed by default.
 
 - **Frontend**: build with `VITE_API_URL` set to the public backend URL and serve `frontend/dist` at the site root of a static host. `frontend/public/_headers` (Cloudflare Pages style) sets caching: `sw.js`, `index.html` and `manifest.json` must not be cached long, while hashed assets and fonts are immutable. The service worker requires HTTPS.
-- **Backend**: run `npm start` on a Node.js 20+ host with `NODE_ENV=production`, `GEMINI_API_KEY`, `CORS_ORIGINS=<frontend origin>` and, behind a proxying host, `TRUST_PROXY=1`. Use `/api/health` as the health check.
+- **Backend**: run `npm start` on a Node.js 22 to 24 host with `NODE_ENV=production`, `GEMINI_API_KEY`, `CORS_ORIGINS=<frontend origin>` and, behind a proxying host, `TRUST_PROXY=1`. Use `/api/health` as the health check.
 
 ## Structure
 

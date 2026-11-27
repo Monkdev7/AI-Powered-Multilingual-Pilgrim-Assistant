@@ -5,22 +5,24 @@ const request = require('supertest');
 
 // Replace the Gemini SDK before the app loads it.
 const geminiMock = { calls: [], impl: async () => 'mock reply' };
-const sdkPath = require.resolve('@google/generative-ai');
+const sdkPath = require.resolve('@google/genai');
 require.cache[sdkPath] = {
   id: sdkPath,
   filename: sdkPath,
   loaded: true,
   exports: {
-    GoogleGenerativeAI: class {
-      getGenerativeModel() {
-        return {
-          startChat: ({ history }) => ({
-            sendMessage: async (prompt) => {
-              geminiMock.calls.push({ history, prompt });
-              const text = await geminiMock.impl(prompt, history);
-              return { response: Promise.resolve({ text: () => text }) };
-            },
-          }),
+    GoogleGenAI: class {
+      constructor(opts) {
+        geminiMock.clientOptions = opts;
+        this.models = {
+          // contents = prior turns followed by the new user turn; the mock splits them like the old chat API did.
+          generateContent: async ({ model, contents, config }) => {
+            const history = contents.slice(0, -1);
+            const prompt = contents[contents.length - 1].parts[0].text;
+            geminiMock.calls.push({ history, prompt, model, config, contents });
+            const text = await geminiMock.impl(prompt, history);
+            return { text };
+          },
         };
       }
     },
@@ -29,7 +31,7 @@ require.cache[sdkPath] = {
 
 const { createApp } = require('../app');
 
-const ENV_KEYS = ['GEMINI_API_KEY', 'DEMO_MODE', 'NODE_ENV', 'CORS_ORIGINS', 'RATE_LIMIT_MAX', 'RATE_LIMIT_WINDOW_MS', 'BODY_LIMIT', 'GEMINI_TIMEOUT_MS', 'TRUST_PROXY'];
+const ENV_KEYS = ['GEMINI_API_KEY', 'GEMINI_MODEL', 'DEMO_MODE', 'NODE_ENV', 'CORS_ORIGINS', 'RATE_LIMIT_MAX', 'RATE_LIMIT_WINDOW_MS', 'BODY_LIMIT', 'GEMINI_TIMEOUT_MS', 'TRUST_PROXY'];
 const FAKE_KEY = 'AIzaFAKEKEYFORTESTSONLY1234567890';
 let saved;
 const origError = console.error;
@@ -322,4 +324,46 @@ test('existing endpoints still behave as before', async () => {
   res = await request(app).get('/api/nope');
   assert.equal(res.status, 404);
   assert.equal(res.body.error, 'Route not found');
+});
+// ---------- @google/genai integration (models.generateContent) ----------
+test('Gemini call: default model gemini-3.5-flash-lite, generateContent shape, system instruction and limits', async () => {
+  const res = await chat(createApp(), { message: 'Hello', language: 'ta', history: [{ role: 'user', content: 'a' }, { role: 'assistant', content: 'b' }] });
+  assert.equal(res.status, 200);
+  const call = geminiMock.calls[0];
+  assert.equal(call.model, 'gemini-3.5-flash-lite');
+  assert.equal(geminiMock.clientOptions.apiKey, FAKE_KEY, 'the key is passed to the client from the environment');
+  assert.deepEqual(call.contents.map((c) => c.role), ['user', 'model', 'user'], 'history turns then the new user turn');
+  assert.deepEqual(call.contents[0].parts, [{ text: 'a' }]);
+  assert.match(call.contents[2].parts[0].text, /^\[Please respond in Tamil\]\n\nHello$/);
+  assert.equal(typeof call.config.systemInstruction, 'string');
+  assert.ok(call.config.systemInstruction.length > 100, 'system instruction (facts-safe prompt) is sent');
+  assert.equal(call.config.maxOutputTokens, 800);
+  assert.equal(call.config.temperature, 0.7);
+  assert.ok(call.config.abortSignal && typeof call.config.abortSignal.aborted === 'boolean', 'an AbortSignal is passed for the timeout');
+});
+test('GEMINI_MODEL overrides the default model; blank falls back to the default', async () => {
+  process.env.GEMINI_MODEL = 'gemini-test-model';
+  await chat(createApp(), { message: 'Hello' });
+  assert.equal(geminiMock.calls[0].model, 'gemini-test-model');
+  process.env.GEMINI_MODEL = '   ';
+  await chat(createApp(), { message: 'Hello again' });
+  assert.equal(geminiMock.calls[1].model, 'gemini-3.5-flash-lite');
+});
+test('an empty or blocked Gemini response is a client-safe error, never an empty reply', async () => {
+  geminiMock.impl = async () => '';
+  let res = await chat(createApp(), { message: 'Hello' });
+  assert.equal(res.status, 500);
+  assert.equal(res.body.code, 'AI_ERROR');
+  assert.ok(!('reply' in res.body));
+  assert.ok(!/Gemini|SAFETY|returned/i.test(JSON.stringify(res.body)));
+});
+test('the legacy SDK is not used anywhere in the backend source or package manifest', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const root = path.join(__dirname, '..');
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+  assert.ok(pkg.dependencies['@google/genai']);
+  assert.equal(pkg.dependencies['@google/generative-ai'], undefined);
+  assert.match(fs.readFileSync(path.join(root, 'routes', 'chat.js'), 'utf8'), /require\('@google\/genai'\)/);
+  assert.ok(!/generative-ai|GoogleGenerativeAI/.test(fs.readFileSync(path.join(root, 'routes', 'chat.js'), 'utf8')));
 });

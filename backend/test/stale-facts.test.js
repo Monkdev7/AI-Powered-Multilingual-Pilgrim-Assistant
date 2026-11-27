@@ -8,16 +8,20 @@ const os = require('os');
 const path = require('path');
 const request = require('supertest');
 const geminiMock = { models: [] };
-const sdkPath = require.resolve('@google/generative-ai');
+const sdkPath = require.resolve('@google/genai');
 require.cache[sdkPath] = {
   id: sdkPath,
   filename: sdkPath,
   loaded: true,
   exports: {
-    GoogleGenerativeAI: class {
-      getGenerativeModel(opts) {
-        geminiMock.models.push(opts);
-        return { startChat: () => ({ sendMessage: async () => ({ response: Promise.resolve({ text: () => 'ok' }) }) }) };
+    GoogleGenAI: class {
+      constructor() {
+        this.models = {
+          generateContent: async ({ model, config }) => {
+            geminiMock.models.push({ model, systemInstruction: config.systemInstruction });
+            return { text: 'ok' };
+          },
+        };
       }
     },
   },

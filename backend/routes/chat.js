@@ -115,30 +115,28 @@ let mockIndex = 0;
 
 const GEMINI_TIMEOUT_MS = () => parseInt(process.env.GEMINI_TIMEOUT_MS, 10) || 25000;
 
+// Default model; override with the optional GEMINI_MODEL environment variable.
+const DEFAULT_GEMINI_MODEL = 'gemini-3.5-flash-lite';
+const geminiModel = () => (process.env.GEMINI_MODEL || '').trim() || DEFAULT_GEMINI_MODEL;
+
 async function getGeminiResponse(message, language, history, systemPrompt) {
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({
-        model: 'gemini-2.5-flash-lite',
-        systemInstruction: systemPrompt,
-    });
-    // Build chat history for context (already validated and normalized)
-    const formattedHistory = history.map((msg) => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }],
-    }));
-    const chat = model.startChat({
-        history: formattedHistory,
-        generationConfig: {
-            maxOutputTokens: 800,
-            temperature: 0.7,
-        },
-    });
+    const { GoogleGenAI } = require('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const langName = LANGUAGE_NAMES[language];
     const prompt = `[Please respond in ${langName}]\n\n${message}`;
+    // Conversation so far (already validated and normalized), followed by the new user turn.
+    const contents = [
+        ...history.map((msg) => ({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.content }],
+        })),
+        { role: 'user', parts: [{ text: prompt }] },
+    ];
+    const controller = new AbortController();
     let timer;
     const timeout = new Promise((_, reject) => {
         timer = setTimeout(() => {
+            controller.abort();
             const e = new Error('Gemini request timed out');
             e.code = 'ETIMEDOUT';
             reject(e);
@@ -147,9 +145,22 @@ async function getGeminiResponse(message, language, history, systemPrompt) {
     try {
         return await Promise.race([
             (async () => {
-                const result = await chat.sendMessage(prompt);
-                const response = await result.response;
-                return response.text();
+                const response = await ai.models.generateContent({
+                    model: geminiModel(),
+                    contents,
+                    config: {
+                        systemInstruction: systemPrompt,
+                        maxOutputTokens: 800,
+                        temperature: 0.7,
+                        abortSignal: controller.signal,
+                    },
+                });
+                const text = response && response.text;
+                if (typeof text === 'string' && text.trim() !== '') return text;
+                // No text: keep the safety-block classification the previous SDK produced.
+                const blocked = (response && response.promptFeedback && response.promptFeedback.blockReason)
+                    || (response && response.candidates && response.candidates[0] && response.candidates[0].finishReason === 'SAFETY');
+                throw new Error(blocked ? 'Gemini response blocked (SAFETY)' : 'Gemini returned no text');
             })(),
             timeout,
         ]);
