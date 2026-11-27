@@ -36,17 +36,17 @@ const ICON_MAP = {
 
 // The API sends only a color name; Tailwind classes are kept here as literal strings
 const COLOR_STYLES = {
-    blue: { bgColor: 'bg-blue-50', borderColor: 'border-blue-200', iconColor: 'text-blue-600', buttonColor: 'bg-blue-500 hover:bg-blue-600' },
-    red: { bgColor: 'bg-red-50', borderColor: 'border-red-200', iconColor: 'text-red-600', buttonColor: 'bg-red-500 hover:bg-red-600' },
-    orange: { bgColor: 'bg-orange-50', borderColor: 'border-orange-200', iconColor: 'text-orange-600', buttonColor: 'bg-orange-500 hover:bg-orange-600' },
-    green: { bgColor: 'bg-green-50', borderColor: 'border-green-200', iconColor: 'text-green-600', buttonColor: 'bg-green-500 hover:bg-green-600' },
-    purple: { bgColor: 'bg-purple-50', borderColor: 'border-purple-200', iconColor: 'text-purple-600', buttonColor: 'bg-purple-500 hover:bg-purple-600' },
-    pink: { bgColor: 'bg-pink-50', borderColor: 'border-pink-200', iconColor: 'text-pink-600', buttonColor: 'bg-pink-500 hover:bg-pink-600' },
-    yellow: { bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', iconColor: 'text-yellow-600', buttonColor: 'bg-yellow-500 hover:bg-yellow-600' },
-    teal: { bgColor: 'bg-teal-50', borderColor: 'border-teal-200', iconColor: 'text-teal-600', buttonColor: 'bg-teal-500 hover:bg-teal-600' },
-    amber: { bgColor: 'bg-amber-50', borderColor: 'border-amber-200', iconColor: 'text-amber-600', buttonColor: 'bg-amber-500 hover:bg-amber-600' },
+    blue: { bgColor: 'bg-blue-50', borderColor: 'border-blue-200', iconColor: 'text-blue-600', buttonColor: 'bg-blue-700 hover:bg-blue-800' },
+    red: { bgColor: 'bg-red-50', borderColor: 'border-red-200', iconColor: 'text-red-600', buttonColor: 'bg-red-700 hover:bg-red-800' },
+    orange: { bgColor: 'bg-orange-50', borderColor: 'border-orange-200', iconColor: 'text-orange-600', buttonColor: 'bg-orange-700 hover:bg-orange-800' },
+    green: { bgColor: 'bg-green-50', borderColor: 'border-green-200', iconColor: 'text-green-600', buttonColor: 'bg-green-700 hover:bg-green-800' },
+    purple: { bgColor: 'bg-purple-50', borderColor: 'border-purple-200', iconColor: 'text-purple-600', buttonColor: 'bg-purple-700 hover:bg-purple-800' },
+    pink: { bgColor: 'bg-pink-50', borderColor: 'border-pink-200', iconColor: 'text-pink-600', buttonColor: 'bg-pink-700 hover:bg-pink-800' },
+    yellow: { bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', iconColor: 'text-yellow-600', buttonColor: 'bg-yellow-700 hover:bg-yellow-800' },
+    teal: { bgColor: 'bg-teal-50', borderColor: 'border-teal-200', iconColor: 'text-teal-600', buttonColor: 'bg-teal-700 hover:bg-teal-800' },
+    amber: { bgColor: 'bg-amber-50', borderColor: 'border-amber-200', iconColor: 'text-amber-600', buttonColor: 'bg-amber-700 hover:bg-amber-800' },
 };
-const DEFAULT_COLOR_STYLE = { bgColor: 'bg-gray-50', borderColor: 'border-gray-200', iconColor: 'text-gray-600', buttonColor: 'bg-gray-500 hover:bg-gray-600' };
+const DEFAULT_COLOR_STYLE = { bgColor: 'bg-gray-50', borderColor: 'border-gray-200', iconColor: 'text-gray-600', buttonColor: 'bg-gray-700 hover:bg-gray-800' };
 
 // Unreviewed emergency/medical content stays English in every UI language until a dedicated review
 // workflow translates it. These replace the old L.* labels that existed in no language.
@@ -85,7 +85,7 @@ const validateEmergencyResponse = (d) =>
 
 function EmptyState({ message }) {
     return (
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 text-center" role="status">
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center" role="status">
             <p className="text-sm text-gray-600">{message}</p>
         </div>
     );
@@ -100,39 +100,39 @@ function ContactCard({ contact: apiContact, callLabel }) {
 
     return (
         <div
-            className={`${contact.bgColor} ${contact.borderColor} border rounded-2xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow duration-200 animate-fade-in`}
+            className={`${contact.bgColor} ${contact.borderColor} border rounded-xl p-4 flex flex-col gap-3 shadow-card hover:shadow-raised transition-shadow duration-200 animate-fade-in`}
         >
             <div className="flex items-start gap-3">
                 <div className={`${contact.bgColor} border ${contact.borderColor} rounded-xl p-2.5 flex-shrink-0`} aria-hidden="true">
                     <IconComponent size={20} className={contact.iconColor} />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-gray-800 text-sm leading-tight">{contact.name}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{contact.description}</p>
+                    <h3 className="font-bold text-gray-900 text-sm leading-snug break-words">{contact.name}</h3>
+                    <p className="text-sm text-gray-700 mt-0.5 break-words">{contact.description}</p>
                 </div>
                 {contact.tollFree && (
-                    <span className="badge bg-green-100 text-green-700 flex-shrink-0 text-xs px-2 py-0.5 rounded-full">{t('emergency.free')}</span>
+                    <span className="badge bg-green-100 text-green-800 flex-shrink-0">{t('emergency.free')}</span>
                 )}
             </div>
 
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                 <div className="flex items-center gap-1.5">
-                    <Phone size={13} className="text-gray-500" aria-hidden="true" />
-                    <span className="font-bold text-gray-800 text-base tracking-wide">{contact.number}</span>
+                    <Phone size={14} className="text-gray-600" aria-hidden="true" />
+                    <span className="font-bold text-gray-900 text-lg tracking-wide">{contact.number}</span>
                 </div>
                 {href && (
                     <a
                         href={href}
-                        className={`${contact.buttonColor} text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 shadow-sm flex items-center gap-1.5`}
+                        className={`${contact.buttonColor} text-white text-sm font-semibold px-4 min-h-[44px] rounded-lg transition-colors shadow-sm inline-flex items-center justify-center gap-1.5`}
                         aria-label={t('emergency.callAria', { name: contact.name, number: contact.number })}
                     >
-                        <Phone size={12} aria-hidden="true" />
+                        <Phone size={14} aria-hidden="true" />
                         {callLabel}
                     </a>
                 )}
             </div>
             {host && (
-                <p className="text-xs text-gray-500 break-words">
+                <p className="text-xs text-gray-700 break-words">
                     <a href={contact.source.url} target="_blank" rel="noopener noreferrer" className="underline">
                         {t('emergency.source', { source: host })}
                     </a>
@@ -149,25 +149,25 @@ function InfoCard({ card: apiCard, onShare }) {
     const detailPreview = card.details[0] || '';
 
     return (
-        <div className={`${card.bgColor} ${card.borderColor} border rounded-2xl p-4 animate-fade-in`}>
+        <div className={`${card.bgColor} ${card.borderColor} border rounded-xl p-4 shadow-card animate-fade-in`}>
             <div className="flex items-center justify-between gap-2 mb-3">
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                     <div className={`${card.bgColor} border ${card.borderColor} rounded-xl p-2.5`} aria-hidden="true">
                         <IconComponent size={20} className={card.iconColor} />
                     </div>
-                    <h3 className="font-bold text-gray-800">{card.title}</h3>
+                    <h3 className="font-bold text-gray-900 break-words">{card.title}</h3>
                 </div>
                 <button
                     type="button"
                     onClick={() => onShare(card)}
-                    className="text-gray-400 hover:text-green-500 transition-colors flex-shrink-0"
+                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-gray-600 hover:bg-white/70 hover:text-green-700 transition-colors"
                     aria-label={t('emergency.shareInfoAria', { title: card.title })}
                     title={t('emergency.shareTitle')}
                 >
-                    <Share2 size={14} />
+                    <Share2 size={16} aria-hidden="true" />
                 </button>
             </div>
-            <p className="text-xs text-gray-600 mb-2">{detailPreview}</p>
+            <p className="text-sm text-gray-700 mb-2 break-words">{detailPreview}</p>
             <ul className="space-y-2">
                 {card.details.map((detail, i) => {
                     const bullet = getDetailBullet(card.id, detail);
@@ -178,7 +178,7 @@ function InfoCard({ card: apiCard, onShare }) {
                             ) : (
                                 <IconComponent size={14} className={`flex-shrink-0 mt-0.5 ${card.iconColor}`} aria-hidden="true" />
                             )}
-                            <span>{detail}</span>
+                            <span className="min-w-0 break-words">{detail}</span>
                         </li>
                     );
                 })}
@@ -229,37 +229,37 @@ export default function EmergencyPanel() {
     return (
         <div className="p-4 space-y-6">
             {/* Header banner */}
-            <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-4 text-white shadow-md">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4">
                 <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                        <div className="text-3xl" aria-hidden="true">🆘</div>
-                        <div>
-                            <h2 className="text-lg font-bold">{t('emergency.title')}</h2>
-                            <p className="text-red-100 text-sm">{t('emergency.subtitle')}</p>
+                    <div className="flex min-w-0 items-center gap-3">
+                        <div className="text-3xl flex-shrink-0" aria-hidden="true">🆘</div>
+                        <div className="min-w-0">
+                            <h2 className="page-title">{t('emergency.title')}</h2>
+                            <p className="page-subtitle">{t('emergency.subtitle')}</p>
                         </div>
                     </div>
                     <button
                         type="button"
                         onClick={handleShareAll}
                         disabled={!data}
-                        className="bg-white/20 hover:bg-white/30 text-white rounded-xl p-2 transition-colors flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-red-200 bg-white text-red-800 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
                         aria-label={t('emergency.shareAllAria')}
                         title={t('emergency.shareAllTitle')}
                     >
-                        <Share2 size={16} />
+                        <Share2 size={18} aria-hidden="true" />
                     </button>
                 </div>
 
                 {/* Most important */}
-                <div className="mt-3 bg-white/20 rounded-xl px-4 py-2.5 flex items-center justify-between gap-3">
-                    <div>
-                        <p className="text-xs text-red-100 font-medium uppercase tracking-wide">{t('emergency.mostImportant')}</p>
-                        <p className="text-white font-bold text-lg leading-tight">{primary?.name || PRIMARY_FALLBACK_NAME}</p>
+                <div className="mt-3 bg-red-700 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="text-xs text-red-50 font-medium uppercase tracking-wide">{t('emergency.mostImportant')}</p>
+                        <p className="text-white font-bold text-lg leading-snug break-words">{primary?.name || PRIMARY_FALLBACK_NAME}</p>
                     </div>
                     {primaryHref && (
                         <a
                             href={primaryHref}
-                            className="bg-white text-red-600 font-extrabold px-5 py-3 rounded-xl text-2xl flex items-center gap-2 hover:bg-red-50 transition-colors active:scale-95 shadow-md flex-shrink-0"
+                            className="bg-white text-red-700 font-extrabold px-5 min-h-[56px] rounded-lg text-2xl flex items-center justify-center gap-2 hover:bg-red-50 transition-colors shadow-raised flex-shrink-0"
                             aria-label={t('emergency.callAria', { name: primary.name, number: primary.number })}
                         >
                             <Phone size={20} aria-hidden="true" />
@@ -268,7 +268,7 @@ export default function EmergencyPanel() {
                     )}
                 </div>
                 {primaryHost && (
-                    <p className="mt-2 text-xs text-red-100 break-words">
+                    <p className="mt-2 text-xs text-red-900 break-words">
                         <a href={primary.source.url} target="_blank" rel="noopener noreferrer" className="underline">
                             {t('emergency.source', { source: primaryHost })}
                         </a>
@@ -279,7 +279,7 @@ export default function EmergencyPanel() {
             {/* Contacts grid */}
             <section aria-labelledby="emergency-numbers-heading">
                 <h3 id="emergency-numbers-heading" className="section-title mb-3 flex items-center gap-2">
-                    <Phone size={16} className="text-orange-500" aria-hidden="true" />
+                    <Phone size={16} className="text-orange-600" aria-hidden="true" />
                     {t('emergency.numbersHeading')}
                 </h3>
                 {error ? (
@@ -290,7 +290,7 @@ export default function EmergencyPanel() {
                     <EmptyState message={t('emergency.emptyContacts')} />
                 ) : (
                     <>
-                        <p className="text-xs text-gray-500 mb-3">{t('emergency.listingNote')}</p>
+                        <p className="text-sm text-gray-600 mb-3">{t('emergency.listingNote')}</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {secondary.map((contact) => (
                                 <ContactCard key={contact.id} contact={contact} callLabel={t('emergency.call')} />
@@ -334,11 +334,11 @@ export default function EmergencyPanel() {
             )}
 
             {/* Heat warning — Ujjain-specific */}
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-                <h3 className="font-bold text-red-800 mb-2 flex items-center gap-2" id="heat-warning-heading">
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                <h3 className="font-bold text-red-900 mb-2 flex items-center gap-2" id="heat-warning-heading">
                     <span aria-hidden="true">🌡️</span> {HEAT_WARNING_TITLE}
                 </h3>
-                <p className="text-sm text-red-700 mb-2">
+                <p className="text-sm text-red-800 mb-2">
                     {HEAT_WARNING_TEXT} <strong>40-43°C</strong>. {HEAT_WARNING_RISK}
                 </p>
                 <div className="space-y-1.5" role="list" aria-labelledby="heat-warning-heading">
@@ -348,7 +348,7 @@ export default function EmergencyPanel() {
                         'ORS packets available FREE at all sector entry gates',
                         'Heatstroke treatment centres at every major medical camp',
                     ].map((tip, i) => (
-                        <div key={i} role="listitem" className="flex items-start gap-2 text-sm text-red-700">
+                        <div key={i} role="listitem" className="flex items-start gap-2 text-sm text-red-800">
                             <ChevronRight size={14} className="text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                             <span>{tip}</span>
                         </div>
@@ -357,9 +357,9 @@ export default function EmergencyPanel() {
             </div>
 
             {/* Safety tips */}
-            <section className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4" aria-labelledby="safety-tips-heading">
-                <h3 id="safety-tips-heading" className="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <AlertTriangle size={16} className="text-amber-500" aria-hidden="true" />
+            <section className="bg-amber-50 border border-amber-200 rounded-xl p-4" aria-labelledby="safety-tips-heading">
+                <h3 id="safety-tips-heading" className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <AlertTriangle size={16} className="text-amber-600" aria-hidden="true" />
                     {t('emergency.safetyTips')}
                 </h3>
                 <div className="space-y-2" role="list" aria-labelledby="safety-tips-heading">

@@ -87,10 +87,10 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
                 aria-expanded={open}
                 aria-controls={open ? 'language-menu' : undefined}
                 aria-label={`${t('language.select')}: ${current.nativeName}`}
-                className="flex items-center gap-1.5 bg-white/20 rounded-xl px-3 py-2 border border-white/30 text-white text-sm font-medium cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="flex min-h-[44px] items-center gap-1.5 bg-black/20 hover:bg-black/30 rounded-lg px-3 py-2 border border-white/40 text-white text-sm font-semibold cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-orange-600"
             >
                 <Globe size={15} className="text-white flex-shrink-0" aria-hidden="true" />
-                <span lang={current.code} className="max-w-[4.5rem] sm:max-w-none truncate">
+                <span lang={current.code}>
                     {current.nativeName}
                 </span>
                 <svg
@@ -112,7 +112,7 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
                     aria-label={t('language.select')}
                     aria-activedescendant={`language-option-${options[active].code}`}
                     onKeyDown={onListKeyDown}
-                    className="absolute right-0 top-full mt-2 w-48 max-w-[calc(100vw-2rem)] bg-white text-gray-800 rounded-xl shadow-xl border border-orange-100 py-1 z-50 focus:outline-none"
+                    className="absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-2rem)] bg-white text-gray-900 rounded-xl shadow-raised border border-orange-200 py-1 z-50 focus:outline-none"
                 >
                     {options.map((o, i) => {
                         const selected = o.code === selectedLanguage;
@@ -125,10 +125,10 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
                                 aria-selected={selected}
                                 onClick={() => choose(i)}
                                 onMouseEnter={() => setActive(i)}
-                                className={`flex items-baseline justify-between gap-2 px-3 py-2 text-sm cursor-pointer ${i === active ? 'bg-orange-100' : ''} ${selected ? 'font-semibold text-orange-700' : ''}`}
+                                className={`flex min-h-[44px] items-center justify-between gap-2 px-3 py-2 text-sm cursor-pointer ${i === active ? 'bg-orange-100' : ''} ${selected ? 'font-semibold text-orange-800' : ''}`}
                             >
                                 <span>{o.nativeName}</span>
-                                <span lang="en" className="text-xs text-gray-500">{o.englishName}</span>
+                                <span lang="en" className="text-xs text-gray-600">{o.englishName}</span>
                             </li>
                         );
                     })}

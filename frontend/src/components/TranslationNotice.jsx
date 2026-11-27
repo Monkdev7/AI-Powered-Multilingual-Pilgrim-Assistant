@@ -9,7 +9,7 @@ export default function TranslationNotice() {
         <div
             role="note"
             data-testid="translation-notice"
-            className="flex-shrink-0 flex items-start gap-2 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs px-4 py-2"
+            className="flex-shrink-0 flex items-start gap-2 bg-amber-50 border-b border-amber-200 text-amber-900 text-sm px-4 py-2"
         >
             <Info size={14} className="flex-shrink-0 mt-0.5 text-amber-500" aria-hidden="true" />
             <p>{t('notice.underReview')}</p>

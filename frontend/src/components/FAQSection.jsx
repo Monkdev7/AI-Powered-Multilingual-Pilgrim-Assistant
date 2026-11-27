@@ -25,28 +25,28 @@ function FAQItem({ faq, isOpen, onToggle }) {
     };
 
     return (
-        <div className={`border rounded-xl overflow-hidden transition-all duration-200 ${isOpen ? 'border-orange-300 shadow-md' : 'border-orange-100 hover:border-orange-200'}`}>
+        <div className={`card overflow-hidden transition-all duration-200 ${isOpen ? '!border-orange-300 shadow-raised' : 'card-hover'}`}>
             <button
                 onClick={onToggle}
-                className={`w-full flex items-start justify-between gap-3 px-4 py-4 text-left transition-colors ${isOpen ? 'bg-orange-50' : 'bg-white hover:bg-orange-50/50'}`}
+                className={`w-full min-h-[48px] flex items-start justify-between gap-3 px-4 py-3.5 text-left transition-colors ${isOpen ? 'bg-orange-50' : 'bg-white hover:bg-orange-50/60'}`}
                 aria-expanded={isOpen}
             >
-                <span className={`text-sm font-semibold leading-snug ${isOpen ? 'text-orange-700' : 'text-gray-800'}`}>
+                <span className={`min-w-0 break-words text-sm font-semibold leading-snug ${isOpen ? 'text-orange-800' : 'text-gray-900'}`}>
                     {faq.question}
                 </span>
-                <span className="flex-shrink-0 mt-0.5" aria-hidden="true">
-                    {isOpen ? <ChevronUp size={16} className="text-orange-500" /> : <ChevronDown size={16} className="text-gray-400" />}
+                <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${isOpen ? 'bg-orange-100' : 'bg-gray-100'}`} aria-hidden="true">
+                    {isOpen ? <ChevronUp size={16} className="text-orange-700" /> : <ChevronDown size={16} className="text-gray-600" />}
                 </span>
             </button>
             {isOpen && (
                 <div className="bg-white border-t border-orange-100 px-4 py-4 animate-fade-in">
-                    <p className="text-sm text-gray-700 leading-relaxed">{faq.answer}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed break-words">{faq.answer}</p>
                     <button
                         onClick={handleShare}
-                        className="mt-3 flex items-center gap-1.5 text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
+                        className="mt-3 -ml-2 inline-flex min-h-[40px] items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-50"
                         aria-label={t('faq.shareAria')}
                     >
-                        <Share2 size={12} />
+                        <Share2 size={14} aria-hidden="true" />
                         {t('faq.share')}
                     </button>
                 </div>
@@ -122,19 +122,17 @@ export default function FAQSection() {
     return (
         <div className="p-4 space-y-4">
             {/* Header */}
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-4 text-white shadow-md">
-                <div className="flex items-center gap-3">
-                    <div className="text-3xl">❓</div>
-                    <div>
-                        <h2 className="text-lg font-bold">{t('faq.title')}</h2>
-                        <p className="text-orange-100 text-sm">{t('faq.subtitle')}</p>
-                    </div>
+            <div className="page-header">
+                <div className="text-3xl flex-shrink-0" aria-hidden="true">❓</div>
+                <div className="min-w-0">
+                    <h2 className="page-title">{t('faq.title')}</h2>
+                    <p className="page-subtitle">{t('faq.subtitle')}</p>
                 </div>
             </div>
 
             {/* Search bar */}
             <div className="relative">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" aria-hidden="true" />
                 <input
                     type="text"
                     value={searchQuery}
@@ -147,26 +145,24 @@ export default function FAQSection() {
                     <button
                         onClick={clearSearch}
                         aria-label={t('faq.clearSearch')}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-0.5 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-gray-500 hover:text-gray-800"
                     >
-                        <X size={16} />
+                        <X size={16} aria-hidden="true" />
                     </button>
                 )}
             </div>
 
             {/* Category filter */}
-            <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
-                <div className="flex gap-2 min-w-max pb-1">
+            <div>
+                <div className="flex flex-wrap gap-2">
                     {faqCategories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => handleCategoryChange(cat.id)}
-                            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${selectedCategory === cat.id
-                                ? 'bg-orange-500 text-white shadow-md'
-                                : 'bg-white text-orange-700 border border-orange-200 hover:bg-orange-50'
-                                }`}
+                            aria-pressed={selectedCategory === cat.id}
+                            className={`chip ${selectedCategory === cat.id ? 'chip-active' : 'chip-idle'}`}
                         >
-                            <span>{CATEGORY_ICONS[cat.id] || '📌'}</span>
+                            <span aria-hidden="true">{CATEGORY_ICONS[cat.id] || '📌'}</span>
                             {cat.label}
                         </button>
                     ))}
@@ -176,8 +172,8 @@ export default function FAQSection() {
             <UnverifiedNotice />
             {/* Results count */}
             <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-500 flex items-center gap-1.5">
-                    <BookOpen size={12} />
+                <p className="text-sm text-gray-600 flex items-center gap-1.5">
+                    <BookOpen size={14} aria-hidden="true" />
                     <span>
                         {data && !error ? (
                             <>
@@ -191,7 +187,7 @@ export default function FAQSection() {
                 {(searchQuery || selectedCategory !== 'All') && (
                     <button
                         onClick={() => { clearSearch(); handleCategoryChange('All'); }}
-                        className="text-xs text-orange-500 hover:text-orange-700 font-medium"
+                        className="min-h-[40px] rounded-lg px-2 text-sm font-medium text-orange-800 hover:bg-orange-50"
                     >
                         {t('faq.clearFilters')}
                     </button>
@@ -204,9 +200,9 @@ export default function FAQSection() {
             ) : isInitialLoad ? (
                 <LoadingState label={t('faq.loading')} />
             ) : faqs.length === 0 ? (
-                <div className="text-center py-12 text-gray-400">
-                    <Search size={40} className="mx-auto mb-3 opacity-30" />
-                    <p className="font-medium">{t('faq.noResults')}</p>
+                <div className="text-center py-12 text-gray-600">
+                    <Search size={40} className="mx-auto mb-3 text-orange-300" aria-hidden="true" />
+                    <p className="font-semibold text-gray-800">{t('faq.noResults')}</p>
                     <p className="text-sm mt-1">{t('faq.noResultsHint')}</p>
                 </div>
             ) : (
@@ -223,7 +219,7 @@ export default function FAQSection() {
             )}
             {/* Bottom tip */}
             <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex items-start gap-2.5">
-                <span className="text-lg flex-shrink-0">💬</span>
+                <span className="text-lg flex-shrink-0" aria-hidden="true">💬</span>
                 <p className="text-sm text-gray-700">
                     {t('faq.chatTip')}
                 </p>

@@ -25,6 +25,10 @@ export default {
                     600: '#FFB300',
                 },
             },
+            boxShadow: {
+                card: '0 1px 2px rgba(124, 45, 18, 0.06), 0 1px 3px rgba(124, 45, 18, 0.06)',
+                raised: '0 2px 4px rgba(124, 45, 18, 0.08), 0 4px 12px rgba(124, 45, 18, 0.08)',
+            },
             fontFamily: {
                 sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Gujarati', 'Noto Sans Gurmukhi', 'system-ui', 'sans-serif'],
             },

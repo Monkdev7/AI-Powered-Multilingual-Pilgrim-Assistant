@@ -122,17 +122,17 @@ function MessageBubble({ message }) {
     return (
         <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in group`}>
             {!isUser && (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-orange-700 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-card">
                     <Bot size={15} className="text-white" aria-hidden="true" />
                 </div>
             )}
 
-            <div className={`max-w-[80%] sm:max-w-[70%]`}>
+            <div className="min-w-0 max-w-[85%] sm:max-w-[75%]">
                 <div
                     className={
                         isUser
-                            ? 'bg-orange-500 text-white rounded-2xl rounded-tr-sm px-4 py-3 shadow-sm'
-                            : 'bg-white text-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-orange-100'
+                            ? 'bg-orange-700 text-white rounded-2xl rounded-tr-sm px-4 py-3 shadow-card break-words'
+                            : 'bg-white text-gray-900 rounded-2xl rounded-tl-sm px-4 py-3 shadow-card border border-orange-100 break-words'
                     }
                 >
                     {isUser ? (
@@ -142,22 +142,22 @@ function MessageBubble({ message }) {
                     )}
                 </div>
                 <div className={`flex items-center gap-2 mt-1 px-1 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                    <p className="text-xs text-gray-400">{safeTime(formatTime, message.timestamp)}</p>
+                    <p className="text-xs text-gray-600">{safeTime(formatTime, message.timestamp)}</p>
                     {!isUser && (
                         <button
                             onClick={handleShare}
                             title={t('chat.shareWhatsApp')}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-green-500"
+                            className="-my-2 inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 transition-opacity hover:text-green-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
                             aria-label={t('chat.shareWhatsApp')}
                         >
-                            <Share2 size={12} aria-hidden="true" />
+                            <Share2 size={14} aria-hidden="true" />
                         </button>
                     )}
                 </div>
             </div>
 
             {isUser && (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0 ml-2 mt-1 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 ml-2 mt-1 shadow-card">
                     <User size={15} className="text-white" aria-hidden="true" />
                 </div>
             )}
@@ -169,12 +169,12 @@ function TypingIndicator() {
     const { t } = useT();
     return (
         <div className="flex justify-start mb-4 animate-fade-in" role="status" aria-live="polite">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-orange-700 flex items-center justify-center flex-shrink-0 mr-2 mt-1 shadow-card">
                 <Bot size={15} className="text-white" aria-hidden="true" />
             </div>
-            <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-orange-100">
+            <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-card border border-orange-100">
                 <div className="flex items-center gap-1.5 min-h-[1.25rem]">
-                    <span className="text-xs text-orange-500 mr-1 font-medium">{t('chat.thinking')}</span>
+                    <span className="text-xs text-orange-800 mr-1 font-medium">{t('chat.thinking')}</span>
                     <div className="typing-dot" aria-hidden="true"></div>
                     <div className="typing-dot" aria-hidden="true"></div>
                     <div className="typing-dot" aria-hidden="true"></div>
@@ -201,7 +201,7 @@ function LanguageIndicator({ code }) {
     const language = getLanguage(code);
     const parts = t('chat.respondingIn', { language: LANGUAGE_SLOT }).split(LANGUAGE_SLOT);
     const name = (
-        <span lang={language.code} className="text-orange-500 font-medium">{language.nativeName}</span>
+        <span lang={language.code} className="text-orange-800 font-medium">{language.nativeName}</span>
     );
     if (parts.length !== 2) return <>{parts.join('')} {name}</>;
     return <>{parts[0]}{name}{parts[1]}</>;
@@ -347,9 +347,9 @@ export default function ChatInterface({ selectedLanguage }) {
                         <DevDemoBanner />
                     </Suspense>
                 ) : (
-                    <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 flex items-start gap-2" role="note">
-                        <Sparkles size={15} className="text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                        <p className="text-xs text-amber-700">
+                    <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 flex items-start gap-2" role="note">
+                        <Sparkles size={15} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <p className="text-sm text-amber-900">
                             <strong>{t('chat.demoMode')}:</strong> {t('chat.demoNotice')}
                         </p>
                     </div>
@@ -365,17 +365,17 @@ export default function ChatInterface({ selectedLanguage }) {
             <div className="flex items-center justify-between px-4 pt-3 pb-2">
                 <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm font-semibold text-gray-700">KumbhSaathi AI</span>
-                    <span className="text-xs text-gray-400 hidden sm:inline">· {t('chat.subtitle')}</span>
+                    <span className="text-sm font-semibold text-gray-900">KumbhSaathi AI</span>
+                    <span className="text-xs text-gray-600 hidden sm:inline">· {t('chat.subtitle')}</span>
                     {hasHistory && (
-                        <span className="text-xs bg-orange-100 text-orange-600 rounded-full px-2 py-0.5 font-medium">
+                        <span className="text-xs bg-orange-100 text-orange-800 rounded-full px-2 py-0.5 font-medium">
                             {t.plural('chat.messageCount', messages.length - 1)}
                         </span>
                     )}
                 </div>
                 <button
                     onClick={handleClearChat}
-                    className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-orange-600 transition-colors px-2 py-1 rounded-lg hover:bg-orange-50"
+                    className="flex min-h-[40px] min-w-[40px] items-center justify-center gap-1.5 text-sm text-gray-700 hover:text-orange-800 transition-colors px-2 py-1 rounded-lg hover:bg-orange-50"
                     title={t('chat.clearHistory')}
                     aria-label={t('chat.clearHistory')}
                 >
@@ -387,7 +387,7 @@ export default function ChatInterface({ selectedLanguage }) {
             {/* Restored session notice */}
             {hasHistory && messages[0]?.id === 'welcome' && messages.length > 1 && (
                 <div className="mx-4 mb-1 text-center">
-                    <span className="text-xs text-gray-400 bg-gray-50 rounded-full px-3 py-1">
+                    <span className="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1">
                         {t('chat.restored')}
                     </span>
                 </div>
@@ -405,14 +405,14 @@ export default function ChatInterface({ selectedLanguage }) {
             {/* Suggested questions (show when only welcome message) */}
             {messages.length === 1 && !isLoading && (
                 <div className="px-4 pb-3">
-                    <p className="text-xs text-gray-500 mb-2 font-medium">{t('chat.tryAsking')}</p>
+                    <p className="text-sm text-gray-700 mb-2 font-medium">{t('chat.tryAsking')}</p>
                     <div className="flex flex-wrap gap-2">
                         {SUGGESTED_QUESTIONS.map((q) => (
                             <button
                                 key={q.id}
                                 onClick={() => sendMessage(t(q.key))}
                                 disabled={!online}
-                                className="text-xs bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-3 py-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="chip chip-idle text-left font-medium disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {t(q.key)}
                             </button>
@@ -425,11 +425,11 @@ export default function ChatInterface({ selectedLanguage }) {
             <div className="border-t border-orange-100 bg-white px-4 py-3">
                 {!online && (
                     <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-2 flex flex-col gap-2">
-                        <p id="chat-offline-note" className="text-xs text-amber-800">{t('offline.chat')}</p>
+                        <p id="chat-offline-note" className="text-sm text-amber-900">{t('offline.chat')}</p>
                         <OfflineEmergencyLink className="w-full" />
                     </div>
                 )}
-                <div className="flex items-end gap-2 bg-orange-50 rounded-2xl border border-orange-200 px-4 py-2 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-200 transition-all">
+                <div className="flex items-end gap-2 bg-orange-50 rounded-xl border border-orange-600 pl-4 pr-2 py-1.5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-300 transition-colors">
                     <textarea
                         ref={inputRef}
                         value={input}
@@ -438,8 +438,8 @@ export default function ChatInterface({ selectedLanguage }) {
                         placeholder={t('chat.placeholder')}
                         rows={1}
                         maxLength={1000}
-                        className="flex-1 bg-transparent resize-none outline-none text-sm text-gray-800 placeholder-gray-400 max-h-32 py-1"
-                        style={{ minHeight: '24px' }}
+                        className="min-w-0 flex-1 bg-transparent resize-none outline-none text-sm text-gray-900 placeholder-gray-500 max-h-32 py-2.5"
+                        style={{ minHeight: '40px' }}
                         disabled={isLoading}
                         aria-label={t('chat.inputLabel')}
                         aria-describedby={!online ? 'chat-offline-note' : undefined}
@@ -447,14 +447,14 @@ export default function ChatInterface({ selectedLanguage }) {
                     <button
                         onClick={() => sendMessage()}
                         disabled={!input.trim() || isLoading || !online}
-                        className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-200 disabled:cursor-not-allowed text-white rounded-xl p-2 transition-all active:scale-95 flex-shrink-0 mb-0.5"
+                        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-orange-700 text-white transition-colors hover:bg-orange-800 disabled:cursor-not-allowed disabled:bg-orange-200"
                         aria-label={t('chat.send')}
                         title={t('chat.send')}
                     >
-                        <Send size={16} aria-hidden="true" />
+                        <Send size={18} aria-hidden="true" />
                     </button>
                 </div>
-                <p className="text-xs text-center text-gray-400 mt-2">
+                <p className="text-xs text-center text-gray-600 mt-2">
                     {t('chat.hint')} · <LanguageIndicator code={selectedLanguage} />
                 </p>
             </div>

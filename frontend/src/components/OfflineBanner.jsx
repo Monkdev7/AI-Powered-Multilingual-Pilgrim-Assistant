@@ -12,9 +12,9 @@ export default function OfflineBanner() {
     return (
         <div role="status" aria-live="polite">
             {!online && (
-                <div className="mx-4 mt-3 bg-amber-50 border border-amber-300 rounded-xl p-3 flex flex-col gap-2" data-testid="offline-banner">
-                    <p className="text-sm text-amber-900 flex items-start gap-2">
-                        <WifiOff size={16} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <div className="mx-4 mt-3 bg-amber-50 border border-amber-300 rounded-xl p-3 flex flex-col gap-3" data-testid="offline-banner">
+                    <p className="text-sm font-medium text-amber-900 flex items-start gap-2">
+                        <WifiOff size={18} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
                         <span>{t('offline.banner')}</span>
                     </p>
                     <OfflineEmergencyLink className="w-full sm:w-auto sm:self-start" />

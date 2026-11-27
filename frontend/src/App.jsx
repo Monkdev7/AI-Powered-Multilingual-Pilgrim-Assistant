@@ -47,17 +47,17 @@ function AppShell() {
     const ActiveComponent = TAB_COMPONENTS[activeTab];
     const isChat = activeTab === 'chat';
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex flex-col">
+        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-amber-50 flex flex-col">
             {/* Header */}
             <Header
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={handleLanguageChange}
             />
             {/* Main layout */}
-            <div className="flex-1 flex flex-col max-w-2xl w-full mx-auto px-0 sm:px-4 pb-20 sm:pb-4">
-                <main className="flex-1 flex flex-col bg-white sm:rounded-2xl sm:shadow-md sm:border sm:border-orange-100 sm:mt-4 overflow-hidden">
+            <div className="flex-1 flex flex-col max-w-4xl w-full mx-auto px-0 sm:px-6 pb-24 sm:pb-4">
+                <main className="flex-1 flex flex-col bg-white sm:rounded-xl sm:shadow-card sm:border sm:border-orange-100 sm:mt-6 overflow-hidden">
                     {/* Desktop tab strip */}
-                    <div className="hidden sm:flex items-center px-4 pt-3 pb-1 gap-1.5 overflow-x-auto scrollbar-hide">
+                    <div className="hidden sm:flex items-stretch px-4 py-3 gap-1.5 border-b border-orange-100">
                         {TAB_IDS.map((id) => {
                             const Icon = TAB_ICONS[id];
                             const label = t(TAB_LABEL_KEYS[id]);
@@ -67,13 +67,13 @@ function AppShell() {
                                     onClick={() => setActiveTab(id)}
                                     aria-label={label}
                                     aria-current={activeTab === id ? 'page' : undefined}
-                                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 whitespace-nowrap flex-shrink-0 ${activeTab === id
-                                        ? 'bg-orange-500 text-white shadow-sm'
-                                        : 'text-gray-500 hover:bg-orange-50 hover:text-orange-600'
+                                    className={`flex-1 min-w-0 min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm leading-tight text-center transition-colors duration-200 ${activeTab === id
+                                        ? 'bg-orange-700 text-white shadow-sm'
+                                        : 'text-gray-700 hover:bg-orange-50 hover:text-orange-800'
                                         }`}
                                 >
-                                    <Icon size={15} aria-hidden="true" />
-                                    {label}
+                                    <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
+                                    <span className="min-w-0 break-words">{label}</span>
                                 </button>
                             );
                         })}
@@ -115,7 +115,7 @@ function AppShell() {
             </div>
             {/* Mobile bottom navigation */}
             <nav
-                className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-orange-100 shadow-lg z-40"
+                className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-orange-200 shadow-raised z-40 pb-[env(safe-area-inset-bottom)]"
                 aria-label={t('app.mainNav')}
             >
                 <div className="flex items-stretch">
@@ -129,17 +129,17 @@ function AppShell() {
                                 onClick={() => setActiveTab(id)}
                                 aria-label={label}
                                 aria-current={isActive ? 'page' : undefined}
-                                className={`flex-1 min-w-0 flex flex-col items-center justify-center py-2.5 px-0 gap-0.5 transition-all duration-200 relative ${isActive ? 'text-orange-600' : 'text-gray-400 hover:text-orange-400'
+                                className={`flex-auto min-w-[44px] flex flex-col items-center justify-center min-h-[56px] py-2 px-1 gap-0.5 transition-colors duration-200 relative ${isActive ? 'text-orange-700' : 'text-gray-600 hover:text-orange-700'
                                     }`}
                             >
-                                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full transition-all duration-200 ${isActive ? 'bg-orange-500' : 'bg-transparent'}`} />
+                                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full transition-colors duration-200 ${isActive ? 'bg-orange-700' : 'bg-transparent'}`} />
                                 <Icon
                                     size={isActive ? 22 : 20}
                                     aria-hidden="true"
                                     className="transition-all"
                                 />
-                                {/* Single line with ellipsis so long labels cannot grow the fixed bottom bar past the pb-20 reserve */}
-                                <span className={`text-xs transition-all max-w-full truncate ${isActive ? 'font-semibold' : 'font-medium'}`}>
+                                {/* Labels wrap (never ellipsis); two lines of text-xs fit inside the pb-24 reserve above the bar */}
+                                <span className={`text-xs leading-tight text-center ${isActive ? 'font-semibold' : 'font-medium'}`}>
                                     {label}
                                 </span>
                             </button>
@@ -148,7 +148,7 @@ function AppShell() {
                 </div>
             </nav>
             {/* Desktop footer */}
-            <footer className="hidden sm:block text-center py-3 text-xs text-gray-400">
+            <footer className="hidden sm:block text-center py-4 text-xs text-gray-600">
                 {t('app.footer')}
             </footer>
         </div>

@@ -23,13 +23,13 @@ function getTimeLeft() {
 // The digits are Latin and have no stacked marks, so they opt out (!) of the Indic 1.6 line-height override.
 function TimeUnit({ value, label }) {
     return (
-        <div className="flex flex-col items-center">
-            <div className="bg-white/20 rounded-xl px-3 py-2 min-w-[52px] text-center">
+        <div className="flex min-w-0 flex-1 flex-col items-center">
+            <div className="w-full max-w-[72px] rounded-lg bg-black/20 px-1 py-2 text-center">
                 <span className="text-2xl font-bold text-white !leading-none">
                     {String(value).padStart(2, '0')}
                 </span>
             </div>
-            <span className="text-orange-100 text-xs mt-1 font-medium">{label}</span>
+            <span className="mt-1 break-words text-center text-xs font-medium text-orange-50">{label}</span>
         </div>
     );
 }
@@ -45,14 +45,14 @@ export default function CountdownTimer({ compact = false }) {
     const startDate = formatDate(SIMHASTHA_START_ISO, START_DATE_FORMAT);
     if (timeLeft.ended) {
         return (
-            <div className="bg-gradient-to-r from-gray-500 to-gray-600 rounded-2xl p-3 text-white text-center shadow-md">
+            <div className="bg-gray-700 rounded-xl p-3 text-white text-center shadow-card">
                 <p className="font-bold text-sm">{t('countdown.concluded')}</p>
             </div>
         );
     }
     if (timeLeft.ongoing) {
         return (
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-3 text-white shadow-md">
+            <div className="bg-green-700 rounded-xl p-3 text-white shadow-card">
                 <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse flex-shrink-0"></div>
                     <p className="font-bold text-sm">{t('countdown.live')}</p>
@@ -63,13 +63,13 @@ export default function CountdownTimer({ compact = false }) {
     // Compact mode: single line for chat tab
     if (compact) {
         return (
-            <div className="bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl px-4 py-2.5 shadow-md flex items-center justify-between gap-3">
+            <div className="bg-orange-700 rounded-xl px-4 py-2.5 shadow-card flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                 <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base flex-shrink-0">⏳</span>
+                    <span className="text-base flex-shrink-0" aria-hidden="true">⏳</span>
                     <div className="min-w-0">
-                        <p className="text-white font-bold text-xs break-words sm:truncate">{t('countdown.beginsInShort')}</p>
-                        <p className="text-orange-100 text-xs">{t('countdown.dateCompact', { date: startDate })}</p>
-                        <ProposedLabel className="text-orange-100" />
+                        <p className="text-white font-bold text-sm break-words">{t('countdown.beginsInShort')}</p>
+                        <p className="text-orange-50 text-xs">{t('countdown.dateCompact', { date: startDate })}</p>
+                        <ProposedLabel className="text-orange-50" />
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -80,12 +80,12 @@ export default function CountdownTimer({ compact = false }) {
                         { v: timeLeft.seconds, l: 's', k: tk('countdown.secondShort') },
                     ].map(({ v, l, k }, i) => (
                         <React.Fragment key={l}>
-                            {i > 0 && <span className="text-orange-200 text-xs">:</span>}
-                            <div className="bg-white/20 rounded-lg px-1.5 py-1 text-center min-w-[30px]">
+                            {i > 0 && <span className="text-white text-xs">:</span>}
+                            <div className="bg-black/20 rounded-lg px-1.5 py-1 text-center min-w-[30px]">
                                 <span className="text-white font-bold text-sm !leading-none">
                                     {String(v).padStart(2, '0')}
                                 </span>
-                                <span className="text-orange-200 text-xs block leading-none">{t(k)}</span>
+                                <span className="text-orange-50 text-xs block leading-none">{t(k)}</span>
                             </div>
                         </React.Fragment>
                     ))}
@@ -95,16 +95,16 @@ export default function CountdownTimer({ compact = false }) {
     }
     // Full mode: for other tabs
     return (
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl p-4 shadow-md">
+        <div className="bg-orange-700 rounded-xl p-4 shadow-card">
             <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">⏳</span>
+                <span className="text-xl" aria-hidden="true">⏳</span>
                 <div>
                     <p className="text-white font-bold text-sm">{t('countdown.beginsIn')}</p>
-                    <p className="text-orange-100 text-xs">{t('countdown.dateFull', { date: startDate })}</p>
-                    <ProposedLabel className="text-orange-100" />
+                    <p className="text-orange-50 text-xs">{t('countdown.dateFull', { date: startDate })}</p>
+                    <ProposedLabel className="text-orange-50" />
                 </div>
             </div>
-            <div className="flex items-start justify-center gap-3">
+            <div className="flex items-start justify-center gap-1.5 sm:gap-3">
                 <TimeUnit value={timeLeft.days} label={t('countdown.days')} />
                 <span className="text-white text-2xl font-bold mt-1">:</span>
                 <TimeUnit value={timeLeft.hours} label={t('countdown.hours')} />
@@ -114,20 +114,20 @@ export default function CountdownTimer({ compact = false }) {
                 <TimeUnit value={timeLeft.seconds} label={t('countdown.seconds')} />
             </div>
             {/* Bhasma Aarti booking */}
-            <div className="mt-3 bg-white/15 rounded-xl p-3 flex items-center justify-between gap-2">
-                <div>
-                    <p className="text-white text-xs font-bold">{t('countdown.bhasmaTitle')}</p>
-                    <p className="text-orange-100 text-xs mt-0.5">{t('countdown.bhasmaPromo')}</p>
+            <div className="mt-3 bg-black/20 rounded-lg p-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-2">
+                <div className="min-w-0">
+                    <p className="text-white text-sm font-bold">{t('countdown.bhasmaTitle')}</p>
+                    <p className="text-orange-50 text-xs mt-0.5">{t('countdown.bhasmaPromo')}</p>
                 </div>
                 <a
                     href={TEMPLE_PORTAL_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white text-orange-600 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-orange-50 transition-colors flex-shrink-0 active:scale-95"
+                    className="bg-white text-orange-800 text-sm font-bold px-3 min-h-[40px] rounded-lg inline-flex items-center gap-1 hover:bg-orange-50 transition-colors flex-shrink-0"
                     aria-label={t('countdown.bookAria')}
                 >
                     {t('countdown.book')}
-                    <ExternalLink size={11} />
+                    <ExternalLink size={12} aria-hidden="true" />
                 </a>
             </div>
         </div>

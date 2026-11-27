@@ -15,10 +15,7 @@ function GhatCard({ ghat }) {
 
     return (
         <div
-            className={`rounded-2xl border transition-all duration-200 overflow-hidden ${ghat.highlight
-                ? 'border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50 shadow-md'
-                : 'border-orange-100 bg-white hover:border-orange-200 hover:shadow-sm'
-                }`}
+            className={`card card-hover ${ghat.highlight ? '!border-orange-300 !bg-orange-50' : ''}`}
         >
             <button
                 className="w-full text-left p-4"
@@ -28,24 +25,24 @@ function GhatCard({ ghat }) {
                 aria-label={t('nav.ghat.details', { name: ghat.name })}
             >
                 <div className="flex items-start gap-3">
-                    <div className="text-2xl flex-shrink-0">{ghat.icon}</div>
+                    <div className="text-2xl flex-shrink-0" aria-hidden="true">{ghat.icon}</div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-bold text-gray-800 text-sm">{ghat.name}</h3>
+                            <h3 className="font-bold text-gray-900 text-sm break-words">{ghat.name}</h3>
                             {ghat.highlight && (
-                                <span className="badge bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">
+                                <span className="badge bg-orange-700 text-white">
                                     {t('nav.ghat.mostSacred')}
                                 </span>
                             )}
                         </div>
-                        <p className="text-orange-600 text-xs font-medium mt-0.5">{ghat.hindi}</p>
-                        <p className="text-gray-600 text-xs mt-1 leading-relaxed">{ghat.significance}</p>
+                        <p className="text-orange-800 text-xs font-medium mt-0.5">{ghat.hindi}</p>
+                        <p className="text-gray-700 text-xs mt-1 leading-relaxed break-words">{ghat.significance}</p>
                     </div>
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0" aria-hidden="true">
                         {expanded ? (
-                            <ChevronUp size={16} className="text-orange-400" />
+                            <ChevronUp size={16} className="text-orange-700" />
                         ) : (
-                            <ChevronDown size={16} className="text-gray-400" />
+                            <ChevronDown size={16} className="text-gray-600" />
                         )}
                     </div>
                 </div>
@@ -53,17 +50,17 @@ function GhatCard({ ghat }) {
 
             {expanded && (
                 <div className="px-4 pb-4 border-t border-orange-100 pt-3 space-y-2 animate-fade-in">
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                        <Clock size={12} className="text-orange-400 flex-shrink-0" />
-                        <span><strong>{t('nav.ghat.timing')}</strong> {ghat.timing}</span>
+                    <div className="flex items-start gap-2 text-xs text-gray-700">
+                        <Clock size={12} className="text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="min-w-0 break-words"><strong>{t('nav.ghat.timing')}</strong> {ghat.timing}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                        <MapPin size={12} className="text-orange-400 flex-shrink-0" />
-                        <span><strong>{t('nav.ghat.distance')}</strong> {ghat.distance}</span>
+                    <div className="flex items-start gap-2 text-xs text-gray-700">
+                        <MapPin size={12} className="text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="min-w-0 break-words"><strong>{t('nav.ghat.distance')}</strong> {ghat.distance}</span>
                     </div>
-                    <div className="flex items-start gap-2 text-xs text-gray-600">
-                        <Lightbulb size={12} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                        <span><strong>{t('nav.ghat.tip')}</strong> {withoutUnsourcedArrivalAdvice(ghat.tips)}</span>
+                    <div className="flex items-start gap-2 text-xs text-gray-700">
+                        <Lightbulb size={12} className="text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="min-w-0 break-words"><strong>{t('nav.ghat.tip')}</strong> {withoutUnsourcedArrivalAdvice(ghat.tips)}</span>
                     </div>
                 </div>
             )}
@@ -76,59 +73,62 @@ function TransportCard({ option }) {
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className="bg-white border border-orange-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-sm transition-all">
+        <div className="card card-hover">
             <button
-                className="w-full text-left p-4"
+                className="w-full rounded-xl p-4 text-left"
                 onClick={() => setExpanded(!expanded)}
                 type="button"
                 aria-expanded={expanded}
                 aria-label={t('nav.transport.travelDetails', { mode: option.mode })}
             >
-                <div className="flex items-center gap-3">
-                    <div className="text-2xl">{option.icon}</div>
-                    <div className="flex-1">
-                        <h3 className="font-bold text-gray-800 text-sm">{option.mode}</h3>
-                        <p className="text-xs text-gray-500 mt-0.5 truncate">{option.from} → {option.to}</p>
+                {/* Icon | text region (name, route, price) | chevron. The text region wraps; the price sits under the route on narrow widths. */}
+                <div className="flex items-start gap-3">
+                    <div className="text-2xl flex-shrink-0" aria-hidden="true">{option.icon}</div>
+                    <div className="min-w-0 flex-1 sm:flex sm:items-start sm:justify-between sm:gap-3">
+                        <div className="min-w-0">
+                            <h3 className="break-words text-sm font-bold text-gray-900">{option.mode}</h3>
+                            <p className="mt-0.5 break-words text-xs leading-relaxed text-gray-600">{option.from} → {option.to}</p>
+                        </div>
+                        <p className="mt-1.5 break-words text-sm font-semibold text-orange-800 sm:mt-0 sm:max-w-[45%] sm:flex-shrink-0 sm:text-right">{option.cost}</p>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                        <p className="text-xs font-semibold text-orange-600">{option.cost}</p>
+                    <span className="flex-shrink-0 pt-0.5" aria-hidden="true">
                         {expanded ? (
-                            <ChevronUp size={14} className="text-gray-400 ml-auto mt-1" />
+                            <ChevronUp size={16} className="text-orange-700" />
                         ) : (
-                            <ChevronDown size={14} className="text-gray-400 ml-auto mt-1" />
+                            <ChevronDown size={16} className="text-gray-600" />
                         )}
-                    </div>
+                    </span>
                 </div>
             </button>
 
             {expanded && (
                 <div className="border-t border-orange-100 px-4 pb-4 pt-3 animate-fade-in">
-                    <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
-                        <div className="bg-orange-50 rounded-lg p-2.5">
-                            <div className="flex items-center gap-1 text-orange-600 font-medium mb-1">
-                                <Clock size={11} />
+                    <div className="mb-3 grid grid-cols-1 gap-3 text-xs min-[400px]:grid-cols-2">
+                        <div className="min-w-0 rounded-lg bg-orange-50 p-2.5">
+                            <div className="mb-1 flex items-center gap-1 font-medium text-orange-800">
+                                <Clock size={12} aria-hidden="true" />
                                 {t('nav.transport.duration')}
                             </div>
-                            <p className="text-gray-700">{option.duration}</p>
+                            <p className="break-words text-gray-800">{option.duration}</p>
                         </div>
-                        <div className="bg-orange-50 rounded-lg p-2.5">
-                            <div className="flex items-center gap-1 text-orange-600 font-medium mb-1">
-                                <DollarSign size={11} />
+                        <div className="min-w-0 rounded-lg bg-orange-50 p-2.5">
+                            <div className="mb-1 flex items-center gap-1 font-medium text-orange-800">
+                                <DollarSign size={12} aria-hidden="true" />
                                 {t('nav.transport.cost')}
                             </div>
-                            <p className="text-gray-700">{option.cost}</p>
+                            <p className="break-words text-gray-800">{option.cost}</p>
                         </div>
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                            <Lightbulb size={12} className="text-amber-400" />
+                        <p className="mb-2 flex items-center gap-1 text-xs font-semibold text-gray-800">
+                            <Lightbulb size={12} className="text-amber-500" aria-hidden="true" />
                             {t('nav.transport.tips')}
                         </p>
                         <ul className="space-y-1.5">
                             {option.tips.map((tip, i) => (
-                                <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
-                                    <span className="text-orange-400 flex-shrink-0">•</span>
-                                    {tip}
+                                <li key={i} className="flex items-start gap-1.5 text-xs text-gray-700">
+                                    <span className="flex-shrink-0 text-orange-500" aria-hidden="true">•</span>
+                                    <span className="min-w-0 break-words">{tip}</span>
                                 </li>
                             ))}
                         </ul>
@@ -154,30 +154,25 @@ export default function NavigationGuide() {
     return (
         <div className="p-4 space-y-4">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-teal-500 rounded-2xl p-4 text-white shadow-md">
-                <div className="flex items-center gap-3">
-                    <div className="text-3xl">🗺️</div>
-                    <div>
-                        <h2 className="text-lg font-bold">{t('navigation.title')}</h2>
-                        <p className="text-blue-100 text-sm">{t('navigation.subtitle')}</p>
-                    </div>
+            <div className="page-header">
+                <div className="text-3xl flex-shrink-0" aria-hidden="true">🗺️</div>
+                <div className="min-w-0">
+                    <h2 className="page-title">{t('navigation.title')}</h2>
+                    <p className="page-subtitle">{t('navigation.subtitle')}</p>
                 </div>
             </div>
 
             {/* Section tabs */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
+            <div className="flex flex-wrap gap-2">
                 {sections.map((s) => (
                     <button
                         key={s.id}
                         type="button"
                         onClick={() => setActiveSection(s.id)}
                         aria-pressed={activeSection === s.id}
-                        className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-semibold text-xs whitespace-nowrap transition-all duration-200 flex-shrink-0 ${activeSection === s.id
-                            ? 'bg-orange-500 text-white shadow-md'
-                            : 'bg-white text-orange-700 border border-orange-200 hover:bg-orange-50'
-                            }`}
+                        className={`chip ${activeSection === s.id ? 'chip-active' : 'chip-idle'}`}
                     >
-                        <span>{s.icon}</span>
+                        <span aria-hidden="true">{s.icon}</span>
                         {t(s.labelKey)}
                     </button>
                 ))}
@@ -187,10 +182,10 @@ export default function NavigationGuide() {
             {activeSection === 'ghats' && (
                 <div className="space-y-3 animate-fade-in">
                     <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-orange-500" />
+                        <MapPin size={16} className="text-orange-600" aria-hidden="true" />
                         <h3 className="section-title">{t('nav.ghats.heading')}</h3>
                     </div>
-                    <p className="text-xs text-gray-500">{t('nav.ghats.hint')}</p>
+                    <p className="text-sm text-gray-600">{t('nav.ghats.hint')}</p>
                     {ghats.map((ghat) => (
                         <GhatCard key={ghat.id} ghat={ghat} />
                     ))}
@@ -201,16 +196,16 @@ export default function NavigationGuide() {
             {activeSection === 'dates' && (
                 <div className="space-y-3 animate-fade-in">
                     <div className="flex items-center gap-2">
-                        <Calendar size={16} className="text-orange-500" />
+                        <Calendar size={16} className="text-orange-600" aria-hidden="true" />
                         <h3 className="section-title">{t('nav.dates.heading')}</h3>
                     </div>
                     <ProposedLabel className="text-amber-800 font-semibold" />
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2">
-                        <span className="text-lg flex-shrink-0">⚠️</span>
-                        <p className="text-xs text-amber-800" data-testid="crowd-notice">{t('nav.dates.crowdNotice')}</p>
+                    <div className="notice">
+                        <span className="text-lg flex-shrink-0" aria-hidden="true">⚠️</span>
+                        <p data-testid="crowd-notice">{t('nav.dates.crowdNotice')}</p>
                     </div>
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5">
-                        <p className="text-xs text-amber-800" data-testid="proposed-dates-notice">
+                    <div className="notice">
+                        <p data-testid="proposed-dates-notice">
                             {t('nav.dates.proposedNotice', {
                                 shahi: PROPOSED_SNAN_PLAN.shahi,
                                 parv: PROPOSED_SNAN_PLAN.parv,
@@ -219,11 +214,11 @@ export default function NavigationGuide() {
                             })}
                         </p>
                     </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
-                        <p className="text-xs font-bold text-blue-800 mb-1">📅 Simhastha Kumbh 2028 Full Duration</p>
-                        <p className="text-xs text-blue-700">March 27, 2028 (Chaitra Purnima) — May 27, 2028 (Vaisakh Purnima)</p>
-                        <p className="text-xs text-blue-600 mt-1">Ujjain, Madhya Pradesh · Kshipra River</p>
-                        <ProposedLabel className="text-blue-700 mt-1" />
+                    <div className="card p-4">
+                        <p className="text-sm font-bold text-gray-900 mb-1">📅 Simhastha Kumbh 2028 Full Duration</p>
+                        <p className="text-sm text-gray-700">March 27, 2028 (Chaitra Purnima) — May 27, 2028 (Vaisakh Purnima)</p>
+                        <p className="text-sm text-gray-600 mt-1">Ujjain, Madhya Pradesh · Kshipra River</p>
+                        <ProposedLabel className="text-amber-800 mt-1" />
                     </div>
                 </div>
             )}
@@ -232,10 +227,10 @@ export default function NavigationGuide() {
             {activeSection === 'transport' && (
                 <div className="space-y-3 animate-fade-in">
                     <div className="flex items-center gap-2">
-                        <Navigation size={16} className="text-orange-500" />
+                        <Navigation size={16} className="text-orange-600" aria-hidden="true" />
                         <h3 className="section-title">{t('nav.transport.heading')}</h3>
                     </div>
-                    <p className="text-xs text-gray-500">{t('nav.transport.hint')}</p>
+                    <p className="text-sm text-gray-600">{t('nav.transport.hint')}</p>
                     {transportOptions.map((option) => (
                         <TransportCard key={option.id} option={option} />
                     ))}
@@ -246,12 +241,12 @@ export default function NavigationGuide() {
             {activeSection === 'map' && (
                 <div className="space-y-3 animate-fade-in">
                     <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-orange-500" />
+                        <MapPin size={16} className="text-orange-600" aria-hidden="true" />
                         <h3 className="section-title">{t('nav.map.heading')}</h3>
                     </div>
 
                     {/* Google Maps embed — Ram Ghat, Ujjain */}
-                    <div className="rounded-2xl overflow-hidden border border-orange-200 shadow-md">
+                    <div className="rounded-xl overflow-hidden border border-orange-200 shadow-card">
                         <iframe
                             title={t('nav.map.iframeTitle')}
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.5!2d75.7692!3d23.1765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39637469de000001%3A0x9f67d93e3e0e9a5b!2sRam%20Ghat%2C%20Ujjain!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
@@ -266,8 +261,8 @@ export default function NavigationGuide() {
 
                     {/* Key locations */}
                     <div className="space-y-2">
-                        <p className="text-xs font-semibold text-gray-600 flex items-center gap-1.5">
-                            <MapPin size={12} className="text-orange-500" />
+                        <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5">
+                            <MapPin size={14} className="text-orange-600" aria-hidden="true" />
                             {t('nav.map.keyLocations')}
                         </p>
                         {[
@@ -278,16 +273,16 @@ export default function NavigationGuide() {
                             { icon: '✈️', name: 'Indore Airport (Nearest)', dist: '55 km from Ujjain', color: 'bg-sky-50 border-sky-200' },
                         ].map((loc) => (
                             <div key={loc.name} className={`${loc.color} border rounded-xl px-3 py-2.5 flex items-center gap-3`}>
-                                <span className="text-lg flex-shrink-0">{loc.icon}</span>
+                                <span className="text-lg flex-shrink-0" aria-hidden="true">{loc.icon}</span>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-gray-800 truncate">{loc.name}</p>
-                                    <p className="text-xs text-gray-500">{loc.dist}</p>
+                                    <p className="text-sm font-semibold text-gray-900 break-words">{loc.name}</p>
+                                    <p className="text-xs text-gray-600">{loc.dist}</p>
                                 </div>
                                 <a
                                     href={`https://www.google.com/maps/search/${encodeURIComponent(loc.name + ' Ujjain')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-xs text-orange-600 font-semibold hover:text-orange-700 flex-shrink-0 bg-white border border-orange-200 rounded-lg px-2 py-1"
+                                    className="inline-flex min-h-[40px] min-w-[40px] flex-shrink-0 items-center justify-center rounded-lg border border-orange-200 bg-white px-3 py-1 text-sm font-semibold text-orange-800 hover:bg-orange-50"
                                     aria-label={t('nav.map.openInMaps', { name: loc.name })}
                                 >
                                     {t('nav.map.mapsLink')}
@@ -297,9 +292,9 @@ export default function NavigationGuide() {
                     </div>
 
                     {/* Offline map tip */}
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2.5">
-                        <span className="text-lg flex-shrink-0">📵</span>
-                        <p className="text-sm text-amber-800">
+                    <div className="notice">
+                        <span className="text-lg flex-shrink-0" aria-hidden="true">📵</span>
+                        <p>
                             <strong>Download offline map</strong> before visiting — open Google Maps, search "Ujjain" and tap Download. Mobile data is unreliable in crowded mela grounds.
                         </p>
                     </div>
@@ -310,27 +305,27 @@ export default function NavigationGuide() {
             {activeSection === 'tips' && (
                 <div className="space-y-3 animate-fade-in">
                     <div className="flex items-center gap-2">
-                        <Lightbulb size={16} className="text-orange-500" />
+                        <Lightbulb size={16} className="text-orange-600" aria-hidden="true" />
                         <h3 className="section-title">{t('nav.tips.heading')}</h3>
                     </div>
                     <div className="space-y-2.5">
                         {navigationTips.filter((item) => !isUnsourcedArrivalAdvice(item.tip)).map((item, i) => (
                             <div
                                 key={i}
-                                className="bg-white border border-orange-100 rounded-xl p-4 flex items-start gap-3 hover:border-orange-200 hover:shadow-sm transition-all animate-fade-in"
+                                className="card card-hover p-4 flex items-start gap-3 animate-fade-in"
                             >
-                                <div className="text-xl flex-shrink-0">{item.icon}</div>
+                                <div className="text-xl flex-shrink-0" aria-hidden="true">{item.icon}</div>
                                 <p className="text-sm text-gray-700 leading-relaxed">{item.tip}</p>
                             </div>
                         ))}
                     </div>
 
                     {/* Sector map info */}
-                    <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-4 mt-4">
+                    <div className="rounded-xl border border-orange-200 bg-orange-50 p-4 mt-4">
                         <h4 className="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2">
                             🗺️ Mela Sector Map
                         </h4>
-                        <p className="text-xs text-gray-700 mb-3">
+                        <p className="text-sm text-gray-700 mb-3">
                             The Kumbh Mela grounds are divided into numbered sectors. Each sector has:
                         </p>
                         <div className="grid grid-cols-2 gap-2">
@@ -342,25 +337,25 @@ export default function NavigationGuide() {
                                 ['🔦', 'Lost & Found'],
                                 ['🍚', 'Food counter'],
                             ].map(([icon, label]) => (
-                                <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600">
+                                <div key={label} className="flex items-center gap-1.5 text-sm text-gray-700">
                                     <span>{icon}</span>
                                     <span>{label}</span>
                                 </div>
                             ))}
                         </div>
-                        <p className="text-xs text-orange-600 font-medium mt-3">
+                        <p className="text-sm text-orange-800 font-medium mt-3">
                             📱 Collect the free paper map at any mela entry gate
                         </p>
                     </div>
 
-                    <section className="bg-white border border-blue-100 rounded-2xl p-4" aria-labelledby="ujjain-map-heading">
+                    <section className="card p-4" aria-labelledby="ujjain-map-heading">
                         <h4 id="ujjain-map-heading" className="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2">
                             {t('nav.liveMap.heading')}
                         </h4>
-                        <p className="text-xs text-gray-600 mb-3">
+                        <p className="text-sm text-gray-700 mb-3">
                             {t('nav.liveMap.description')}
                         </p>
-                        <div className="rounded-xl overflow-hidden border border-blue-200 bg-blue-50">
+                        <div className="rounded-lg overflow-hidden border border-orange-200 bg-orange-50">
                             <iframe
                                 title={t('nav.liveMap.iframeTitle')}
                                 src="https://www.google.com/maps?q=Ujjain,+Madhya+Pradesh&output=embed"
@@ -374,7 +369,7 @@ export default function NavigationGuide() {
                             href="https://www.google.com/maps/search/?api=1&query=Ram+Ghat,+Ujjain"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex mt-3 text-xs font-semibold text-blue-700 hover:text-blue-800"
+                            className="btn-secondary mt-3"
                             aria-label={t('nav.liveMap.directions')}
                         >
                             {t('nav.liveMap.directions')}

@@ -23,21 +23,21 @@ const validateServicesResponse = (d) =>
     d.services.every((s) => s && typeof s.category === 'string' && Array.isArray(s.items));
 function ServiceItem({ item }) {
     return (
-        <div className="bg-white rounded-xl border border-gray-100 p-3.5 hover:border-orange-200 hover:shadow-sm transition-all">
-            <div className="flex items-start justify-between gap-2 mb-2">
-                <h4 className="font-semibold text-gray-800 text-sm">{item.name}</h4>
-                <span className="text-xs font-bold text-green-700 bg-green-100 rounded-full px-2 py-0.5 flex-shrink-0">
+        <div className="card card-hover p-3.5">
+            <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1 mb-2">
+                <h4 className="min-w-0 break-words font-semibold text-gray-900 text-sm">{item.name}</h4>
+                <span className="text-xs font-bold text-green-800 bg-green-100 rounded-full px-2 py-0.5">
                     {item.cost}
                 </span>
             </div>
-            <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.detail}</p>
-            <div className="flex flex-wrap gap-3 text-xs text-gray-500">
-                <span className="flex items-center gap-1">
-                    <MapPin size={10} className="text-orange-400" />
+            <p className="text-sm text-gray-700 mb-2 leading-relaxed break-words">{item.detail}</p>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-600">
+                <span className="flex items-start gap-1">
+                    <MapPin size={12} className="mt-0.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
                     {item.location}
                 </span>
-                <span className="flex items-center gap-1">
-                    <Clock size={10} className="text-orange-400" />
+                <span className="flex items-start gap-1">
+                    <Clock size={12} className="mt-0.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
                     {item.timing}
                 </span>
             </div>
@@ -50,21 +50,22 @@ function ServiceCategory({ service }) {
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className={`rounded-2xl border ${CATEGORY_COLORS[service.id] || DEFAULT_CATEGORY_COLOR} overflow-hidden transition-all duration-200`}>
+        <div className={`rounded-xl border shadow-card ${CATEGORY_COLORS[service.id] || DEFAULT_CATEGORY_COLOR} overflow-hidden transition-all duration-200`}>
             <button
                 className="w-full text-left p-4 flex items-center gap-3"
+                aria-expanded={expanded}
                 onClick={() => setExpanded(!expanded)}
             >
-                <span className="text-2xl flex-shrink-0">{service.icon}</span>
+                <span className="text-2xl flex-shrink-0" aria-hidden="true">{service.icon}</span>
                 <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-gray-800 text-sm">{service.category}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{t.plural('services.available', service.items.length)}</p>
+                    <h3 className="font-bold text-gray-900 text-sm break-words">{service.category}</h3>
+                    <p className="text-xs text-gray-700 mt-0.5">{t.plural('services.available', service.items.length)}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" aria-hidden="true">
                     {expanded ? (
-                        <ChevronUp size={16} className="text-orange-500" />
+                        <ChevronUp size={16} className="text-orange-700" />
                     ) : (
-                        <ChevronDown size={16} className="text-gray-400" />
+                        <ChevronDown size={16} className="text-gray-600" />
                     )}
                 </div>
             </button>
@@ -74,13 +75,13 @@ function ServiceCategory({ service }) {
                     {service.warning && (
                         <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
                             <Info size={13} className="text-red-500 flex-shrink-0 mt-0.5" />
-                            <p className="text-xs text-red-700">{service.warning}</p>
+                            <p className="text-sm text-red-800 break-words">{service.warning}</p>
                         </div>
                     )}
                     {service.tip && (
                         <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
                             <Info size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                            <p className="text-xs text-amber-800">{service.tip}</p>
+                            <p className="text-sm text-amber-900 break-words">{service.tip}</p>
                         </div>
                     )}
                     {service.items.map((item, i) => (
@@ -100,7 +101,7 @@ function ChatTip() {
     return (
         <p className="text-sm text-gray-700">
             {before}
-            <span className="text-orange-600 font-semibold">{t('services.chatTab')}</span>
+            <span className="text-orange-800 font-semibold">{t('services.chatTab')}</span>
             {after}
         </p>
     );
@@ -112,13 +113,11 @@ export default function LocalServices() {
     return (
         <div className="p-4 space-y-4">
             {/* Header */}
-            <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-2xl p-4 text-white shadow-md">
-                <div className="flex items-center gap-3">
-                    <div className="text-3xl">🏘️</div>
-                    <div>
-                        <h2 className="text-lg font-bold">{t('services.title')}</h2>
-                        <p className="text-teal-100 text-sm">{t('services.subtitle')}</p>
-                    </div>
+            <div className="page-header">
+                <div className="text-3xl flex-shrink-0" aria-hidden="true">🏘️</div>
+                <div className="min-w-0">
+                    <h2 className="page-title">{t('services.title')}</h2>
+                    <p className="page-subtitle">{t('services.subtitle')}</p>
                 </div>
             </div>
 
@@ -130,18 +129,18 @@ export default function LocalServices() {
                     { icon: '🚻', labelKey: tk('services.stat.toilets'), count: '1,00,000+' },
                     { icon: '🏥', labelKey: tk('services.stat.medical'), count: '40+' },
                 ].map((stat) => (
-                    <div key={stat.labelKey} className="bg-white border border-orange-100 rounded-xl p-3 text-center">
-                        <div className="text-xl mb-1">{stat.icon}</div>
-                        <div className="font-bold text-orange-600 text-sm">{stat.count}</div>
-                        <div className="text-xs text-gray-500">{t(stat.labelKey)}</div>
+                    <div key={stat.labelKey} className="card p-3 text-center">
+                        <div className="text-xl mb-1" aria-hidden="true">{stat.icon}</div>
+                        <div className="font-bold text-orange-800 text-sm break-words">{stat.count}</div>
+                        <div className="text-xs text-gray-700 break-words">{t(stat.labelKey)}</div>
                     </div>
                 ))}
             </div>
 
             {/* Service categories */}
             <div className="space-y-3">
-                <p className="text-xs text-gray-500 flex items-center gap-1.5">
-                    <Info size={12} className="text-orange-400" />
+                <p className="text-sm text-gray-600 flex items-center gap-1.5">
+                    <Info size={14} className="text-orange-600" aria-hidden="true" />
                     {t('services.tapHint')}
                 </p>
                 {error ? (
@@ -149,9 +148,9 @@ export default function LocalServices() {
                 ) : loading ? (
                     <LoadingState label={t('services.loading')} />
                 ) : services.length === 0 ? (
-                    <div className="text-center py-12 text-gray-400">
-                        <Info size={40} className="mx-auto mb-3 opacity-30" />
-                        <p className="font-medium">{t('services.emptyTitle')}</p>
+                    <div className="text-center py-12 text-gray-600">
+                        <Info size={40} className="mx-auto mb-3 text-orange-300" aria-hidden="true" />
+                        <p className="font-semibold text-gray-800">{t('services.emptyTitle')}</p>
                         <p className="text-sm mt-1">{t('services.emptyHint')}</p>
                     </div>
                 ) : (
@@ -163,7 +162,7 @@ export default function LocalServices() {
 
             {/* Bottom tip */}
             <div className="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex items-start gap-2.5">
-                <span className="text-lg flex-shrink-0">💬</span>
+                <span className="text-lg flex-shrink-0" aria-hidden="true">💬</span>
                 <ChatTip />
             </div>
         </div>
